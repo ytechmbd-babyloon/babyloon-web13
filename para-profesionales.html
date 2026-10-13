@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Trabaja con Babyloon | Para profesionales de la belleza</title>
+<meta name="description" content="Babyloon te trae el trabajo y te deja la gestión hecha: agenda, facturas e impuestos, cobros protegidos, academia y tus productos a precio de profesional. Tú pones el talento." />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0D0B0F" />
+<link rel="canonical" href="https://babyloon.app/para-profesionales.html" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Babyloon" />
+<meta property="og:title" content="Trabaja con Babyloon | Para profesionales de la belleza" />
+<meta property="og:description" content="Babyloon te trae el trabajo y te deja la gestión hecha. Tú pones el talento." />
+<meta property="og:url" content="https://babyloon.app/para-profesionales.html" />
+<meta property="og:image" content="https://babyloon.app/og-image.png" />
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<style>
+  :root{--ink:#0D0B0F;--plum:#241820;--plum-2:#1B1219;--gold:#C8A96A;--cream:#F9F5EE;--smoke:#E8E0D5;
+    --mauve:#8C7482;--line:rgba(200,169,106,.16);--serif:'Cormorant Garamond',serif;--sans:'Jost',system-ui,sans-serif;
+    --gold-grad:linear-gradient(135deg,#8E723F,#F3E0BC 42%,#C9A96E 72%,#9C8050)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:var(--sans);font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 28px}
+  .inf path{stroke:url(#gg);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .eyebrow{font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);font-weight:500}
+  .gold-text{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .btn{font-family:var(--sans);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;cursor:pointer;border:none;padding:15px 30px;border-radius:2px;display:inline-block;transition:.28s;text-align:center}
+  .btn-gold{color:var(--ink);background:var(--gold-grad);background-size:180% 180%}
+  .btn-gold:hover{background-position:100% 0}
+  .btn-ghost{color:var(--cream);border:1px solid var(--line);background:transparent}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+  header{position:sticky;top:0;z-index:50;background:rgba(13,11,15,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:14px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:24px;flex:none}
+  .nav a.back{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--smoke);text-align:right}
+
+  /* ── Portada ──────────────────────────────────────────────────── */
+  .hero{text-align:center;padding:84px 0 62px;position:relative}
+  .hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(52% 70% at 50% 0%,rgba(200,169,106,.11),transparent 70%)}
+  .hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(38px,6.4vw,70px);line-height:1.06;margin:16px 0 18px;position:relative;text-wrap:balance}
+  .hero p{color:var(--smoke);max-width:600px;margin:0 auto 30px;font-size:16px;position:relative}
+  .hero .cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative}
+
+  section.blk{padding:62px 0;border-top:1px solid rgba(249,245,238,.06)}
+  .blk h2{font-family:var(--serif);font-weight:400;font-size:clamp(27px,3.9vw,42px);margin-bottom:14px;text-wrap:balance}
+  .blk .sub{color:var(--mauve);max-width:60ch;margin-bottom:34px}
+  .center{text-align:center}
+  .center .sub{margin-left:auto;margin-right:auto}
+
+  /* ── El dinero: la calculadora ────────────────────────────────── */
+  .dinero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:34px;align-items:start}
+  .calc{border:1px solid var(--line);border-radius:18px;background:rgba(27,18,25,.55);padding:26px 24px;min-width:0}
+  .calc label{display:block;font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+  .calc .campo{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:22px}
+  .calc input{flex:1;min-width:0;background:none;border:none;color:var(--cream);font-family:var(--serif);font-size:38px;font-weight:400;width:100%}
+  .calc input:focus{outline:none}
+  .calc .cur{font-family:var(--serif);font-size:24px;color:var(--mauve);flex:none}
+  .fila{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;font-size:14.5px;color:var(--smoke)}
+  .fila .v{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .fila.resta{color:var(--mauve)}
+  .fila.total{border-top:1px solid var(--line);margin-top:8px;padding-top:15px;font-size:16px;color:var(--cream)}
+  .fila.total .v{font-family:var(--serif);font-size:28px;color:var(--gold)}
+  .tramos{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
+  .tramos b{font-weight:400;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:12px;color:var(--smoke)}
+  .tramos b i{font-style:normal;color:var(--gold)}
+  .nota{font-size:12.5px;color:var(--mauve);margin-top:16px;line-height:1.55}
+
+  /* ── Listas de beneficio ──────────────────────────────────────── */
+  .cosas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+  .cosa{border-left:1px solid var(--line);padding:2px 0 2px 18px;min-width:0}
+  .cosa h3{font-family:var(--serif);font-size:21px;font-weight:400;margin-bottom:7px}
+  .cosa p{color:var(--mauve);font-size:14px}
+  .lista{list-style:none;display:grid;gap:13px;margin-top:6px}
+  .lista li{position:relative;padding-left:22px;color:var(--smoke);font-size:15px}
+  .lista li::before{content:"";position:absolute;left:0;top:10px;width:7px;height:7px;border-radius:50%;background:var(--gold-grad)}
+  .dos{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}
+
+  /* ── El seguro: sólo se pinta si existe ───────────────────────── */
+  .seguro{border:1px solid var(--line);border-radius:18px;padding:26px 24px;background:rgba(36,24,32,.4)}
+  .seguro .quien{font-size:12.5px;color:var(--mauve);margin-top:14px}
+  .seguro .quien b{color:var(--smoke);font-weight:400}
+
+  /* ── Pasos ────────────────────────────────────────────────────── */
+  .pasos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;text-align:center}
+  .pasos .n{font-family:var(--serif);color:var(--gold);font-size:15px;letter-spacing:.2em;margin-bottom:10px;display:block}
+  .pasos h3{font-family:var(--serif);font-size:22px;font-weight:500;margin-bottom:7px}
+  .pasos p{color:var(--mauve);font-size:14px}
+
+  .cierre{text-align:center;padding:76px 0 84px}
+  .cierre h2{margin-bottom:14px}
+  .cierre p{color:var(--smoke);max-width:52ch;margin:0 auto 28px}
+
+  footer{border-top:1px solid var(--line);padding:38px 0;text-align:center;color:var(--mauve);font-size:12px}
+  footer a{color:var(--smoke)}footer a:hover{color:var(--gold)}
+  footer .pies{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+
+  @media(max-width:860px){
+    .dinero,.dos{grid-template-columns:1fr;gap:30px}
+    .cosas,.pasos{grid-template-columns:1fr}
+  }
+  @media(max-width:420px){
+    .wrap{padding:0 16px}
+    .nav{height:64px}
+    .brand{font-size:20px}
+    .nav a.back{font-size:11px}
+    .calc input{font-size:32px}
+    .fila.total .v{font-size:24px}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8E723F"/><stop offset=".42" stop-color="#F3E0BC"/><stop offset=".72" stop-color="#C9A96E"/><stop offset="1" stop-color="#9C8050"/></linearGradient></defs></svg>
+
+<header><div class="wrap nav">
+  <a href="index.html" class="brand"><svg class="inf" width="36" height="18" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>Babyloon</a>
+  <a href="index.html" class="back" data-i18n="pp_volver">← Inicio</a>
+</div></header>
+
+<!-- ═══ PORTADA ═══ -->
+<section class="hero"><div class="wrap">
+  <span class="eyebrow" data-i18n="pp_eyebrow">Para profesionales</span>
+  <h1><span data-i18n="pp_h1a">Tú pones el talento.</span><br><span class="gold-text" data-i18n="pp_h1b">Nosotros, todo lo demás.</span></h1>
+  <p data-i18n="pp_lead">El trabajo te llega, el cobro está protegido y la gestión está hecha. Tú decides cuándo, dónde y a qué precio.</p>
+  <div class="cta">
+    <a class="btn btn-gold" href="index.html#app" data-i18n="pp_cta1">Darme de alta</a>
+    <a class="btn btn-ghost" href="#dinero" data-i18n="pp_cta2">Ver los números</a>
+  </div>
+</div></section>
+
+<!-- ═══ EL DINERO ═══ -->
+<section class="blk" id="dinero"><div class="wrap">
+  <span class="eyebrow" data-i18n="pp_din_eyebrow">Lo primero, el dinero</span>
+  <div class="dinero" style="margin-top:14px">
+    <div>
+      <h2 data-i18n="pp_din_h2">Te quedas con la mayor parte, y lo ves antes de aceptar</h2>
+      <p class="sub" data-i18n="pp_din_p">Nuestra comisión es de las más bajas del sector. No hay cuota mensual, ni alta, ni permanencia: si un mes no trabajas, no pagas nada.</p>
+      <div class="tramos" id="ppTramos"></div>
+      <p class="nota" data-i18n="pp_din_nota">El precio de cada servicio lo pones tú al pujar, dentro de una horquilla que calcula el sistema con la ciudad, la hora y la distancia. Nadie te obliga a aceptar un precio.</p>
+    </div>
+
+    <div class="calc">
+      <label for="ppPrecio" data-i18n="pp_din_label">Un servicio de</label>
+      <div class="campo">
+        <input id="ppPrecio" type="number" inputmode="decimal" min="0" step="5" value="80" aria-describedby="ppQueda">
+        <span class="cur" id="ppMoneda">€</span>
+      </div>
+      <div class="fila resta"><span data-i18n="pp_din_com">Comisión Babyloon</span><span class="v" id="ppCom">–</span></div>
+      <div class="fila total"><span data-i18n="pp_din_queda">Te queda</span><span class="v" id="ppQueda">–</span></div>
+      <p class="nota" id="ppSeguroNota" hidden></p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ═══ EL TRABAJO LLEGA SOLO ═══ -->
+<section class="blk"><div class="wrap">
+  <h2 data-i18n="pp_tra_h2">No buscas clientela. Te llega.</h2>
+  <p class="sub" data-i18n="pp_tra_sub">Babyloon es el escaparate, el buscador y el que llama a la puerta. Tú abres la agenda cuando te viene bien.</p>
+  <div class="cosas">
+    <div class="cosa"><h3 data-i18n="pp_tra_1t">Solicitudes cerca de ti</h3><p data-i18n="pp_tra_1d">Te avisamos cuando alguien pide un servicio en tu zona. Decides si pujas y a qué precio.</p></div>
+    <div class="cosa"><h3 data-i18n="pp_tra_2t">Ahora o con fecha</h3><p data-i18n="pp_tra_2d">Servicios inmediatos, citas programadas y reservas Privée para bodas y eventos.</p></div>
+    <div class="cosa"><h3 data-i18n="pp_tra_3t">Tu agenda viaja contigo</h3><p data-i18n="pp_tra_3d">Abre un par de tardes en tu destino y tus vacaciones se pagan solas.</p></div>
+  </div>
+</div></section>
+
+<!-- ═══ EL GESTOR ═══ -->
+<section class="blk"><div class="wrap">
+  <div class="dos">
+    <div>
+      <span class="eyebrow" data-i18n="pp_ges_eyebrow">Lo que no vas a tener que hacer</span>
+      <h2 style="margin-top:14px" data-i18n="pp_ges_h2">Tu gestoría, dentro de la app</h2>
+      <p class="sub" data-i18n="pp_ges_p">Esto es lo que de verdad nos separa del resto. Cada servicio que haces deja su factura, su registro y su casilla en su sitio, con las normas del país donde trabajas y con fecha y firma.</p>
+    </div>
+    <ul class="lista">
+      <li data-i18n="pp_ges_l1">Facturas emitidas solas, con tus datos fiscales</li>
+      <li data-i18n="pp_ges_l2">Ingresos, gastos y kilometraje, contados al día</li>
+      <li data-i18n="pp_ges_l3">Lo que te toca declarar y cuándo, según tu país y tu régimen</li>
+      <li data-i18n="pp_ges_l4">Todo exportable, para ti o para tu asesor</li>
+    </ul>
+  </div>
+</div></section>
+
+<!-- ═══ EL COBRO ═══ -->
+<section class="blk"><div class="wrap">
+  <div class="dos">
+    <div>
+      <h2 data-i18n="pp_cob_h2">Cobrar no es la parte difícil</h2>
+      <p class="sub" data-i18n="pp_cob_p">El dinero de quien reserva se retiene antes de que empieces, no después. Nadie se va sin pagar.</p>
+      <ul class="lista">
+        <li data-i18n="pp_cob_l1">El pago se bloquea al reservar y se libera al terminar</li>
+        <li data-i18n="pp_cob_l2">Tu cartera, con retiradas a tu cuenta por Stripe</li>
+        <li data-i18n="pp_cob_l3">Sin datos de contacto por medio: el trato es dentro de la app, y eso te protege a ti</li>
+      </ul>
+    </div>
+
+    <!-- El seguro NO está escrito aquí. Lo pregunta a la base, y si no hay
+         póliza firmada y vigente este bloque no existe. Ver bloque 27.2. -->
+    <div class="seguro" id="ppSeguro" hidden>
+      <span class="eyebrow" data-i18n="pp_seg_eyebrow">Incluido</span>
+      <h3 style="font-family:var(--serif);font-size:24px;font-weight:400;margin:10px 0 8px" data-i18n="pp_seg_h2">Cada servicio va asegurado</h3>
+      <p style="color:var(--smoke);font-size:14.5px" id="ppSeguroCobertura"></p>
+      <p class="nota" data-i18n="pp_seg_p">Lo paga quien reserva, con el servicio, no tú. A ti no te cuesta nada y trabajas con cobertura desde el primer día.</p>
+      <p class="quien" id="ppSeguroQuien"></p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ═══ CRECER ═══ -->
+<section class="blk"><div class="wrap">
+  <h2 data-i18n="pp_cre_h2">Y además, creces</h2>
+  <p class="sub" data-i18n="pp_cre_sub">La Academia no es un extra: es parte de lo que cobras.</p>
+  <div class="cosas">
+    <div class="cosa"><h3 data-i18n="pp_cre_1t">Aprende</h3><p data-i18n="pp_cre_1d">Técnica en vídeo y clases en directo, grabadas por gente que trabaja con las manos todos los días.</p></div>
+    <div class="cosa"><h3 data-i18n="pp_cre_2t">Enseña, y cobra por ello</h3><p data-i18n="pp_cre_2d">Sube tus propios tutoriales y llévate lo que paguen por verlos. Tu técnica también es un ingreso.</p></div>
+    <div class="cosa"><h3 data-i18n="pp_cre_3t">Certifícate</h3><p data-i18n="pp_cre_3d">Los certificados se ven en tu ficha, y una ficha con certificados recibe más solicitudes.</p></div>
+  </div>
+</div></section>
+
+<!-- ═══ GASTAR MENOS + REFERIDAS ═══ -->
+<section class="blk"><div class="wrap">
+  <div class="dos">
+    <div>
+      <h2 data-i18n="pp_bou_h2">Tus productos, a precio de profesional</h2>
+      <p class="sub" data-i18n="pp_bou_p">La boutique tiene un precio para quien reserva y otro para ti. Lo que usas para trabajar te cuesta menos, y te llega a casa.</p>
+    </div>
+    <div>
+      <h2 data-i18n="pp_ref_h2">Trae a otra, y notarlo</h2>
+      <p class="sub" data-i18n="pp_ref_p">Cada profesional que entra contigo te deja una recompensa. Sin letra pequeña y sin tope de personas.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ═══ CÓMO EMPEZAR ═══ -->
+<section class="blk center"><div class="wrap">
+  <h2 data-i18n="pp_pas_h2">Empezar son tres pasos</h2>
+  <p class="sub" data-i18n="pp_pas_sub">Sin cuota de alta y sin compromiso de permanencia.</p>
+  <div class="pasos">
+    <div><span class="n">01</span><h3 data-i18n="pp_pas_1t">Cuéntanos quién eres</h3><p data-i18n="pp_pas_1d">Tus servicios, tu ciudad y tu experiencia.</p></div>
+    <div><span class="n">02</span><h3 data-i18n="pp_pas_2t">Verificamos</h3><p data-i18n="pp_pas_2d">Identidad y credenciales. Es lo que hace que la clientela se fíe de todo el mundo.</p></div>
+    <div><span class="n">03</span><h3 data-i18n="pp_pas_3t">Abre tu agenda</h3><p data-i18n="pp_pas_3d">Y empiezas a recibir solicitudes el mismo día.</p></div>
+  </div>
+</div></section>
+
+<!-- ═══ CIERRE ═══ -->
+<section class="cierre"><div class="wrap">
+  <h2 class="display" style="font-family:var(--serif);font-weight:400;font-size:clamp(28px,4.2vw,46px)"><span data-i18n="pp_fin_h2a">La belleza no se queda en casa.</span> <span class="gold-text" data-i18n="pp_fin_h2b">Tu trabajo tampoco.</span></h2>
+  <p data-i18n="pp_fin_p">Las solicitudes se reciben y se pujan desde la app. El alta empieza aquí.</p>
+  <a class="btn btn-gold" href="index.html#app" data-i18n="pp_fin_cta">Darme de alta como profesional</a>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="pies">
+    <a href="index.html" data-i18n="pp_volver">← Inicio</a>
+    <a href="academia.html" data-i18n="nav_academia">Academia</a>
+    <a href="como-funciona.html" data-i18n="pp_pie_como">Cómo funciona</a>
+    <a href="terminos.html" data-i18n="foot_terms">Términos</a>
+    <a href="privacidad.html" data-i18n="foot_priv">Privacidad</a>
+    <a href="contacto.html" data-i18n="foot_contact">Contacto</a>
+  </div>
+  <div>© <span id="ppAnio"></span> Babyloon</div>
+</div></footer>
+
+<script src="app-link.js"></script>
+<script src="cookies.js?v=2"></script>
+<script src="presencia.js?v=2"></script>
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="conexion.js?v=1"></script>
+<script src="money.js?v=2"></script>
+<script src="i18n.js?v=10"></script>
+<script src="i18n-paginas.js?v=4"></script>
+<script src="i18n-pro.js?v=1"></script>
+<script src="i18n-baby.js?v=1"></script>
+<script src="baby.js?v=2"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   para-profesionales.html · los números los dice el servidor
+
+   NINGUNA CIFRA DE ESTA PÁGINA ESTÁ ESCRITA EN EL HTML. Ni el 13 % de
+   comisión, ni el 4 % del seguro, ni lo que cubre la póliza. Y es a
+   propósito: es la lección del «★ 4.9» del bloque 15.8, donde una
+   media escrita a mano sobrevivió meses a la realidad.
+
+   · La comisión sale de `comisiones_publicas()`, que lee las tarifas
+     FIRMADAS y vigentes. Si un día no hay ninguna, el bloque del
+     dinero se esconde entero: publicar un porcentaje de comisión es un
+     compromiso con quien se da de alta leyéndolo.
+
+   · El seguro sale de `seguro_vigente()`. Mientras no haya una póliza
+     firmada y en vigor, contesta que no hay seguro y este bloque NO SE
+     PINTA. No hay manera de que la promesa vuelva a ir por delante de
+     la póliza, porque quien decide es la base y no esta página.
+
+   Si no hay conexión con el servidor, no se inventa nada: los bloques
+   se quedan escondidos y el resto de la página funciona igual.
+   ═══════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var SB_URL = 'https://qphatjblvojnfyghwmjy.supabase.co';
+  var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2MjYwMDMsImV4cCI6MjA2OTIwMjAwM30.KLZ3QWNBUPTnlZEBW9OjWxLSJJ8DuNKYHKGJ5tkXJmQ';
+
+  var sb = null;
+  try {
+    sb = window.supabase && window.supabase.createClient
+       ? window.supabase.createClient(SB_URL, SB_KEY) : null;
+    window.__sbClient = window.__sbClient || sb;
+  } catch (_) { sb = null; }
+
+  var anio = document.getElementById('ppAnio');
+  if (anio) anio.textContent = new Date().getFullYear();
+
+  function T(k, d) {
+    try { var v = window.BBL && BBL.t(k); return (v && v !== k) ? v : (d || ''); }
+    catch (_) { return d || ''; }
+  }
+  function esc(s) {
+    return (s == null ? '' : String(s)).replace(/[<>&"]/g, function (c) {
+      return ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' })[c];
+    });
+  }
+  function dinero(v, mon) {
+    try { return window.Money ? Money.format(Number(v) || 0, mon || Money.myCode())
+                              : (Number(v) || 0).toFixed(2) + ' ' + (mon || 'EUR'); }
+    catch (_) { return (Number(v) || 0).toFixed(2) + ' ' + (mon || 'EUR'); }
+  }
+
+  /* ── La comisión ─────────────────────────────────────────────── */
+  var COM = null;     // { standard:{pct}, elite:{pct}, privee:{pct} }
+  var SEG = null;     // lo que devuelva seguro_vigente()
+
+  var NOMBRE_TRAMO = { standard: 'pp_tramo_std', elite: 'pp_tramo_elite', privee: 'pp_tramo_privee' };
+
+  function pintarTramos() {
+    var caja = document.getElementById('ppTramos');
+    if (!caja) return;
+    if (!COM) { caja.innerHTML = ''; return; }
+    var orden = ['standard', 'elite', 'privee'], html = '';
+    for (var i = 0; i < orden.length; i++) {
+      var k = orden[i];
+      if (!COM[k]) continue;
+      html += '<b>' + esc(T(NOMBRE_TRAMO[k], k)) + ' <i>' +
+              esc(String(COM[k].pct).replace('.00', '')) + ' %</i></b>';
+    }
+    caja.innerHTML = html;
+  }
+
+  /* ── La calculadora ──────────────────────────────────────────── */
+  function calcular() {
+    var inp = document.getElementById('ppPrecio');
+    var elCom = document.getElementById('ppCom');
+    var elQue = document.getElementById('ppQueda');
+    if (!inp || !elCom || !elQue) return;
+
+    var p = parseFloat(inp.value);
+    if (!isFinite(p) || p < 0) p = 0;
+
+    if (!COM || !COM.standard) { elCom.textContent = '–'; elQue.textContent = '–'; return; }
+
+    var tasa = Number(COM.standard.pct) / 100;
+    var com  = Math.round(p * tasa * 100) / 100;
+    var neto = Math.round((p - com) * 100) / 100;
+
+    elCom.textContent = '− ' + dinero(com);
+    elQue.textContent = dinero(neto);
+
+    /* El seguro NO se resta aquí, y esa es la frase que más importa de
+       toda la página para quien la lee: lo paga la clienta encima del
+       precio, no sale de lo que ella cobra. */
+    var nota = document.getElementById('ppSeguroNota');
+    if (nota) {
+      if (SEG && SEG.hay) {
+        var s = Math.round(p * Number(SEG.tasa) * 100) / 100;
+        nota.textContent = T('pp_din_seg', 'Quien reserva paga además {imp} de seguro del servicio ({pct} %). No sale de lo tuyo.')
+          .split('{imp}').join(dinero(s))
+          .split('{pct}').join(String(SEG.pct).replace('.00', ''));
+        nota.hidden = false;
+      } else {
+        nota.hidden = true;
+      }
+    }
+  }
+
+  /* ── El seguro, si existe ────────────────────────────────────── */
+  function pintarSeguro() {
+    var caja = document.getElementById('ppSeguro');
+    if (!caja) return;
+    if (!SEG || !SEG.hay) { caja.hidden = true; return; }
+
+    var cob = document.getElementById('ppSeguroCobertura');
+    if (cob) cob.textContent = SEG.cobertura || '';
+
+    var quien = document.getElementById('ppSeguroQuien');
+    if (quien) {
+      var trozos = [];
+      if (SEG.aseguradora) trozos.push(T('pp_seg_por', 'Aseguradora') + ': ' + SEG.aseguradora);
+      if (SEG.limite) trozos.push(T('pp_seg_hasta', 'Hasta') + ' ' + dinero(SEG.limite, SEG.moneda));
+      quien.innerHTML = trozos.map(function (t) { return '<b>' + esc(t) + '</b>'; }).join(' · ');
+    }
+    caja.hidden = false;
+  }
+
+  /* ── Traer los datos ─────────────────────────────────────────── */
+  function idiomaPais() {
+    try {
+      var l = (window.BBL && BBL.lang) || document.documentElement.lang || '';
+      return l.slice(0, 2).toLowerCase() === 'es' ? 'ES' : null;
+    } catch (_) { return null; }
+  }
+
+  async function traer() {
+    if (!sb || !sb.rpc) { pintarTramos(); calcular(); return; }
+    /* 61.68 · La calculadora, en la moneda de quien mira: la de su cuenta o,
+       sin cuenta, la del pais desde el que mira; si no se sabe, dolares.
+       Antes no se preguntaba y salian euros a todo el mundo. */
+    var moneda = (window.Money && Money.mine) ? Money.mine(sb).catch(function () {}) : null;
+    try {
+      var r1 = await sb.rpc('comisiones_publicas', { p_country: null });
+      if (r1 && !r1.error && r1.data && r1.data.hay) COM = r1.data.tramos || null;
+    } catch (_) {}
+    try {
+      var r2 = await sb.rpc('seguro_vigente', { p_country: idiomaPais() });
+      if (r2 && !r2.error && r2.data && r2.data.hay) SEG = r2.data;
+    } catch (_) {}
+
+    /* Sin comisión firmada no se enseña el bloque del dinero. Prefiero
+       una página con una sección menos que una página que promete un
+       porcentaje que nadie ha firmado. */
+    if (!COM) {
+      var blq = document.getElementById('dinero');
+      if (blq) blq.hidden = true;
+    }
+    try { await moneda; } catch (_) {}
+    pintarTramos();
+    pintarSeguro();
+    calcular();
+  }
+
+  var inp = document.getElementById('ppPrecio');
+  if (inp) inp.addEventListener('input', calcular);
+  document.addEventListener('bbl:lang', function () { pintarTramos(); pintarSeguro(); calcular(); });
+
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', traer);
+  else traer();
+})();
+</script>
+
+</body>
+</html>

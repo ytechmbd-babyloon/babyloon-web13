@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pago · Babyloon Boutique</title>
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<style>
+  /* ocultar badge 'Powered by Netlify' */
+  #netlify-badge,[class*="netlify-badge"],a[href*="netlify.com/?utm"],div[style*="z-index: 2147483647"]{display:none!important}
+
+  :root{
+    --ink:#0D0B0F;--plum:#241820;--plum-2:#1B1219;--gold:#C8A96A;--gold-lite:#F3E0BC;
+    --cream:#F9F5EE;--smoke:#E8E0D5;--mauve:#8C7482;--mauve-dim:#6B5766;
+    --line:rgba(200,169,106,.16);--line-soft:rgba(249,245,238,.08);
+    --serif:'Cormorant Garamond',serif;--sans:'Jost',system-ui,sans-serif;
+    --gold-grad:linear-gradient(135deg,#8E723F 0%,#F3E0BC 42%,#C9A96E 72%,#9C8050 100%);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:var(--sans);font-weight:300;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+  .display{font-family:var(--serif);font-weight:300;letter-spacing:.01em}
+  .eyebrow{font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);font-weight:500}
+  .gold-text{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .inf path{stroke:url(#gg);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .btn-gold{font-family:var(--sans);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;
+    font-weight:500;cursor:pointer;border:none;color:var(--ink);padding:16px 28px;border-radius:2px;
+    background:var(--gold-grad);background-size:180% 180%;transition:.28s;
+    box-shadow:0 8px 30px -12px rgba(200,169,106,.5)}
+  .btn-gold:hover{background-position:100% 0}
+  .btn-gold:disabled{opacity:.5;cursor:not-allowed}
+
+  header{border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;
+    background:rgba(13,11,15,.85);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:24px}
+  .secure{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mauve);
+    display:flex;align-items:center;gap:8px}
+  .secure svg{color:var(--gold)}
+
+  .head{text-align:center;padding:54px 0 34px}
+  .head h1{font-size:clamp(36px,6vw,58px);margin:12px 0}
+  .steps{display:flex;justify-content:center;gap:0;margin-top:18px}
+  .step{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mauve-dim);
+    display:flex;align-items:center;gap:9px}
+  .step::after{content:"";width:38px;height:1px;background:var(--line);margin:0 16px}
+  .step:last-child::after{display:none}
+  .step.on{color:var(--gold)}
+  .step b{width:22px;height:22px;border-radius:50%;border:1px solid currentColor;
+    display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:400}
+
+  .layout{display:grid;grid-template-columns:1fr 380px;gap:40px;padding:20px 0 100px;align-items:start}
+
+  .panel{border:1px solid var(--line);border-radius:6px;background:var(--plum-2);
+    padding:32px 30px;margin-bottom:22px}
+  .panel h2{font-family:var(--serif);font-size:24px;font-weight:500;margin-bottom:22px;
+    display:flex;align-items:center;gap:12px}
+  .panel h2 .n{width:26px;height:26px;border-radius:50%;background:var(--gold-grad);
+    color:var(--ink);font-size:13px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .field{margin-bottom:14px}
+  .field.full{grid-column:1/-1}
+  .field label{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:7px}
+  .field input,.field select{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line);
+    border-radius:3px;padding:13px 14px;color:var(--cream);font-family:var(--sans);font-size:14px}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--gold)}
+  .field input::placeholder{color:var(--mauve-dim)}
+
+  #payElement{margin-bottom:8px;min-height:44px}
+  .pay-hint{font-size:12px;color:var(--mauve);display:flex;align-items:center;gap:8px;margin-top:14px}
+
+  /* resumen */
+  .summary{border:1px solid var(--line);border-radius:6px;background:var(--plum-2);
+    padding:28px 26px;position:sticky;top:96px}
+  .summary h3{font-family:var(--serif);font-size:22px;font-weight:500;margin-bottom:20px}
+  .s-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+  .s-item img{width:54px;height:54px;object-fit:cover;border-radius:4px;background:var(--ink)}
+  .s-item .si{flex:1;min-width:0}
+  .s-item h4{font-family:var(--serif);font-size:15px;font-weight:500;line-height:1.2}
+  .s-item small{color:var(--mauve);font-size:12px}
+  .s-item .sp{font-size:13px;color:var(--cream);white-space:nowrap}
+  .s-line{display:flex;justify-content:space-between;padding:8px 0;color:var(--smoke);font-size:13.5px}
+  .s-line.disc{color:var(--gold)}
+  .s-total{display:flex;justify-content:space-between;align-items:baseline;
+    padding-top:16px;margin-top:8px;border-top:1px solid var(--line)}
+  .s-total span{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--mauve)}
+  .s-total b{font-family:var(--serif);font-size:30px;font-weight:500}
+
+  .s-iva{font-size:11.5px;color:var(--mauve);text-align:right;margin-top:6px;line-height:1.5}
+  /* 36.3 · la casilla de las condiciones */
+  .ck-acepto{display:flex;gap:10px;align-items:flex-start;margin:14px 0 4px;
+    font-size:12.5px;color:var(--smoke);line-height:1.5;cursor:pointer}
+  .ck-acepto input{margin-top:2px;flex:0 0 auto;width:17px;height:17px;
+    accent-color:var(--gold);cursor:pointer}
+  .ck-acepto span{min-width:0}
+  .ck-acepto.falta{color:var(--gold)}
+  .ck-acepto.falta input{outline:2px solid var(--gold);outline-offset:2px}
+  /* 35.3 · los envíos. A 320 px el plazo y el precio se ponen debajo
+     del título en vez de pelearse por la misma línea. */
+  .envios{margin-top:16px;padding-top:14px;border-top:1px solid rgba(200,169,106,.16)}
+  .envios h5{font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);margin:0 0 10px;font-weight:500}
+  .env{display:flex;gap:10px;align-items:flex-start;padding:7px 0;font-size:12.5px;
+    color:var(--smoke);line-height:1.45}
+  .env .n{flex:0 0 auto;width:20px;height:20px;border-radius:50%;
+    border:1px solid rgba(200,169,106,.4);color:var(--gold);font-size:10.5px;
+    display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .env .d{min-width:0;flex:1 1 auto}
+  .env .d b{display:block;color:var(--cream);font-weight:400;font-size:12.5px}
+  .env .d small{display:block;opacity:.75;overflow-wrap:anywhere}
+  .env .c{flex:0 0 auto;color:var(--cream);font-variant-numeric:tabular-nums}
+  .envios .nota,.envios .vent{font-size:11.5px;color:var(--mauve);line-height:1.5;margin:10px 0 0}
+  .envios .vent{margin-top:6px}
+  @media (max-width:360px){ .env{font-size:12px} .env .n{display:none} }
+  .legal-ck{font-size:11.5px;color:var(--mauve);text-align:center;margin-top:12px;line-height:1.6}
+  .legal-ck a{color:var(--gold)}
+
+  .msg{text-align:center;font-size:13px;margin-top:14px;min-height:18px}
+  .msg.err{color:#E0857C}.msg.ok{color:#8FC9A8}
+
+  .done{text-align:center;padding:90px 20px;display:none}
+  .done.show{display:block}
+  .done .inf{width:80px;height:40px;margin:0 auto 26px}
+  .done h2{font-size:clamp(34px,5vw,52px);margin-bottom:14px}
+  .done p{color:var(--smoke);max-width:440px;margin:0 auto 30px}
+  .done .oid{font-family:var(--serif);color:var(--gold);font-size:15px;margin-bottom:34px}
+
+  footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;color:var(--mauve);font-size:12px}
+  @media(max-width:880px){.layout{grid-template-columns:1fr}.summary{position:static;order:-1}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  .saved-addr{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+  .saved-addr .sa-lbl{width:100%;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mauve,#8C7482);margin-bottom:2px}
+  .saved-addr .sa{border:1px solid var(--line,rgba(200,169,106,.2));border-radius:20px;padding:8px 14px;font-size:12.5px;color:var(--smoke,#E8E0D5);cursor:pointer;transition:.2s;background:none}
+  .saved-addr .sa:hover,.saved-addr .sa.on{border-color:var(--gold,#C8A96A);color:var(--gold,#C8A96A)}
+</style>
+<link rel="stylesheet" href="movil.css?v=1" />
+
+<link rel="stylesheet" href="estetica.css?v=2" />
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#8E723F"/><stop offset="42%" stop-color="#F3E0BC"/>
+    <stop offset="72%" stop-color="#C9A96E"/><stop offset="100%" stop-color="#9C8050"/>
+  </linearGradient></defs></svg>
+
+<header><div class="wrap nav">
+  <a href="boutique.html" class="brand">
+    <svg class="inf" width="38" height="19" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>
+    Babyloon
+  </a>
+  <span class="secure">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>
+    Pago seguro con Stripe
+  </span>
+</div></header>
+
+<div id="checkoutView">
+  <div class="head">
+    <div class="wrap">
+      <span class="eyebrow">Boutique</span>
+      <h1 class="display">Finalizar <span class="gold-text">compra</span></h1>
+      <div class="steps">
+        <div class="step on" id="stepA"><b>1</b> Envío</div>
+        <div class="step" id="stepB"><b>2</b> Pago</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap layout">
+    <div>
+      <!-- envío -->
+      <div class="panel">
+        <h2><span class="n">1</span> <span data-i18n="ck_envio">Datos de envío</span></h2>
+        <div class="row">
+          <div class="field"><label data-i18n="cp_nombrec">Nombre completo</label><input id="fName" data-i18n-ph="ck_ph_nombre" placeholder="Nombre y apellidos" autocomplete="name"/></div>
+          <div class="field"><label data-i18n="ct_tel">Teléfono</label><input id="fPhone" placeholder="+34…" autocomplete="tel"/></div>
+        </div>
+        <div id="savedAddr" class="saved-addr"></div>
+        <div class="field full"><label data-i18n="ck_direccion">Dirección</label><input id="fLine1" data-i18n-ph="ck_ph_calle" placeholder="Calle, número, piso" autocomplete="address-line1"/></div>
+        <div class="row">
+          <div class="field"><label data-i18n="ct_ciudad">Ciudad</label><input id="fCity" data-i18n-ph="ct_ciudad" placeholder="Ciudad" autocomplete="address-level2"/></div>
+          <div class="field"><label data-i18n="cp_prov">Provincia</label><input id="fProvince" data-i18n-ph="cp_prov" placeholder="Provincia"/></div>
+        </div>
+        <div class="row">
+          <div class="field"><label data-i18n="ck_cp">Código postal</label><input id="fZip" placeholder="29600" autocomplete="postal-code"/></div>
+          <div class="field"><label data-i18n="ct_pais">País</label>
+            <!-- Los seis países los nombra el navegador a partir del ISO,
+                 igual que en las páginas de ciudad: `Intl.DisplayNames`
+                 los sabe en los dieciséis idiomas y aquí sólo había seis
+                 escritos en español. -->
+            <!-- 17.A9 · Aquí había SEIS países escritos a mano. En
+                 `shipping_zones` hay veinte configurados, los mismos
+                 para los tres proveedores: catorce países a los que se
+                 puede enviar y a los que esta página decía que no.
+                 Ahora la lista la da `paises_de_envio()` y el nombre de
+                 cada uno lo pone el navegador por su ISO, como en las
+                 páginas de ciudad. -->
+            <select id="fCountry">
+              <option value="ES">España</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-gold" id="toPayment" style="margin-top:8px" data-i18n="ck_continuar">Continuar al pago</button>
+      </div>
+
+      <!-- pago -->
+      <div class="panel" id="paymentPanel" style="display:none">
+        <h2><span class="n">2</span> <span data-i18n="ck_pago">Pago</span></h2>
+        <div id="payElement"></div>
+        <button class="btn-gold" id="payBtn" style="width:100%;margin-top:18px" disabled data-i18n="ck_pagar">Pagar</button>
+        <!-- 17.A6 · Esta página no enlazaba a los términos ni a la
+             privacidad. Cero enlaces, en la página donde se paga. -->
+        <p class="legal-ck" id="ckLegal">
+          <span data-i18n="ck_legal">Al pagar aceptas nuestros</span>
+          <a href="terminos.html" data-i18n="ck_terminos">Términos y Condiciones</a>
+          <span data-i18n="ck_y">y la</span>
+          <a href="privacidad.html" data-i18n="ck_privacidad">Política de Privacidad</a>.
+          <!-- 35.6 · Los plazos, el envío y las devoluciones se pueden leer
+               enteros antes de pagar, no después de reclamar. -->
+          <a href="envios-y-devoluciones.html" data-i18n="pb_titulo">Envíos y devoluciones</a>.
+        </p>
+        <!-- 36.3 · La aceptación se marca y se registra CON SU VERSIÓN.
+             El servidor la vuelve a exigir en `boutique_pedido`: esta
+             casilla se puede saltar desde fuera, eso no. -->
+        <label class="ck-acepto" for="ckAcepto">
+          <input type="checkbox" id="ckAcepto" />
+          <span data-i18n="ck_acepto">He leído y acepto las condiciones de compra de la Boutique: plazos de entrega, gastos de envío, cancelaciones y devoluciones.</span>
+        </label>
+        <div class="pay-hint">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span data-i18n="ck_tarjeta">Tus datos de tarjeta se procesan cifrados por Stripe. Babyloon no los almacena.</span>
+        </div>
+        <div class="msg" id="payMsg"></div>
+      </div>
+    </div>
+
+    <!-- resumen -->
+    <aside class="summary">
+      <h3 class="display" data-i18n="ck_tupedido">Tu pedido</h3>
+      <div id="sumItems"></div>
+      <div class="s-line"><span data-i18n="ck_subtotal">Subtotal</span><span id="sumSub">&nbsp;</span></div>
+      <div class="s-line"><span data-i18n="ck_envio_l">Envío</span><span id="sumShip" data-i18n="ck_gratis">Gratis</span></div>
+      <div class="s-line disc" id="sumDiscRow" style="display:none"><span id="sumDiscLbl" data-i18n="ck_descuento">Descuento</span><span id="sumDisc">&nbsp;</span></div>
+      <div class="s-total"><span data-i18n="ck_total">Total</span><b id="sumTotal">&nbsp;</b></div>
+      <!-- 17.A7 · La palabra «IVA» no aparecía en ninguna página de la
+           web. El tipo lo dice `vat_breakdown()` para el país de envío;
+           aquí no hay ningún porcentaje escrito. -->
+      <div class="s-iva" id="sumIva" style="display:none"></div>
+
+      <!-- 35.3 · Un carrito con productos de varios proveedores llega en
+           varios envíos, cada uno con su plazo. El cobro se reparte por
+           dentro (boutique_shipments), y esto es la otra mitad: decirlo
+           ANTES de pagar. Repartirlo y no contarlo es no repartirlo.
+           Todo sale de `cobro_de_carrito`; aquí no hay ni un número. -->
+      <div class="envios" id="bblEnvios" hidden></div>
+    </aside>
+  </div>
+</div>
+
+<!-- confirmación -->
+<div class="done" id="doneView">
+  <svg class="inf" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>
+  <span class="eyebrow" data-i18n="ck_gracias">Gracias por tu compra</span>
+  <h2 class="display" style="margin-top:14px" id="doneTit" data-i18n="ck_confirmado">Pedido confirmado</h2>
+  <p id="doneTxt" data-i18n="ck_confirmado_p">Tu pedido está confirmado y en preparación. Te avisaremos con el seguimiento
+    en cuanto salga hacia ti.</p>
+  <div class="oid" id="doneOid"></div>
+  <a href="boutique.html" class="btn-gold" data-i18n="ck_seguir">Seguir explorando</a>
+</div>
+
+<footer><div class="wrap">Babyloon · Boutique — <span data-i18n="ck_pie">pago protegido por Stripe</span> · © 2026</div></footer>
+
+<script src="seguro.js?v=1"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="conexion.js?v=1"></script>
+<!-- 35.3 · `money.js` iba al FINAL de la página y el script de arriba
+     llama a `Money.mine()` en su primera línea. Resultado: el arranque
+     del checkout reventaba con «Money is not defined» en CADA carga, y
+     como el bloque es una función async suelta, el fallo no se veía en
+     ningún sitio. Lo que no ocurría: el nombre y el teléfono no se
+     rellenaban de la ficha, las direcciones guardadas no se cargaban, y
+     el resumen se quedaba vacío hasta pulsar «Continuar al pago», que
+     es la primera vez que se vuelve a llamar. Es el mismo fallo que
+     `como-funciona.html` (32.7): una dependencia usada antes de
+     cargarla, sin ruido. -->
+<script src="money.js?v=1"></script>
+<script>
+  // ═══ CONFIG ═══
+  const SUPABASE_URL="https://qphatjblvojnfyghwmjy.supabase.co";
+  const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  // ⚠️ REEMPLAZA con tu clave PUBLICABLE de Stripe (pk_live_… o pk_test_…),
+  //    la misma que usas en stripe_service.dart de las apps.
+  const STRIPE_PK="pk_live_TU_CLAVE_PUBLICABLE_DE_STRIPE";
+
+  const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+  window.__sbClient = sb;
+  // 61.10 · Con la clave de ejemplo no se monta nada que vaya a fallar al
+  // pagar: se dice que el pago con tarjeta todavía no está activado.
+  const STRIPE_LISTO=/^pk_(test|live)_[A-Za-z0-9]{20,}$/.test(STRIPE_PK);
+  const stripe=STRIPE_LISTO ? Stripe(STRIPE_PK) : null;
+  // Las monedas que Stripe cuenta sin céntimos: la misma lista que
+  // `moneda_decimales()` en la base y que create-payment-intent.
+  const SIN_CENTIMOS=['CLP','JPY','KRW','VND','ISK','BIF','DJF','GNF','KMF',
+                      'MGA','PYG','RWF','UGX','VUV','XAF','XOF','XPF'];
+  const aMenores=(v,c)=>Math.round(Number(v)*(SIN_CENTIMOS.includes(String(c).toUpperCase())?1:100));
+  // La moneda en que se cobra. Se resuelve al cargar con my_currency,
+  // la misma funcion que usan las apps, y es la que viaja a Stripe.
+  let CUR='EUR';
+  const fmt=(v,c)=>Money.format(v, c||CUR);
+
+  /* Traduce con respaldo: si la clave no está, se pinta el español que
+     viene escrito aquí en vez de la clave en crudo. */
+  function T(k, alt){ try{ var s=BBL.t(k); return (s&&s!==k)?s:alt; }catch(_){ return alt; } }
+
+  /* 61.7 · Cada línea que el presupuesto quita lleva su motivo, en el
+     idioma de quien compra. Antes salía el código tal cual
+     («producto_no_disponible:…»), y en la UE ahora también puede salir
+     «no se vende en el país de envío» (seguridad del producto). */
+  function motivoDeFalta(f){
+    const s=String(f), i=s.indexOf(':');
+    const cod=i>0?s.slice(0,i):s, resto=i>0?s.slice(i+1):'';
+    const nombre=(cod==='producto_no_existe'||!resto)?T('ck_un_articulo','Un artículo'):resto;
+    const por={no_se_vende_en_el_pais:'todavía no se vende en el país de envío',
+               producto_no_disponible:'ya no está disponible',
+               producto_sin_precio:'no tiene precio en este momento',
+               producto_no_existe:'ya no existe'}[cod];
+    return por ? `${nombre} — ${T('ck_motivo_'+cod, por)}` : nombre;
+  }
+
+  /* ── 17.A9 · Los países a los que se envía ───────────────────────
+     La lista la da `shipping_zones` a través de `paises_de_envio()`.
+     El nombre de cada país lo pone el navegador con Intl.DisplayNames a
+     partir del ISO — es la misma regla de las páginas de ciudad: un
+     país tiene código, así que no hay que traducirlo a mano en
+     dieciséis idiomas. */
+  let PAISES = [];
+  function nombrePais(iso){
+    try{ return new Intl.DisplayNames([BBL.lang], {type:'region'}).of(iso) || iso; }
+    catch(_){ return iso; }
+  }
+  function pintaPaises(){
+    const sel=document.getElementById('fCountry');
+    if(!sel || !PAISES.length) return;
+    const antes = sel.value || 'ES';
+    sel.innerHTML = PAISES
+      .map(p=>({iso:p.iso, nombre:nombrePais(p.iso)}))
+      .sort((a,b)=>a.nombre.localeCompare(b.nombre, BBL.lang))
+      .map(p=>`<option value="${esc(p.iso)}">${esc(p.nombre)}</option>`).join('');
+    sel.value = PAISES.some(p=>p.iso===antes) ? antes : (PAISES[0]||{}).iso || 'ES';
+    pintaIva();
+  }
+
+  /* ── 17.A7 · Si el precio lleva IVA, y cuánto ────────────────────
+     El tipo sale de `vat_breakdown()` para el país de envío. Aquí no hay
+     ningún porcentaje escrito: si mañana cambia el de Portugal, cambia
+     solo. Y donde no lo conocemos —Estados Unidos, donde el impuesto es
+     estatal y se liquida distinto— se dice que no se incluye, en vez de
+     enseñar un 0 % que parecería una exención. */
+  function pintaIva(){
+    const caja=document.getElementById('sumIva');
+    const sel=document.getElementById('fCountry');
+    if(!caja||!sel) return;
+    const p = PAISES.find(x=>x.iso===sel.value);
+    if(!p){ caja.style.display='none'; return; }
+    const pct = Number(p.iva_pct);
+    let txt;
+    if(pct>0){
+      let n; try{ n=new Intl.NumberFormat(BBL.lang,{style:'percent',maximumFractionDigits:2})
+                     .format(pct/100); }catch(_){ n=pct+' %'; }
+      txt = T('ck_iva_incl','Precios con IVA incluido') + ' (' + n + ').';
+    } else {
+      txt = T('ck_iva_no','Los impuestos de tu país no están incluidos y pueden aplicarse en la entrega.');
+    }
+    if(p.dias_min && p.dias_max){
+      txt += ' ' + T('ck_envio_dias','Entrega estimada:') + ' ' + p.dias_min + '–' + p.dias_max + ' '
+           + T('ck_dias','días') + '.';
+    }
+    caja.textContent = txt;
+    caja.style.display = '';
+  }
+
+  sb.rpc('paises_de_envio').then(r=>{
+    // Si no se puede preguntar, se queda España y nada más: mejor un
+    // país que una lista vacía en la página donde se paga.
+    if(r.error || !r.data || r.data.hay!==true) return;
+    PAISES = r.data.paises || [];
+    pintaPaises();
+  }).catch(()=>{});
+
+  document.addEventListener('change', e=>{ if(e.target && e.target.id==='fCountry') pintaIva(); });
+  document.addEventListener('bbl:lang', ()=>{ pintaPaises(); });
+
+  // ── carrito ──
+  function loadCart(){try{return JSON.parse(localStorage.getItem('bbl_cart')||'[]');}catch(_){return [];}}
+  let cart=loadCart();
+  let isPrivee=false, elements=null, clientSecret=null, user=null;
+
+  // ── guard: sesión + carrito ──
+  (async ()=>{
+    const {data}=await sb.auth.getSession();
+    if(!data.session){ location.href='index.html'; return; }
+    user=data.session.user;
+    // La moneda de quien paga y los tipos de cambio, antes de pintar
+    // ningun importe. Las dos cosas salen de las mismas fuentes que
+    // usan las apps: my_currency y exchange_rates.
+    const m=await Money.mine(sb);
+    CUR=m.code;
+    await Money.loadFX(sb);
+    if(!cart.length){ location.href='boutique.html'; return; }
+    try{
+      const {data:prof}=await sb.from('profiles').select('is_privee,display_name,nombre,telefono')
+        .eq('id',user.id).maybeSingle();
+      if(prof){ isPrivee=prof.is_privee===true;
+        if(prof.display_name||prof.nombre) document.getElementById('fName').value=prof.display_name||prof.nombre;
+        if(prof.telefono) document.getElementById('fPhone').value=prof.telefono; }
+    }catch(_){}
+    try{ await loadSavedAddresses(user.id); }catch(_){}
+    renderSummary();
+    // Y en cuanto se puede, los importes de verdad: los del servidor.
+    try{ await fijarTotales(); }catch(e){ console.warn('cobro_de_carrito:', e); }
+    // 61.10 · Si se vuelve de un pago que salió de la página, se espera a
+    // que el servidor lo confirme, como si no se hubiera ido.
+    const vuelta=new URLSearchParams(location.search);
+    const cobroVuelta=vuelta.get('cobro');
+    if(cobroVuelta){
+      try{ history.replaceState(null,'',location.pathname); }catch(_){}
+      const msg=document.getElementById('payMsg');
+      document.getElementById('paymentPanel').style.display='block';
+      if(vuelta.get('redirect_status')==='failed'){
+        msg.textContent=T('ck_no_completado','El pago no se completó y no se ha cobrado nada. Puedes intentarlo de nuevo.');
+        msg.className='msg err';
+      } else {
+        try{ await terminar(cobroVuelta); }
+        catch(err){ msg.textContent=err.message||String(err); msg.className='msg err'; }
+      }
+    }
+  })();
+
+  // ── resumen + totales ──
+  // OJO: estas cifras son solo para pintar algo al instante. Las de verdad
+  // las pone el servidor en cobro_de_carrito, que valora el carrito contra
+  // boutique_products e ignora cualquier precio que salga del navegador.
+  let SUB=0, DISC=0, TOT=0, SHIP=0, DISC_TIPO=isPrivee?'privee':null;
+  let ENVIOS=[], LINEAS=[], VENTANAS=null;   // 35.3 · el reparto lo dice el servidor
+  let TOTAL_FIJADO=false;   // true cuando los importes vienen del servidor
+  function renderSummary(){
+    document.getElementById('sumItems').innerHTML=cart.map(i=>`
+      <div class="s-item"><img src="${safeUrl(i.image_url)}" alt=""/>
+        <div class="si"><h4>${esc(i.name)}</h4><small>${esc(T('ck_cantidad','Cantidad'))}: ${i.qty}</small></div>
+        <div class="sp">${Money.priceIn(i.price*i.qty, i.currency, CUR)}</div></div>`).join('');
+    // Cada linea se convierte y luego se suman ya convertidas, igual
+    // que hace cart_get en el backend: el redondeo a .99 no es lineal.
+    if(!TOTAL_FIJADO){
+      SUB=cart.reduce((a,i)=>a+Money.convert(i.price,i.currency,CUR)*i.qty,0);
+      SUB=Math.round(SUB*100)/100;
+      DISC=isPrivee?Math.round(SUB*0.07*100)/100:0;
+      TOT=Math.max(0,Math.round((SUB+SHIP-DISC)*100)/100);
+    }
+    document.getElementById('sumSub').textContent=fmt(SUB);
+    if(DISC>0){document.getElementById('sumDiscRow').style.display='flex';
+      // El servidor dice cuál de los dos descuentos ha ganado.
+      document.getElementById('sumDiscLbl').textContent =
+        DISC_TIPO==='welcome' ? T('ck_dto_bienvenida','Descuento de bienvenida')
+        : DISC_TIPO==='privee' ? T('ck_dto_privee','Descuento Privée')
+        : T('ck_descuento','Descuento');
+      document.getElementById('sumDisc').textContent='−'+fmt(DISC);}
+    document.getElementById('sumTotal').textContent=fmt(TOT);
+    pintarEnvios();
+  }
+
+  /* 35.3 · «Tu pedido llega en 3 envíos».
+     Con UN proveedor no se pinta nada: no hay nada que avisar y una
+     caja que diga «llega en 1 envío» sólo es ruido. */
+  function pintarEnvios(){
+    const caja=document.getElementById('bblEnvios');
+    if(!caja) return;
+    if(!ENVIOS.length || ENVIOS.length<2){ caja.hidden=true; caja.innerHTML=''; return; }
+    const n=ENVIOS.length;
+    // El orden: primero el que llega antes. Es lo que se pregunta.
+    const orden=ENVIOS.slice().sort((a,b)=>(Number(a.dias_max)||99)-(Number(b.dias_max)||99));
+    const filas=orden.map(function(e,i){
+      const arts=LINEAS.filter(function(l){return l.supplier===e.supplier;})
+                       .reduce(function(s,l){return s+(Number(l.quantity)||1);},0);
+      const dias=(e.dias_min!=null&&e.dias_max!=null)
+        ? con(T('ck_env_plazo','llega en {min}–{max} días'),
+              {min:num(e.dias_min),max:num(e.dias_max)}) : '';
+      const coste=Number(e.envio)>0 ? fmt(Number(e.envio))
+                                    : T('ck_envio_gratis','envío incluido');
+      return '<div class="env"><span class="n">'+num(i+1)+'</span>'+
+        '<span class="d"><b>'+esc(con(T('ck_envio_n','Envío {i} de {n}'),
+            {i:num(i+1),n:num(n)}))+'</b>'+
+        '<small>'+esc((arts===1 ? T('ck_art_1','1 artículo')
+                                : con(T('ck_arts','{n} artículos'),{n:num(arts)}))+
+                      (dias?' · '+dias:''))+'</small></span>'+
+        '<span class="c">'+esc(coste)+'</span></div>';
+    }).join('');
+    const vent = VENTANAS
+      ? '<p class="vent">'+esc(con(T('ck_ventanas',
+          'Puedes cancelar sin coste durante las primeras {h} h, y devolver hasta {d} días después de la entrega.'),
+          {h:num(VENTANAS.cancelar_horas), d:num(VENTANAS.devolver_dias)}))+'</p>'
+      : '';
+    caja.hidden=false;
+    caja.innerHTML='<h5>'+esc(con(T('ck_envios_t','Tu pedido llega en {n} envíos'),{n:num(n)}))+'</h5>'+
+      filas+
+      '<p class="nota">'+esc(T('ck_envios_nota',
+        'Cada envío sale de un almacén distinto y llega por su cuenta. El total de arriba ya los incluye todos: no se cobra nada aparte.'))+'</p>'+
+      vent;
+  }
+  /* Los huecos se rellenan sobre la frase YA traducida: partirla en
+     trozos deja frases que en otros idiomas no encajan. */
+  function con(s,v){ return String(s).replace(/\{(\w+)\}/g,function(_,k){
+    return v[k]!=null?v[k]:''; }); }
+  function num(x){ try{ return new Intl.NumberFormat(BBL.lang).format(x); }
+                   catch(_){ return String(x); } }
+
+  // Lo que hay que cobrar lo dice el servidor. Se le manda solo qué producto
+  // y cuántas unidades; el precio, el envío y el descuento los pone él.
+  async function fijarTotales(){
+    const items=cart.map(i=>({ product_id:i.id, variant_id:i.variant_id||null,
+      quantity:i.qty }));
+    const { data, error } = await sb.rpc('cobro_de_carrito',{
+      p_client_id:user.id, p_items:items,
+      p_country:(document.getElementById('fCountry')||{}).value||null });
+    if(error) throw error;
+    if(!data || data.ok!==true) throw new Error(data&&data.error||'No se pudo valorar el carrito.');
+    if(!data.n_lineas) throw new Error('Ningún producto del carrito está disponible ahora mismo.');
+    CUR  = data.moneda || CUR;
+    SUB  = Number(data.subtotal)||0;
+    SHIP = Number(data.envio)||0;
+    DISC = Number(data.descuento)||0;
+    DISC_TIPO = data.descuento_tipo || null;
+    // 35.3 · el reparto por proveedor y las ventanas que se prometen
+    ENVIOS   = Array.isArray(data.envio_detalle) ? data.envio_detalle : [];
+    LINEAS   = Array.isArray(data.lineas) ? data.lineas : [];
+    VENTANAS = data.ventanas || null;
+    TOT  = Number(data.total)||0;
+    TOTAL_FIJADO=true;
+    renderSummary();
+    const faltan=(data.faltan||[]);
+    if(faltan.length){
+      alert(T('ck_faltan','Algunos artículos ya no están disponibles y se han quitado del pedido:')
+            + '\n· ' + faltan.map(motivoDeFalta).join('\n· '));
+    }
+    return data;
+  }
+  function esc(s){return (s||'').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));}
+  /* ── Autocompletar la dirección · bloque 24.1 ──────────────────────
+     Aquí vivía el autocompletado de Google Places, con su etiqueta de
+     Google Maps al final de la página. Retirado Google del proyecto, esa
+     etiqueta pasó a pintar un cartel encima del formulario —«Esta página
+     no puede cargar Google Maps correctamente»— y el campo dejó de
+     sugerir nada.
+
+     Ahora lo monta `direccion.js`, que pregunta a la MISMA función del
+     servidor que usan las dos apps (`places-autocomplete`), y que por
+     dentro ya no habla con Google sino con Photon, el buscador de
+     direcciones de OpenStreetMap. Una sola puerta para las tres
+     superficies: el día que cambiemos de proveedor se cambia allí.
+
+     Se le pasa el país elegido para que las sugerencias sean de donde se
+     va a enviar: buscar «Gran Vía 1» sin decir el país devolvía ocho
+     calles de Italia. */
+  function montaDireccion(){
+    /* 52.5 · esta guarda se rendía SIN DECIR NADA, y ahí estuvo el fallo
+       escondido: `i18n.js` hacía `window.BBL=BBL` y borraba
+       `BBL.direccion`, así que se entraba aquí, se volvía, y el campo de
+       la calle se quedaba siendo un campo de texto normal. Sin excepción
+       y sin rastro en la consola, el único modo de enterarse era usar la
+       página — y así se enteró Andrés, no nosotros. Una protección que no
+       deja rastro cuando actúa no es una protección: es un escondite. */
+    if(!window.BBL || !BBL.direccion){
+      try{ console.warn('[Babyloon] checkout: falta BBL.direccion — el campo '+
+        'de la calle no va a sugerir nada. ¿Se cargó direccion.js? '+
+        '¿Lo pisó alguien que reasigna window.BBL?'); }catch(_){}
+      return;
+    }
+    BBL.direccion({
+      sb: sb,
+      input:     document.getElementById('fLine1'),
+      ciudad:    document.getElementById('fCity'),
+      provincia: document.getElementById('fProvince'),
+      cp:        document.getElementById('fZip'),
+      pais:      document.getElementById('fCountry'),
+      paisActual: function(){
+        const s=document.getElementById('fCountry');
+        return s && s.value ? s.value : null;
+      }
+    });
+  }
+  if(document.readyState==='loading')
+    document.addEventListener('DOMContentLoaded',montaDireccion);
+  else montaDireccion();
+  async function loadSavedAddresses(uid){
+    const box=document.getElementById('savedAddr'); if(!box)return;
+    const {data}=await sb.from('client_addresses').select('*').eq('client_id',uid).order('is_default',{ascending:false});
+    if(!data||!data.length)return;
+    box.innerHTML='<div class="sa-lbl" data-i18n="ck_dir_guardadas">Direcciones guardadas</div>'+
+      '<div id="savedAddrAviso" class="saveMsg err" style="display:none"></div>'+data.map((a,i)=>
+      `<button type="button" class="sa" data-i="${i}">${esc(a.label||a.city||'Dirección')} · ${esc((a.address_line||'').slice(0,26))}</button>`).join('');
+    box.querySelectorAll('.sa').forEach(b=>b.addEventListener('click',()=>{
+      const a=data[b.dataset.i];
+      document.getElementById('fLine1').value=a.address_line||'';
+      document.getElementById('fCity').value=a.city||'';
+      document.getElementById('fZip').value=a.postal_code||'';
+      const prov=document.getElementById('fProvince'); if(prov) prov.value=a.province||'';
+      /* 52.1 · EL PAÍS TAMBIÉN, Y ESTO NO ES UN DETALLE.
+         El envío, el IVA y los días de entrega salen TODOS del país
+         (17.A6, 17.A9, 34.1). Antes se rellenaban calle, ciudad y código
+         postal y el país se quedaba como estuviera: quien guardaba una
+         dirección de Lisboa con España puesta se llevaba el envío y el
+         IVA españoles a Portugal. No reventaba nada — cobraba mal, en
+         silencio. Y si la dirección es vieja y no tiene país, no se pisa
+         el que haya: se avisa. */
+      const selP=document.getElementById('fCountry');
+      if(selP){
+        if(a.country_code && [...selP.options].some(o=>o.value===a.country_code)){
+          selP.value=a.country_code;
+          selP.dispatchEvent(new Event('change',{bubbles:true}));
+        } else if(!a.country_code){
+          const av=document.getElementById('savedAddrAviso');
+          if(av){ av.textContent=T('ck_dir_sin_pais','Esta dirección se guardó sin país. Comprueba el país de envío antes de pagar.'); av.style.display='block'; }
+        }
+      }
+      box.querySelectorAll('.sa').forEach(x=>x.classList.toggle('on',x===b));
+    }));
+  }
+
+  // ── paso 1 → 2: valorar y montar el formulario de pago ──
+  // 61.10 · Ningún pedido nace pagado sin cobro. Aquí ya no se crea nada
+  // que cobre: el formulario de Stripe se monta SIN PaymentIntent (modo
+  // diferido) por el importe que acaba de valorar el servidor. El cobro lo
+  // abre el servidor al pulsar «Pagar», después de aceptar las
+  // condiciones, y el pedido lo escribe la confirmación del pago en el
+  // servidor. Antes se creaba aquí un PaymentIntent por el importe que
+  // mandaba el navegador, y al pagar el navegador escribía el pedido con
+  // un PaymentIntent que nadie comprobaba.
+  const APARIENCIA={
+    theme:'night',
+    variables:{ colorPrimary:'#C8A96A', colorBackground:'#1B1219',
+      colorText:'#F9F5EE', colorTextSecondary:'#8C7482',
+      colorDanger:'#E0857C', fontFamily:'Jost, sans-serif', borderRadius:'3px' },
+    rules:{ '.Input':{ border:'1px solid rgba(200,169,106,.16)' },
+      '.Input:focus':{ border:'1px solid #C8A96A', boxShadow:'none' },
+      '.Label':{ color:'#C8A96A', textTransform:'uppercase',
+        fontSize:'10px', letterSpacing:'.16em' } }
+  };
+  document.getElementById('toPayment').addEventListener('click',async()=>{
+    const req=['fName','fPhone','fLine1','fCity','fZip'];
+    for(const id of req){ const el=document.getElementById(id);
+      if(!el.value.trim()){ el.focus(); el.style.borderColor='#E0857C';
+        setTimeout(()=>el.style.borderColor='',1500); return; } }
+    const btn=document.getElementById('toPayment');
+    btn.disabled=true; btn.textContent=T('ck_preparando','Preparando el pago…');
+    try{
+      if(!STRIPE_LISTO) throw new Error(T('ck_sin_stripe',
+        'El pago con tarjeta en la web todavía no está activado. Puedes comprar desde la app.'));
+      // El importe que se enseña lo pone el servidor, con la dirección de ahora.
+      await fijarTotales();
+      if(!elements){
+        elements=stripe.elements({ mode:'payment', amount:aMenores(TOT,CUR),
+          currency:CUR.toLowerCase(), appearance:APARIENCIA });
+        const pe=elements.create('payment',{ layout:'tabs' });
+        pe.mount('#payElement');
+        pe.on('ready',()=>{ acomodarPago(); });
+      } else {
+        elements.update({ amount:aMenores(TOT,CUR), currency:CUR.toLowerCase() });
+      }
+      document.getElementById('paymentPanel').style.display='block';
+      document.getElementById('stepB').classList.add('on');
+      document.getElementById('paymentPanel').scrollIntoView({behavior:'smooth',block:'center'});
+      btn.textContent='✓ '+T('ck_pago_preparado','Pago preparado');
+    }catch(err){
+      btn.disabled=false; btn.textContent=T('ck_continuar','Continuar al pago');
+      alert(T('ck_no_inicia','No se pudo iniciar el pago:')+' '+(err.message||err));
+    }
+  });
+  // Si se cambia la dirección después, se puede volver a valorar.
+  ['fLine1','fCity','fProvince','fZip','fCountry'].forEach(function(id){
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('change',function(){
+      const b=document.getElementById('toPayment');
+      if(b && b.disabled && elements){ b.disabled=false; b.textContent=T('ck_continuar','Continuar al pago'); }
+    });
+  });
+
+  /* 36.3 · Sin la casilla no se paga. Y no se esconde el botón: se
+     deja visible y desactivado, para que se vea QUÉ falta en vez de
+     buscar un botón que no está. */
+  let PAGO_LISTO = false;
+  function acomodarPago(){
+    PAGO_LISTO = true;
+    const b=document.getElementById('payBtn'), c=document.getElementById('ckAcepto');
+    if(b) b.disabled = !(c && c.checked);
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    const c=document.getElementById('ckAcepto');
+    if(c) c.addEventListener('change', function(){
+      document.querySelector('.ck-acepto')?.classList.remove('falta');
+      if(PAGO_LISTO) acomodarPago();
+    });
+  });
+
+  // ── pagar ──
+  // 61.10 · 1) las condiciones, aceptadas y registradas con su versión;
+  // 2) el servidor abre el COBRO con lo que él valora (con tarjeta,
+  // boutique_pedido no escribe el pedido); 3) el PaymentIntent de ESE
+  // cobro; 4) Stripe cobra; 5) se espera a que el servidor confirme el
+  // pago y escriba el pedido. Si lo que el servidor valora no es lo que se
+  // está enseñando (se cambió la dirección), se enseña y no se cobra.
+  let COBRO=null;   // {id, total, moneda, menor, firma, secreto}
+  function direccion(){
+    return { name:val('fName'), phone:val('fPhone'), line1:val('fLine1'),
+      city:val('fCity'), province:val('fProvince'), zip:val('fZip'),
+      country_code:val('fCountry') };
+  }
+  // El cuerpo de una respuesta 4xx de una función: el motivo viene ahí.
+  async function cuerpoDe(r){
+    if(r && r.error){
+      try{ const b=await r.error.context.json(); if(b) return b; }catch(_){}
+      return { error:String(r.error.message||r.error) };
+    }
+    return r ? r.data : null;
+  }
+  document.getElementById('payBtn').addEventListener('click',async()=>{
+    const btn=document.getElementById('payBtn'), msg=document.getElementById('payMsg');
+    msg.className='msg'; msg.textContent=''; btn.disabled=true;
+    btn.textContent=T('ck_procesando','Procesando…');
+    try{
+      const c=document.getElementById('ckAcepto');
+      if(!c || !c.checked){
+        document.querySelector('.ck-acepto')?.classList.add('falta');
+        throw new Error(T('ck_falta_acepto','Marca la casilla de las condiciones para poder pagar.'));
+      }
+      if(!stripe || !elements) throw new Error(T('ck_sin_stripe',
+        'El pago con tarjeta en la web todavía no está activado. Puedes comprar desde la app.'));
+      // Lo primero, nada más pulsar: Stripe comprueba la tarjeta (y los
+      // monederos como Apple Pay lo exigen dentro del gesto de pulsar).
+      const { error: errForm } = await elements.submit();
+      if(errForm) throw errForm;
+
+      // Se registra ANTES de cobrar: si se cobra, consta qué se aceptó.
+      const { error: errAc } = await sb.rpc('accept_boutique_policies',
+        { p_user_id:user.id, p_order_id:null });
+      if(errAc) throw errAc;
+
+      const address=direccion();
+      const items=cart.map(i=>({ product_id:i.id, variant_id:i.variant_id||null,
+        quantity:i.qty }));
+      const firma=JSON.stringify({address, items});
+      if(!COBRO || COBRO.firma!==firma){
+        // El cobro: lo que hay que pagar, valorado por el servidor.
+        const { data, error } = await sb.rpc('boutique_pedido',{
+          p_client_id:user.id, p_items:items, p_address:address,
+          p_payment_method:'card', p_payment_intent:null });
+        if(error) throw error;
+        if(!data || data.pago_pendiente!==true || !data.cobro_id){
+          throw new Error((data && (data.detalle||data.mensaje)) ||
+            T('ck_cobro_no_abierto','No hemos podido preparar el pago. No se ha cobrado nada.'));
+        }
+        COBRO={ id:data.cobro_id, total:Number(data.total), moneda:String(data.moneda||CUR).toUpperCase(),
+                menor:Number(data.importe_menor), firma, secreto:null };
+        const cambia = COBRO.moneda!==String(CUR).toUpperCase() || Math.abs(COBRO.total-TOT)>0.004;
+        // El resumen, con lo que se va a cobrar de verdad.
+        CUR=COBRO.moneda; TOT=COBRO.total;
+        if(data.subtotal!=null) SUB=Number(data.subtotal)||0;
+        SHIP=Number(data.envio)||0; DISC=Number(data.descuento)||0;
+        TOTAL_FIJADO=true; renderSummary();
+        if(cambia){
+          elements.update({ amount:COBRO.menor, currency:COBRO.moneda.toLowerCase() });
+          throw new Error(T('ck_total_cambio',
+            'El total ha cambiado con la dirección de envío. No se ha cobrado nada: revísalo y vuelve a pulsar el botón de pago.'));
+        }
+      }
+      if(!COBRO.secreto){
+        // El PaymentIntent de ESE cobro: el importe y la moneda los pone él.
+        const d=await cuerpoDe(await sb.functions.invoke('create-payment-intent',{
+          body:{ type:'boutique', client_id:user.id, cobro_id:COBRO.id,
+                 currency:COBRO.moneda.toLowerCase(),
+                 description:'Compra Boutique Babyloon (web)' }}));
+        if(!d || d.error || !d.client_secret){
+          throw new Error((d && (d.message||d.error)) ||
+            T('ck_cobro_no_abierto','No hemos podido preparar el pago. No se ha cobrado nada.'));
+        }
+        COBRO.secreto=d.client_secret;
+      }
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements, clientSecret:COBRO.secreto, redirect:'if_required',
+        confirmParams:{ return_url: location.origin+location.pathname+
+          '?cobro='+encodeURIComponent(COBRO.id) } });
+      if(error) throw error;
+      if(!paymentIntent || (paymentIntent.status!=='succeeded' && paymentIntent.status!=='processing')){
+        throw new Error(T('ck_no_completado','El pago no se completó y no se ha cobrado nada. Puedes intentarlo de nuevo.'));
+      }
+      await terminar(COBRO.id);
+    }catch(err){
+      msg.textContent=err.message||T('ck_no_completado','El pago no se completó y no se ha cobrado nada. Puedes intentarlo de nuevo.');
+      msg.classList.add('err');
+      btn.disabled=false; btn.textContent=T('ck_pagar','Pagar');
+    }
+  });
+
+  // ── esperar a que el servidor confirme el pago ──
+  //  El pedido lo escribe el webhook de Stripe, no esta página. Se pregunta
+  //  por el cobro hasta que deja de estar pendiente (suelen ser segundos).
+  async function esperarCobro(cobroId){
+    const fin=Date.now()+30000; let ult=null;
+    while(Date.now()<fin){
+      try{
+        const { data }=await sb.rpc('estado_de_mi_cobro',{ p_cobro:cobroId });
+        if(data){ ult=data; if(data.estado && data.estado!=='pendiente') return data; }
+      }catch(_){}
+      await new Promise(r=>setTimeout(r,1500));
+    }
+    return ult;
+  }
+  async function terminar(cobroId){
+    const msg=document.getElementById('payMsg');
+    msg.className='msg ok'; msg.textContent=T('ck_confirmando','Pago recibido. Confirmando tu pedido…');
+    const est=await esperarCobro(cobroId);
+    const estado=(est && est.estado) || 'pendiente';
+    if(estado!=='pagado' && estado!=='pendiente'){
+      // fallido o caducado: el servidor devuelve el pago entero. El
+      // carrito se queda, y un nuevo intento abre un cobro nuevo.
+      COBRO=null;
+      throw new Error(T('ck_devuelto','No hemos podido completar el pedido. Te devolvemos el importe íntegro; puede tardar unos días en verse en tu cuenta.'));
+    }
+    // Cobrado: el carrito se vacía para no pagarlo dos veces.
+    try{ localStorage.removeItem('bbl_cart'); }catch(_){}
+    const tit=document.getElementById('doneTit'), txt=document.getElementById('doneTxt');
+    const oid=document.getElementById('doneOid');
+    if(estado==='pagado'){
+      const p=(est && est.pedido) || {};
+      oid.textContent = p.order_id
+        ? (T('ck_n_pedido','Nº de pedido')+': '+String(p.order_id).slice(0,8).toUpperCase()) : '';
+      // La conversión de la boutique, con lo que cobró el servidor.
+      try{ if(window.BBLPresencia) BBLPresencia.evento('pedido_hecho',
+        {pedido:String(p.order_id||'').slice(0,8), total:est.total, moneda:est.moneda,
+         articulos:cart.reduce(function(n,i){return n+(i.qty||1);},0)}); }catch(_){}
+    } else {
+      // Cobrado y todavía sin confirmar: se dice eso, no «confirmado».
+      if(tit){ tit.setAttribute('data-i18n','ck_recibido'); tit.textContent=T('ck_recibido','Pago recibido'); }
+      if(txt){ txt.setAttribute('data-i18n','ck_recibido_p'); txt.textContent=T('ck_recibido_p',
+        'Estamos confirmando tu pedido. En unos minutos lo verás en tu cuenta con su número, y te avisaremos con el seguimiento en cuanto salga.'); }
+      oid.textContent='';
+    }
+    document.getElementById('checkoutView').style.display='none';
+    document.getElementById('doneView').classList.add('show');
+    window.scrollTo(0,0);
+  }
+  // 35.3 · al cambiar de idioma, el aviso de los envíos se vuelve a
+  // escribir: sus frases son nuestras, sus cifras no cambian.
+  document.addEventListener('bbl:lang', pintarEnvios);
+
+  function val(id){return document.getElementById(id).value.trim();}
+</script>
+<script src="cookies.js?v=2"></script>
+<script src="presencia.js?v=2"></script>
+<script src="lujo.js?v=1"></script>
+<script src="i18n.js?v=10"></script>
+<script src="direccion.js?v=3"></script>
+<script src="i18n-direccion.js?v=1"></script>
+<script src="i18n-paginas.js?v=4"></script>
+<script src="i18n-politicas.js?v=1"></script>
+<script src="i18n-seguridad.js?v=1"></script>
+<script src="i18n-cobro.js?v=1"></script>
+<script src="i18n-auth.js?v=1"></script>
+<script src="i18n-auth-extra.js?v=2"></script>
+<script>
+/* Los seis países del desplegable. El navegador los sabe en los dieciséis
+   idiomas a partir del ISO; aquí estaban escritos en español y ahí se
+   quedaban. Si el navegador es viejo y no tiene `Intl.DisplayNames`, se
+   quedan como estaban: se degrada, no se rompe. */
+(function(){
+  function pinta(){
+    var sel = document.getElementById('fCountry');
+    if (!sel || typeof Intl === 'undefined' || !Intl.DisplayNames) return;
+    try {
+      var l = (window.BBL && BBL.lang) || document.documentElement.lang || 'es';
+      var n = new Intl.DisplayNames([l], { type: 'region' });
+      var previo = sel.value;
+      for (var i = 0; i < sel.options.length; i++) {
+        var o = sel.options[i], nom = n.of(o.value);
+        if (nom) o.textContent = nom;
+      }
+      // Y ordenados por el alfabeto de quien mira, no por el español.
+      var ops = Array.prototype.slice.call(sel.options);
+      ops.sort(function(a,b){ return a.textContent.localeCompare(b.textContent, l); });
+      ops.forEach(function(o){ sel.appendChild(o); });
+      sel.value = previo;
+    } catch (_) {}
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pinta);
+  else pinta();
+  document.addEventListener('bbl:lang', pinta);
+})();
+</script>
+<script src="auth.js?v=5"></script>
+<script src="i18n-aceptacion.js?v=1"></script>
+<script src="aceptacion.js?v=1"></script>
+</body>
+</html>

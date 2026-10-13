@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="referrer" content="no-referrer" />
+<title>Babyloon · Escanear recibo</title>
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<script>
+  /* El ordenador pasa el idioma en el QR (&l=xx). Se fija ANTES de cargar i18n.js,
+     que lo lee de localStorage: así el móvil habla como ella aunque nunca haya
+     entrado a la web desde este teléfono. */
+  try { var l=new URLSearchParams(location.search).get('l'); if(l && /^[a-z]{2}$/.test(l)) localStorage.setItem('bbl_lang', l); } catch(_){}
+</script>
+<script src="i18n.js?v=10"></script>
+<script src="i18n-gestor.js?v=2"></script>
+<style>
+  :root{--fondo:#140D12;--panel:#1B1219;--oro:#C8A96A;--oro2:#E3CB95;--crema:#EDE5DA;--gris:#A89BA3;--bien:#7FB894;--mal:#E07A7A}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--fondo);color:var(--crema);font:400 16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  body{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:calc(28px + env(safe-area-inset-top,0px)) 20px calc(28px + env(safe-area-inset-bottom,0px))}
+  .marca{font-family:'Cormorant Garamond',Georgia,serif;font-size:30px;letter-spacing:.06em;color:var(--oro);margin:6px 0 2px}
+  .sub{color:var(--gris);font-size:14px;text-align:center;max-width:34ch;margin:0 0 26px}
+  .caja{width:100%;max-width:420px;background:var(--panel);border:1px solid rgba(200,169,106,.25);border-radius:18px;padding:22px}
+  .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:14px;padding:18px;font:600 17px/1 inherit;cursor:pointer;margin-bottom:12px}
+  .oro{background:linear-gradient(135deg,var(--oro2),var(--oro));color:#1B1219}
+  .linea{background:transparent;border:1px solid rgba(200,169,106,.45);color:var(--oro)}
+  .btn:disabled{opacity:.5}
+  input[type=file]{display:none}
+  .estado{min-height:24px;text-align:center;font-size:15px;margin-top:6px}
+  .bien{color:var(--bien)} .mal{color:var(--mal)}
+  .lista{margin:18px 0 0;padding:0;list-style:none}
+  .lista li{display:flex;justify-content:space-between;gap:10px;border-top:1px solid rgba(255,255,255,.07);padding:10px 2px;font-size:14px}
+  .lista .dato{color:var(--gris)}
+  .pie{color:var(--gris);font-size:12.5px;text-align:center;max-width:36ch;margin-top:22px}
+  .spin{display:inline-block;vertical-align:-3px;margin-right:8px;width:16px;height:16px;border:2px solid rgba(200,169,106,.3);border-top-color:var(--oro);border-radius:50%;animation:g .8s linear infinite}
+  @keyframes g{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+  <div class="marca">Babyloon</div>
+  <p class="sub" id="sub"></p>
+
+  <div class="caja">
+    <button class="btn oro" id="bFoto"></button>
+    <button class="btn linea" id="bArchivo"></button>
+    <input type="file" id="iFoto" accept="image/*" capture="environment" />
+    <input type="file" id="iArchivo" accept="image/*,application/pdf" />
+    <div class="estado" id="estado"></div>
+    <ul class="lista" id="lista"></ul>
+  </div>
+  <p class="pie" id="pie"></p>
+
+<script>
+(function(){
+  'use strict';
+  var SUPABASE_URL="https://qphatjblvojnfyghwmjy.supabase.co";
+  var SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  var FUNCION=SUPABASE_URL+'/functions/v1/scan-receipt';
+  var T=function(k,alt){ try{ var s=BBL.t(k); return (s&&s!==k)?s:alt; }catch(_){ return alt; } };
+  var conDatos=function(t,v){ return String(t).replace(/\{(\w+)\}/g,function(_,k){ return v[k]!=null?v[k]:''; }); };
+  var esc=function(s){ return (s||'').toString().replace(/[<>&"]/g,function(c){ return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]; }); };
+  var el=function(id){ return document.getElementById(id); };
+
+  var token=new URLSearchParams(location.search).get('t')||'';
+  el('sub').textContent=T('sc_sub','Haz una foto a tu recibo o factura. Aparecerá al momento en tu gestor del ordenador.');
+  el('bFoto').textContent=T('sc_foto','Hacer foto del recibo');
+  el('bArchivo').textContent=T('sc_archivo','Elegir foto o PDF');
+  el('pie').textContent=T('sc_pie','Este enlace es temporal y sólo sirve para tu cuenta. Caduca en 15 minutos.');
+
+  var ERRORES={
+    qr_no_valido:T('sc_e_qr','Este código no es válido. Genera uno nuevo desde el ordenador.'),
+    qr_caducado:T('sc_e_caducado','Este código ha caducado. Genera uno nuevo desde el ordenador.'),
+    limite_de_fotos:T('sc_e_limite','Has llegado al máximo de fotos de este código. Genera uno nuevo.'),
+    formato_no_admitido:T('sc_e_formato','Formato no admitido. Usa una foto (JPG, PNG) o un PDF.'),
+    archivo_demasiado_grande:T('sc_e_grande','El archivo es demasiado grande (máx. 8 MB).'),
+    gestor_no_incluido:T('sc_e_gestor','El gestor no está activo en tu cuenta.')
+  };
+  function estado(txt,clase,cargando){
+    el('estado').className='estado '+(clase||'');
+    el('estado').innerHTML=(cargando?'<span class="spin"></span>':'')+esc(txt);
+  }
+  if(!/^[a-f0-9]{64}$/.test(token)){
+    el('bFoto').disabled=true; el('bArchivo').disabled=true;
+    estado(ERRORES.qr_no_valido,'mal'); return;
+  }
+
+  /* Las fotos del móvil pesan mucho y a veces vienen en HEIC: se redibujan en
+     un lienzo a 1800 px como JPEG. Nítido para leer el recibo y ligero de subir. */
+  function comprimir(file){
+    return new Promise(function(ok,ko){
+      var url=URL.createObjectURL(file), img=new Image();
+      img.onload=function(){
+        var max=1800, w=img.naturalWidth, h=img.naturalHeight, k=Math.min(1,max/Math.max(w,h));
+        var cv=document.createElement('canvas'); cv.width=Math.round(w*k); cv.height=Math.round(h*k);
+        cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+        URL.revokeObjectURL(url);
+        cv.toBlob(function(b){ b?ok(b):ko(new Error('formato_no_admitido')); },'image/jpeg',0.85);
+      };
+      img.onerror=function(){ URL.revokeObjectURL(url); ko(new Error('formato_no_admitido')); };
+      img.src=url;
+    });
+  }
+  function aBase64(blob){
+    return new Promise(function(ok,ko){
+      var r=new FileReader(); r.onload=function(){ ok(String(r.result).split(',')[1]); }; r.onerror=ko; r.readAsDataURL(blob);
+    });
+  }
+
+  var subidas=0;
+  async function enviar(file){
+    if(!file) return;
+    el('bFoto').disabled=true; el('bArchivo').disabled=true;
+    estado(T('sc_enviando','Enviando y leyendo el recibo…'),'',true);
+    try{
+      var esPdf=file.type==='application/pdf';
+      var blob=esPdf?file:await comprimir(file);
+      if(blob.size>8*1024*1024) throw new Error('archivo_demasiado_grande');
+      var r=await fetch(FUNCION,{method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},
+        body:JSON.stringify({token:token,file_base64:await aBase64(blob),mime:esPdf?'application/pdf':'image/jpeg',name:file.name||'foto'})});
+      var d=await r.json().catch(function(){ return {}; });
+      if(!d.ok) throw new Error(d.error||'error');
+      subidas++;
+      var li=document.createElement('li');
+      if(d.duplicado){
+        li.innerHTML='<span>'+esc(T('sc_dup','Este recibo ya estaba subido'))+'</span>';
+      } else {
+        var rs=d.resumen||{};
+        li.innerHTML='<span>'+esc(rs.proveedor||T('sc_recibo','Recibo'))+'</span><span class="dato">'+
+          esc([rs.fecha||'', rs.total!=null?(Number(rs.total).toFixed(2)+' €'):''].filter(Boolean).join(' · '))+'</span>';
+      }
+      el('lista').prepend(li);
+      estado(conDatos(T('sc_ok','Listo. {n} enviado(s). Puedes seguir con otro.'),{n:subidas}),'bien');
+    }catch(e){
+      estado(ERRORES[e.message]||T('sc_e_general','No se pudo enviar. Comprueba la conexión e inténtalo otra vez.'),'mal');
+    }finally{
+      el('bFoto').disabled=false; el('bArchivo').disabled=false;
+      el('iFoto').value=''; el('iArchivo').value='';
+    }
+  }
+  el('bFoto').onclick=function(){ el('iFoto').click(); };
+  el('bArchivo').onclick=function(){ el('iArchivo').click(); };
+  el('iFoto').onchange=function(e){ enviar(e.target.files[0]); };
+  el('iArchivo').onchange=function(e){ enviar(e.target.files[0]); };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(self), camera=(self), microphone=(self), payment=(self), interest-cohort=()
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://js.stripe.com https://*.js.stripe.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://qphatjblvojnfyghwmjy.supabase.co wss://qphatjblvojnfyghwmjy.supabase.co https://cdn.jsdelivr.net https://api.stripe.com https://link.com https://*.link.com https://*.livekit.cloud wss://*.livekit.cloud; frame-src https://js.stripe.com https://*.js.stripe.com https://hooks.stripe.com https://link.com https://*.link.com; worker-src 'self' blob:; upgrade-insecure-requests
+
+# ══════════════════════════════════════════════════════════════════════
+# Por qué está escrito así
+#
+# PERMISSIONS-POLICY
+# Antes decía `geolocation=(), camera=(), microphone=()`, que es
+# «bloqueado para TODOS, nosotros incluidos». Y la web promete
+# geolocalización en cómo-funciona, y las clases en directo necesitan
+# cámara y micrófono. `(self)` bloquea a los terceros incrustados y nos
+# deja a nosotros, que es lo que se quería decir.
+# `interest-cohort=()` desactiva el seguimiento por cohortes del
+# navegador: no lo usamos y no queremos que nos lo atribuyan.
+#
+# CONTENT-SECURITY-POLICY
+# Los orígenes salen de contar los que la web usa de verdad, no de una
+# lista de manual:
+#   (Google Fonts, fuera)                    las dos tipografías se sirven
+#                                             desde este dominio desde el
+#                                             bloque 17.A8: pedirlas a
+#                                             Google mandaba la IP de quien
+#                                             entra a un tercero antes de
+#                                             preguntarle nada, y eso no lo
+#                                             arregla ninguna casilla. Si
+#                                             vuelve a aparecer una petición
+#                                             a Google, la CSP la bloquea
+#   cdn.jsdelivr.net                          SÓLO livekit-client, y sólo en
+#                                             masterclass.html — supabase-js
+#                                             dejó de venir de fuera en 15.5
+#                                             y se sirve desde este dominio
+#   qphatjblvojnfyghwmjy.supabase.co          base, auth, storage y realtime (wss)
+#   js.stripe.com / api.stripe.com            el pago
+#   *.js.stripe.com · hooks.stripe.com        61.10 · lo que pide la guía de
+#   link.com · *.link.com                     seguridad de Stripe para Stripe.js:
+#                                             hooks.stripe.com es la ventana del
+#                                             3D Secure —sin ella, una tarjeta
+#                                             que pide confirmación al banco no
+#                                             se puede pagar en la web—, y
+#                                             link.com la de Link, que el
+#                                             formulario de pago enseña si está
+#                                             activado en la cuenta de Stripe
+#   (Google Maps, fuera)                     el autocompletado de dirección
+#                                             ya no pasa por Google: lo
+#                                             sirve nuestra propia función
+#                                             `places-autocomplete`, que
+#                                             habla con Photon (OSM). Por
+#                                             eso `maps.googleapis.com`
+#                                             sale de aquí: si vuelve a
+#                                             aparecer una llamada a
+#                                             Google, la CSP la bloquea y
+#                                             nos enteramos (bloque 24.1).
+#   *.livekit.cloud                           la sala de las clases en vivo
+#
+# `img-src` y `media-src` admiten cualquier https a propósito: las fotos
+# de producto vienen de los proveedores (EPROLO, Shopify, CJ) y los
+# vídeos del almacenamiento, y sus dominios cambian. Cerrarlos dejaría el
+# catálogo sin fotos.
+#
+# `script-src` conserva 'unsafe-inline' porque cada página lleva su
+# bloque <script> escrito dentro. Eso significa —y conviene decirlo sin
+# adornos— que ESTA CABECERA NO IMPIDE UN XSS de tipo `onerror=`. Lo que
+# sí impide es cargar un script de un dominio que no esté en la lista y,
+# sobre todo, `connect-src` impide **enviar** los datos robados a
+# ninguna parte que no sea nuestra. La CSP es la segunda línea; el
+# arreglo de verdad es escapar bien, que es el bloque 16.6.
+# Quitar 'unsafe-inline' exige sacar los scripts en línea a ficheros o
+# firmarlos con nonce, y un Worker de sólo archivos estáticos no puede
+# poner un nonce distinto por respuesta. Queda anotado.
+#
+# `frame-ancestors 'self'` es la versión moderna de X-Frame-Options; se
+# dejan las dos porque los navegadores viejos sólo entienden la vieja.
+#
+# PENDIENTE (16.12): con supabase-js ya local, el ÚNICO script de terceros
+# que queda es el SDK de vídeo, y sólo lo pide `masterclass.html`. Se puede
+# sacar `cdn.jsdelivr.net` de `script-src` en esta regla general y darle a
+# esa página su propia cabecera. Eso deja el checkout —la página donde más
+# importa— sin admitir un solo script ajeno. No se hace aquí porque obliga
+# a repetir la CSP entera en la regla de masterclass, y una CSP duplicada
+# se desincroniza; va junto con el resto del repaso del bloque 16.12.
+#
+# Falta aquí `Cache-Control`. No se pone en este cambio a propósito:
+# marcar los .js como inmutables sin repasar antes los `?v=` de las 200
+# etiquetas de script dejaría a la gente con ficheros viejos. Va en el
+# bloque 21.5, con ese repaso delante.
+# ══════════════════════════════════════════════════════════════════════

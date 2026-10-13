@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Seguridad | Babyloon</title>
+<meta name="description" content="Qué hacemos antes, durante y después de un servicio a domicilio: quién puede trabajar en Babyloon, qué pasa con tu dinero, qué pasa con tus datos y a quién reclamas." />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0D0B0F" />
+<link rel="canonical" href="https://babyloon.app/seguridad.html" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Babyloon" />
+<meta property="og:title" content="Seguridad | Babyloon" />
+<meta property="og:description" content="Va a entrar alguien en tu casa. Esto es lo que hacemos antes." />
+<meta property="og:url" content="https://babyloon.app/seguridad.html" />
+<meta property="og:image" content="https://babyloon.app/og-image.png" />
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<link href="compania.css?v=5" rel="stylesheet" />
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#8E723F"/><stop offset=".42" stop-color="#F3E0BC"/>
+<stop offset=".72" stop-color="#C9A96E"/><stop offset="1" stop-color="#9C8050"/></linearGradient></defs></svg>
+
+<header><div class="wrap nav">
+  <a href="index.html" class="brand"><svg class="inf" width="36" height="18" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>Babyloon</a>
+  <a href="index.html" class="back" data-i18n="cp_volver">← Inicio</a>
+</div></header>
+
+<section class="hero-compania">
+  <svg class="marca-cartel" viewBox="0 0 120 60" aria-hidden="true"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>
+  <div class="wrap">
+    <div class="hero-texto">
+    <span class="eyebrow rv" data-i18n="sg_eyebrow">Seguridad</span>
+    <h1 data-i18n="sg_h1">Va a entrar alguien en tu casa. Esto es lo que hacemos antes.</h1>
+    <p class="lead" data-i18n="sg_lead">Un servicio a domicilio no es una entrega: es una persona en tu salón, a veces sola contigo, durante dos horas. Esta página cuenta qué exigimos antes de que llegue, qué pasa mientras está ahí y qué pasa con tu dinero y tus datos. Sin adjetivos: lo que está puesto y funcionando.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 1 · DÓNDE ESTÁ TU DINERO · bloque 54.1 ────────────────────────
+     La pieza principal, y va la primera porque es la pregunta que de
+     verdad se hace quien está a punto de pagar por adelantado un
+     servicio que todavía no ha recibido.
+
+     El dinero se queda quieto en «retenido» durante tres de los cinco
+     momentos —incluido todo el servicio— y sólo se mueve cuando la
+     clienta confirma. Eso, escrito en una viñeta, es una frase más;
+     visto parado mientras pasa el servicio, es el argumento entero.
+
+     El contenido de dentro está AQUÍ y no sólo en el JavaScript: sin
+     JavaScript se lee igual, y `montarDinero()` lo sustituye por la
+     versión que se toca. Un hueco vacío en la sección que explica dónde
+     está tu dinero sería el peor sitio de la web para un hueco.
+     ────────────────────────────────────────────────────────────── -->
+<section class="sec sec-dinero"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="sg_din_eyebrow">Tu dinero</span>
+  <h2 class="rv" data-i18n="sg_din_h2">Dónde está tu dinero en cada momento</h2>
+  <p class="rv" data-i18n="sg_din_p">Pagas al aceptar una oferta, antes de que nadie haya hecho nada todavía. Esto es lo que pasa con ese dinero desde entonces. No hay una cuarta bolsa: o está en tu tarjeta, o está retenido, o está en su cuenta.</p>
+
+  <div class="dinero rv" id="dinero">
+    <ol class="plano">
+      <li><b>01</b><h3 data-i18n="sg_din_reserva_t">Pides el servicio</h3><p data-i18n="sg_din_reserva_d">No se cobra nada. Quienes trabajan en tu zona reciben la solicitud y hacen su oferta.</p></li>
+      <li><b>02</b><h3 data-i18n="sg_din_acepta_t">Aceptas una oferta</h3><p data-i18n="sg_din_acepta_d">Aquí se autoriza el cargo y el importe queda retenido. Retenido no es entregado: no está en su cuenta.</p></li>
+      <li><b>03</b><h3 data-i18n="sg_din_servicio_t">Durante el servicio</h3><p data-i18n="sg_din_servicio_d">El dinero sigue exactamente donde estaba. Que el servicio haya empezado, o incluso terminado, no mueve nada.</p></li>
+      <li><b>04</b><h3 data-i18n="sg_din_confirma_t">Confirmas tú</h3><p data-i18n="sg_din_confirma_d">El servicio no lo cierra quien lo presta: lo cierras tú. Y hasta que lo haces, el dinero no se mueve.</p></li>
+      <li><b>05</b><h3 data-i18n="sg_din_pago_t">Se libera el pago</h3><p data-i18n="sg_din_pago_d">Ahora sí sale de la retención y llega a su cuenta de cobro, que está a su nombre. La garantía sigue corriendo después de esto.</p></li>
+    </ol>
+  </div>
+
+  <p class="nota-suelta rv" data-i18n="sg_din_nota">Si no confirmas, el sistema cierra el servicio solo pasado el plazo y te avisa de que lo ha hecho. Y los datos de tu tarjeta no pasan por nuestros servidores en ningún momento: los procesa Stripe.</p>
+</div></section>
+
+<!-- ── 2 · El viaje de un servicio · bloque 46.9b ────────────────────
+     Estaba la ÚLTIMA de la página, debajo de la nota de cierre. Era la
+     única pieza que se tocaba en toda la página y estaba donde no baja
+     nadie. Sube aquí, que es su sitio: después de contar dónde está el
+     dinero, qué pasa alrededor de él.
+     ────────────────────────────────────────────────────────────── -->
+<section class="sec"><div class="wrap">
+  <!-- El texto va escrito AQUÍ, no sólo en el diccionario. Venía vacío
+       del 46.9b y lo cazó la medición: sin JavaScript esta sección se
+       quedaba con un titular en blanco y un párrafo en blanco encima de
+       los cinco pasos. `data-i18n` sustituye cuando el diccionario
+       llega; cuando no llega, esto es lo que se lee. -->
+  <span class="eyebrow rv" data-i18n="cq_v_eyebrow">El viaje de un servicio</span>
+  <h2 class="rv" data-i18n="cq_v_h2">Qué te protege en cada momento</h2>
+  <p class="rv" data-i18n="cq_v_p">Cinco momentos entre que pides un servicio y el dinero llega a quien lo ha hecho. En cada uno hay algo puesto. Toca uno.</p>
+  <div class="viaje rv" id="viaje">
+    <ol class="plano">
+      <li><b>01</b><h3 data-i18n="cq_v_solicitud_t"></h3><p data-i18n="cq_v_solicitud_d"></p></li>
+      <li><b>02</b><h3 data-i18n="cq_v_subasta_t"></h3><p data-i18n="cq_v_subasta_d"></p></li>
+      <li><b>03</b><h3 data-i18n="cq_v_confirmacion_t"></h3><p data-i18n="cq_v_confirmacion_d"></p></li>
+      <li><b>04</b><h3 data-i18n="cq_v_servicio_t"></h3><p data-i18n="cq_v_servicio_d"></p></li>
+      <li><b>05</b><h3 data-i18n="cq_v_pago_t"></h3><p data-i18n="cq_v_pago_d"></p></li>
+    </ol>
+  </div>
+</div></section>
+
+<!-- ── 3 · Quién puede trabajar ──────────────────────────────────── -->
+<section class="sec"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="sg_s1_eyebrow">Antes de que llegue</span>
+  <h2 class="rv" data-i18n="sg_s1_h2">Cinco cosas, y sin las cinco no se puede ni ofertar</h2>
+  <p class="rv" data-i18n="sg_s1_p">Cuando pides un servicio, quienes trabajan en tu zona reciben tu solicitud y hacen su oferta. Para poder hacerla, el sistema comprueba cinco condiciones. No es una recomendación ni una insignia: es la puerta, y está en el servidor.</p>
+  <ul class="lista">
+    <li class="rv" data-i18n-html="sg_s1_l1"><strong>Identidad verificada.</strong> Documento oficial revisado por una persona del equipo. Mientras no esté aprobado, no puede ofertar.</li>
+    <li class="rv" data-i18n-html="sg_s1_l2"><strong>Cuenta de cobro a su nombre</strong>, dada de alta y habilitada para recibir pagos. El dinero va a su cuenta, no a una bolsa común.</li>
+    <li class="rv" data-i18n-html="sg_s1_l3"><strong>Al menos un servicio del catálogo</strong>, no un texto libre. Por eso la duración y la garantía de lo que reservas se saben de antemano.</li>
+    <li class="rv" data-i18n-html="sg_s1_l4"><strong>Un precio de partida declarado.</strong></li>
+    <li class="rv" data-i18n-html="sg_s1_l5"><strong>Cuenta activa.</strong> Una cuenta suspendida deja de poder ofertar en el acto.</li>
+  </ul>
+  <p style="margin-top:22px" data-i18n="sg_s1_p2">Los certificados de formación se revisan uno a uno antes de contar para su puntuación, y en el escaparate público sólo aparece quien ha pasado la verificación.</p>
+</div></section>
+
+<!-- ── 4 · Antes de aceptar ──────────────────────────────────────── -->
+<section class="sec"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="sg_s2_eyebrow">Antes de aceptar</span>
+  <h2 class="rv" data-i18n="sg_s2_h2">Eliges tú, con lo que necesitas para elegir</h2>
+  <div class="rej">
+    <div class="card rv"><span class="num">01</span><p class="rv" data-i18n="sg_s2_c1">Ves su ficha, su puntuación, sus opiniones y su oferta antes de decidir. Nadie te asigna a nadie.</p></div>
+    <div class="card rv"><span class="num">02</span><p class="rv" data-i18n="sg_s2_c2">El precio lo pone ella al ofertar, dentro de una horquilla que calcula el sistema. No hay precio distinto para la misma persona según lo que parezca poder pagar.</p></div>
+    <div class="card rv"><span class="num">03</span><p class="rv" data-i18n="sg_s2_c3">Cómo se ordenan los resultados está publicado, con el peso de cada criterio, incluido lo que no es cómodo de contar.</p></div>
+  </div>
+  <p style="margin-top:22px"><a href="profesionales.html" style="color:var(--gold);border-bottom:1px solid var(--line);padding-bottom:2px" data-i18n="sg_s2_link">Ver cómo se ordenan los resultados →</a></p>
+</div></section>
+
+<!-- ── 5 · Durante ───────────────────────────────────────────────── -->
+<section class="sec"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="sg_s3_eyebrow">Durante el servicio</span>
+  <h2 class="rv" data-i18n="sg_s3_h2">Un botón que llega a una persona, y tu dinero quieto</h2>
+  <ul class="lista">
+    <li class="rv" data-i18n-html="sg_s3_l1"><strong>Botón de emergencia</strong> en la app, para las dos partes. El aviso entra en la pantalla del equipo, y cerrarlo exige escribir qué se hizo: un aviso cerrado sin explicación no es un aviso atendido.</li>
+    <li class="rv" data-i18n-html="sg_s3_l2"><strong>Tú decides el ambiente.</strong> Silencio, trabajar mientras te atienden, o consejo y conversación. Se lo decimos antes de entrar, para que no tengas que explicarlo en la puerta.</li>
+    <li class="rv" data-i18n-html="sg_s3_l3"><strong>El dinero está retenido, no entregado.</strong> Se autoriza al aceptar y no llega a quien presta el servicio hasta que el servicio termina y tú lo confirmas.</li>
+    <li class="rv" data-i18n-html="sg_s3_l4"><strong>Los datos de tu tarjeta no pasan por nuestros servidores</strong> en ningún momento. Los procesa Stripe.</li>
+  </ul>
+</div></section>
+
+<!-- ── 6 · EL BOTÓN DE PÁNICO · bloque 54.2 ──────────────────────────
+     Qué pasa exactamente al pulsarlo. Estaba en una viñeta de nueve
+     palabras dentro de la lista de «Durante el servicio», y es lo único
+     de toda la página que alguien va a necesitar de verdad algún día.
+
+     Sin minutos de respuesta y sin gente de guardia: hoy no hay ningún
+     número medido, y prometer «respuesta en X minutos» sin un dato
+     detrás es el ★ 4.9 inventado otra vez. Lo que sí se puede decir es
+     el circuito, y el cuarto paso —que cerrarlo exige escribir qué se
+     hizo— está en el servidor desde el bloque 20.3.
+     ────────────────────────────────────────────────────────────── -->
+<section class="sec sec-panico"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="sg_pan_eyebrow">El botón de emergencia</span>
+  <h2 class="rv" data-i18n="sg_pan_h2">Qué pasa exactamente cuando se pulsa</h2>
+  <p class="rv" data-i18n="sg_pan_p">Está en la app y lo tienen las dos partes: quien recibe el servicio y quien lo presta. Esto es el recorrido completo del aviso, sin adornos y sin promesas de tiempo que hoy no podemos medir.</p>
+
+  <div class="panico rv" id="panico">
+    <ol class="pan-lista">
+      <li class="pan-p"><span class="n" aria-hidden="true">01</span><h3 data-i18n="sg_pan_pulsa_t">Lo pulsas</h3><p data-i18n="sg_pan_pulsa_d">Desde la pantalla del servicio, sin salir de la app y sin buscar un número de teléfono.</p></li>
+      <li class="pan-p"><span class="n" aria-hidden="true">02</span><h3 data-i18n="sg_pan_entra_t">Entra en la pantalla del equipo</h3><p data-i18n="sg_pan_entra_d">No es un formulario de contacto ni un correo a una bandeja: aparece en el panel con el servicio, quién lo pulsó y cuándo.</p></li>
+      <li class="pan-p"><span class="n" aria-hidden="true">03</span><h3 data-i18n="sg_pan_mira_t">Lo ve una persona</h3><p data-i18n="sg_pan_mira_d">Lo abre quien tiene permiso de soporte. No hay un robot que clasifique el aviso antes de que alguien lo lea.</p></li>
+      <li class="pan-p"><span class="n" aria-hidden="true">04</span><h3 data-i18n="sg_pan_cierra_t">Cerrarlo exige escribir qué se hizo</h3><p data-i18n="sg_pan_cierra_d">El servidor no admite cerrar un aviso sin una nota. Un aviso cerrado sin explicación no es un aviso atendido, y así no se puede vaciar la lista sin haberla resuelto.</p></li>
+    </ol>
+  </div>
+
+  <p class="nota-suelta rv" data-i18n="sg_pan_nota">Esto no sustituye a los servicios de emergencia. Si hay un peligro inmediato, el número que hay que marcar es el de emergencias de tu país, y después nos lo cuentas.</p>
+</div></section>
+
+<!-- ── 7 · Después ───────────────────────────────────────────────── -->
+<section class="sec"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="sg_s4_eyebrow">Después</span>
+  <h2 class="rv" data-i18n="sg_s4_h2">Confirmas tú, y sigue habiendo garantía</h2>
+  <ul class="lista">
+    <li class="rv" data-i18n-html="sg_s4_l1"><strong>El servicio no lo cierra ella: lo cierras tú.</strong> Si no confirmas, el sistema lo cierra solo pasado el plazo y te avisa de que lo ha hecho.</li>
+    <li class="rv" data-i18n-html="sg_s4_l2"><strong>Garantía por servicio.</strong> Los servicios que la llevan tienen 7 o 14 días según el tipo de trabajo —el color y la uña de gel no se juzgan el mismo día— y la ficha del servicio dice cuántos son antes de reservar.</li>
+    <li class="rv" data-i18n-html="sg_s4_l3"><strong>Las opiniones son de servicios reales.</strong> Sólo puede opinar quien ha tenido el servicio. Se pueden moderar y retirar con motivo, y la respuesta profesional pasa por el mismo filtro que el resto.</li>
+  </ul>
+</div></section>
+
+<!-- ── 8 · Tus datos ─────────────────────────────────────────────── -->
+<section class="sec"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="sg_s5_eyebrow">Tus datos</span>
+  <h2 class="rv" data-i18n="sg_s5_h2">Lo que no sale de aquí</h2>
+  <p class="rv" data-i18n="sg_s5_p">Lo que se escribe dentro de Babyloon pasa por un filtro que retira teléfonos, correos, redes sociales y enlaces: en el chat del servicio, en el chat de las clases en directo, en los comentarios de Autocuidado y en los de la Academia. No es una manía de control. Fuera de la app no hay pago retenido, ni garantía, ni opiniones verificadas, ni nadie a quien reclamar — y quien te propone salir de aquí te está proponiendo quedarte sin todo eso.</p>
+  <ul class="lista">
+    <li class="rv" data-i18n-html="sg_s5_l1"><strong>Ningún documento se abre sin dejar rastro.</strong> Si alguien del equipo necesita ver un documento de identidad, queda registrado quién, cuándo y por qué. Los permisos extraordinarios caducan solos y nadie puede concederse uno a sí mismo.</li>
+    <li class="rv" data-i18n-html="sg_s5_l2"><strong>Las fotos de tu ficha no son públicas.</strong> Lo que tu profesional apunte sobre ti —alergias, fórmula, antes y después— vive en un almacén cerrado, no en un escaparate.</li>
+    <li class="rv" data-i18n-html="sg_s5_l3"><strong>Antes de medir nada, preguntamos.</strong> Sin tu respuesta no se escribe ningún identificador de medición en tu dispositivo, y puedes cambiar de idea cuando quieras.</li>
+  </ul>
+</div></section>
+
+<!-- ── 9 · El seguro. Nace escondido: lo decide `seguro_vigente()` ──
+     Ni una palabra sobre una cobertura que todavía no está firmada.
+     Misma regla que `como-funciona.html` (bloque 27.5). -->
+<section class="sec" id="seguro" hidden><div class="wrap">
+  <span class="eyebrow rv" data-i18n="sg_s6_eyebrow">El seguro</span>
+  <h2 class="rv" data-i18n="sg_s6_h2">Cada servicio va cubierto</h2>
+  <p class="rv" data-i18n="sg_s6_p">Cada servicio reservado por Babyloon lleva su propia cobertura, contratada por nosotros y anotada servicio a servicio.</p>
+  <div class="datos">
+    <div><span class="k" data-i18n="sg_seg_cia">Aseguradora</span><span class="v" id="segCia">—</span></div>
+    <div><span class="k" data-i18n="sg_seg_hasta">Cobertura hasta</span><span class="v" id="segHasta">—</span></div>
+  </div>
+</div></section>
+
+<!-- ── 10 · Si algo va mal ────────────────────────────────────────── -->
+<section class="sec"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="sg_s7_eyebrow">Si algo va mal</span>
+  <h2 class="rv" data-i18n="sg_s7_h2">A quién se lo dices</h2>
+  <div class="rej">
+    <div class="card rv"><h3 data-i18n="sg_s7_c1t">El resultado no es el que esperabas</h3><p class="rv" data-i18n="sg_s7_c1d">Reclama la garantía desde el servicio, en la app, dentro del plazo que indica su ficha.</p></div>
+    <div class="card rv"><h3 data-i18n="sg_s7_c2t">Algo ha pasado durante el servicio</h3><p class="rv" data-i18n="sg_s7_c2d">Usa el botón de emergencia de la app. Llega a una persona, no a un formulario.</p></div>
+    <div class="card rv"><h3 data-i18n="sg_s7_c3t">Cualquier otra cosa</h3><p class="rv" data-i18n="sg_s7_c3d">Escríbenos desde la página de contacto y te contestamos por el mismo sitio.</p></div>
+  </div>
+  <div class="nota">
+    <p data-i18n="sg_nota">Esta página describe lo que hay puesto hoy. Si algo de lo que lees aquí deja de ser cierto, lo cambiamos aquí antes que en ningún otro sitio.</p>
+  </div>
+</div></section>
+
+
+
+<div class="wrap hermanas">
+  <a href="sostenibilidad.html" data-i18n="cp_sostenibilidad">Sostenibilidad</a>
+  <a href="empleo.html" data-i18n="cp_empleo">Trabajar en Babyloon</a>
+  <a href="informacion-legal.html" data-i18n="cp_legal">Información legal</a>
+  <a href="contacto.html" data-i18n="foot_contact">Contacto</a>
+</div>
+
+<footer><div class="wrap">© 2026 Babyloon · <a href="privacidad.html" data-i18n="foot_priv">Privacidad</a> · <a href="terminos.html" data-i18n="foot_terms">Términos</a> · <a href="index.html" data-i18n="cn_inicio">Inicio</a></div></footer>
+
+<script src="cookies.js?v=2"></script>
+<script src="presencia.js?v=2"></script>
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="conexion.js?v=1"></script>
+<script src="money.js?v=1"></script>
+<script src="i18n.js?v=10"></script>
+<script src="i18n-paginas.js?v=4"></script>
+<script src="i18n-compania.js?v=4"></script>
+<script src="i18n-compania-46.js?v=1"></script>
+<script src="i18n-compania-54.js?v=1"></script>
+<script src="compania.js?v=2"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   El seguro lo decide la base, no esta página.
+
+   `seguro_vigente()` existe desde el bloque 26 y es quien sabe si hay
+   póliza firmada. Hoy `insurance_policies` está VACÍA, así que esta
+   sección no se pinta. El día que se firme aparece sola, con el nombre
+   de la aseguradora y el límite que diga la póliza — no lo que yo
+   escriba aquí.
+
+   Es la lección del ★ 4.9 (bloque 15.8): una cifra escrita a mano en
+   una página es una cifra que un día deja de ser verdad y nadie se
+   entera.
+   ═══════════════════════════════════════════════════════════════════ */
+(function () {
+  var SEG = null;
+
+  function pais() {
+    try {
+      var l = (document.documentElement.lang || 'es').slice(0, 2);
+      return ({ es:'ES', pt:'PT', fr:'FR', de:'DE', it:'IT', nl:'NL', pl:'PL',
+                el:'GR', hu:'HU', ru:'RU', ar:'AE', zh:'CN', ja:'JP', ko:'KR',
+                sv:'SE', en:'GB' })[l] || null;
+    } catch (_) { return null; }
+  }
+
+  function pintar() {
+    var sec = document.getElementById('seguro');
+    if (!sec || !SEG || !SEG.hay) return;      /* sin póliza, calla */
+    var cia = document.getElementById('segCia');
+    var has = document.getElementById('segHasta');
+    if (cia) cia.textContent = SEG.aseguradora || '—';
+    if (has && SEG.limite != null) {
+      has.textContent = (window.Money && Money.format)
+        ? Money.format(SEG.limite, SEG.moneda || 'EUR')
+        : String(SEG.limite);
+    }
+    sec.hidden = false;
+  }
+
+  async function traer() {
+    /* `window.sb` no existe en esta página y no ha existido nunca: el
+       cliente lo crea `compania.js` y lo deja en `__sbClient`. Antes
+       esta línea era `if (!window.sb) return;` y se cumplía siempre. */
+    var sb = window.__sbClient;
+    if (!sb) return;
+    try {
+      var r = await sb.rpc('seguro_vigente', { p_country: pais() });
+      if (r && !r.error && r.data && r.data.hay) SEG = r.data;
+    } catch (_) {}
+    pintar();
+  }
+
+  document.addEventListener('bbl:lang', pintar);
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', traer);
+  else traer();
+})();
+</script>
+
+</body>
+</html>

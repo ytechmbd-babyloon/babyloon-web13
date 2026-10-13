@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Boutique · Babyloon | Productos de belleza seleccionados</title>
+<meta name="description" content="La boutique de Babyloon: cuidado del cabello, piel, unas, maquillaje y fragancia elegidos por profesionales. Envio a domicilio en Málaga, Madrid y Miami." />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0D0B0F" />
+<link rel="canonical" href="https://babyloon.app/boutique.html" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Babyloon" />
+<meta property="og:title" content="Boutique Babyloon · Belleza seleccionada" />
+<meta property="og:description" content="La boutique de Babyloon: cuidado del cabello, piel, unas, maquillaje y fragancia elegidos por profesionales. Envio a domicilio en Málaga, Madrid y Miami." />
+<meta property="og:url" content="https://babyloon.app/boutique.html" />
+<meta property="og:image" content="https://babyloon.app/og-image.png" />
+<meta property="og:locale" content="es_ES" />
+<meta property="og:locale:alternate" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Boutique Babyloon · Belleza seleccionada" />
+<meta name="twitter:description" content="La boutique de Babyloon: cuidado del cabello, piel, unas, maquillaje y fragancia elegidos por profesionales. Envio a domicilio en Málaga, Madrid y Miami." />
+<meta name="twitter:image" content="https://babyloon.app/og-image.png" />
+<meta name="description" content="La Boutique de Babyloon — cuidado del cabello, piel, uñas, maquillaje y herramientas seleccionadas por profesionales." />
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<style>
+  /* ocultar badge 'Powered by Netlify' */
+  #netlify-badge,[class*="netlify-badge"],a[href*="netlify.com/?utm"],div[style*="z-index: 2147483647"]{display:none!important}
+
+  :root{
+    --ink:#0D0B0F; --ink-2:#150E12; --plum:#241820; --plum-2:#1B1219;
+    --gold:#C8A96A; --gold-lite:#F3E0BC; --gold-deep:#9C8050;
+    --cream:#F9F5EE; --smoke:#E8E0D5; --mauve:#8C7482; --mauve-dim:#6B5766;
+    --line:rgba(200,169,106,.16); --line-soft:rgba(249,245,238,.08);
+    --serif:'Cormorant Garamond',serif; --sans:'Jost',system-ui,sans-serif;
+    --gold-grad:linear-gradient(135deg,#8E723F 0%,#F3E0BC 42%,#C9A96E 72%,#9C8050 100%);
+    --max:1240px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--cream);font-family:var(--sans);
+    font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased}
+  ::selection{background:rgba(200,169,106,.28)}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
+  .display{font-family:var(--serif);font-weight:300;line-height:1.04;letter-spacing:.01em}
+  .eyebrow{font-size:11px;letter-spacing:.42em;text-transform:uppercase;
+    color:var(--gold);font-weight:500}
+  .gold-text{background:var(--gold-grad);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .inf path{stroke:url(#gg);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .btn{font-family:var(--sans);font-size:12.5px;letter-spacing:.16em;
+    text-transform:uppercase;font-weight:500;cursor:pointer;border:none;
+    background:none;transition:.28s ease}
+  .btn-ghost{color:var(--cream);border:1px solid var(--line);padding:12px 24px;border-radius:2px}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+  .btn-gold{color:var(--ink);padding:14px 28px;border-radius:2px;
+    background:var(--gold-grad);background-size:180% 180%;
+    box-shadow:0 8px 30px -12px rgba(200,169,106,.5)}
+  .btn-gold:hover{background-position:100% 0}
+
+  /* nav */
+  header{position:sticky;top:0;z-index:50;background:rgba(13,11,15,.82);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);
+    font-size:24px;letter-spacing:.03em}
+  .nav-links{display:flex;gap:30px}
+  .nav-links a{font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--smoke);transition:color .25s}
+  .nav-links a:hover,.nav-links a.on{color:var(--gold)}
+  .nav-right{display:flex;align-items:center;gap:18px}
+  .cart-btn{position:relative;background:none;border:none;color:var(--cream);
+    cursor:pointer;display:flex;align-items:center}
+  .cart-btn:hover{color:var(--gold)}
+  .cart-count{position:absolute;top:-8px;right:-9px;background:var(--gold-grad);
+    color:var(--ink);font-size:10px;font-weight:600;min-width:17px;height:17px;
+    border-radius:9px;display:flex;align-items:center;justify-content:center;
+    padding:0 4px}
+  /* 15.15 · Aquí había una COMILLA SUELTA delante de `.cart-count.hide`.
+     En CSS eso abre una cadena, y la cadena no se cierra hasta la
+     siguiente comilla de la hoja — que está seis reglas más abajo, en
+     el `url("data:image/svg+xml,…")` de la flecha del selector. Todo lo
+     que hay en medio se lo traga el analizador:
+         .cart-count.hide        el contador del carrito a cero
+         .ship-to                la etiqueta y el selector de país
+         .tools .ship-to .country-sel
+         @media(max-width:680px) el orden de la barra en móvil
+         .ship-to>span
+         .menu-toggle            el botón del menú
+         .nav-lang-m
+     Por eso el «Envío a» salía como una pastilla diminuta encima de su
+     propia etiqueta: no es que el selector no funcione —funciona, lo he
+     probado en producción y cambia los precios a US$ al elegir Estados
+     Unidos—, es que se quedó sin estilos. Comprobado en el navegador:
+     `.ship-to` no existía en la hoja de estilos de la página servida. */
+  .cart-count.hide{display:none}
+  .ship-to{display:inline-flex;align-items:center;gap:8px;flex-shrink:0}
+  .tools .ship-to .country-sel{padding:9px 30px 9px 12px}
+  @media(max-width:680px){.toolbar-inner .tools{flex-wrap:wrap;gap:10px}.tools .ship-to{order:3}.tools .search{order:1;flex:1 1 100%}.tools .sort{order:2}}
+  .ship-to>span{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mauve);white-space:nowrap}
+  .menu-toggle{display:none;background:none;border:none;color:var(--cream);cursor:pointer}
+  .nav-lang-m{display:none}
+  .country-sel{-webkit-appearance:none;appearance:none;color:var(--cream);border:1px solid var(--line);
+    font-family:var(--sans);font-size:12px;padding:8px 26px 8px 12px;border-radius:20px;cursor:pointer;transition:.25s;
+    max-width:132px;background:rgba(0,0,0,.3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23C8A96A' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 9px center}
+  .country-sel:hover{border-color:var(--gold);color:var(--gold)}
+  .country-sel option{background:#1B1219;color:var(--cream)}
+  .prod .ph{position:relative}
+  .prod .fav{position:absolute;top:10px;right:10px;z-index:3;width:34px;height:34px;border-radius:50%;
+    background:rgba(13,11,15,.5);border:1px solid rgba(249,245,238,.15);cursor:pointer;padding:0;
+    display:flex;align-items:center;justify-content:center;transition:.2s;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+  .prod .fav svg{fill:none;stroke:var(--cream);stroke-width:1.6}
+  .prod .fav:hover{border-color:var(--gold)}
+  .prod .fav:hover svg{stroke:var(--gold)}
+  .prod .fav.on svg{fill:#E0607F;stroke:#E0607F}
+  /* language switcher */
+  .bbl-lang{position:relative}
+  .bbl-lang-btn{display:flex;align-items:center;gap:5px;background:none;border:1px solid var(--line);
+    color:var(--smoke);font-family:var(--sans);font-size:11px;letter-spacing:.1em;padding:8px 12px;
+    border-radius:20px;cursor:pointer;transition:.25s}
+  .bbl-lang-btn:hover{border-color:var(--gold);color:var(--gold)}
+  .bbl-lang-menu{position:absolute;top:calc(100% + 8px);right:0;background:var(--plum);
+    border:1px solid var(--line);border-radius:6px;padding:6px;min-width:150px;z-index:60;
+    opacity:0;visibility:hidden;transform:translateY(-6px);transition:.22s;box-shadow:0 20px 50px -20px rgba(0,0,0,.8)}
+  .bbl-lang.open .bbl-lang-menu{opacity:1;visibility:visible;transform:translateY(0)}
+  .bbl-lang-menu button{display:block;width:100%;text-align:left;background:none;border:none;
+    color:var(--smoke);font-family:var(--sans);font-size:13px;padding:9px 12px;border-radius:3px;cursor:pointer;transition:.2s}
+  .bbl-lang-menu button:hover{background:rgba(200,169,106,.08);color:var(--cream)}
+  .bbl-lang-menu button.on{color:var(--gold)}
+  .bbl-lang-menu{max-height:min(66vh,460px);overflow-y:auto}
+  @media(max-width:920px){
+    .nav-lang-m .bbl-lang-btn{display:none}
+    .nav-lang-m .bbl-lang-menu{position:static;opacity:1;visibility:visible;transform:none;
+      display:grid;grid-template-columns:repeat(2,1fr);gap:2px;min-width:0;max-height:none;
+      box-shadow:none;border:none;background:none;padding:8px 0 0}
+    .nav-lang-m .bbl-lang-menu button{font-size:13.5px;padding:11px 10px}
+  }
+  .role-pick{display:flex;gap:10px;margin:0 0 16px}
+  .role-pick .role{flex:1;text-align:center;border:1px solid var(--line);border-radius:3px;padding:13px 8px;
+    cursor:pointer;transition:.25s;font-size:12.5px;color:var(--smoke)}
+  .role-pick .role.sel{border-color:var(--gold);background:rgba(200,169,106,.08);color:var(--gold)}
+  .role-pick .role small{display:block;font-size:10px;color:var(--mauve);margin-top:4px}
+  .role-pick .role.sel small{color:var(--gold)}
+  .btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;
+    color:#1f1f1f;border:none;border-radius:3px;padding:12px;cursor:pointer;font-family:var(--sans);
+    font-size:13.5px;font-weight:500;margin-bottom:16px;transition:.2s}
+  .btn-google:hover{background:#f1f1f1}
+  .m-or{text-align:center;color:var(--mauve);font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+    margin-bottom:14px;position:relative}
+  .m-or span{background:var(--plum,#241820);padding:0 12px;position:relative;z-index:1}
+  .m-or::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:var(--line-soft)}
+  /* banner boutique */
+  .bq-wrap-banner{padding-top:8px}
+  .bq-banner{border:1px solid var(--line);border-radius:8px;overflow:hidden;
+    background:linear-gradient(115deg,var(--plum) 0%,var(--ink) 62%);position:relative;
+    display:flex;align-items:center;min-height:210px;padding:42px 46px}
+  .bq-banner::before{content:"∞";position:absolute;right:-16px;top:50%;transform:translateY(-50%);
+    font-family:var(--serif);font-size:270px;color:rgba(200,169,106,.06);line-height:0}
+  .bq-banner::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(60% 100% at 100% 50%,rgba(200,169,106,.1),transparent 60%)}
+  .bq-banner .bb-in{position:relative;max-width:580px}
+  .bq-banner .eyebrow{display:block;margin-bottom:14px}
+  .bq-banner h2{font-family:var(--serif);font-weight:400;line-height:1.1;
+    font-size:clamp(26px,3.4vw,40px);margin-bottom:12px}
+  .bq-banner p{color:var(--smoke);font-size:14.5px;max-width:450px;margin-bottom:22px}
+  /* portadas de categoría (como la app) */
+  .cat-covers-wrap{padding-top:38px}
+  .covers-title{font-family:var(--serif);font-size:clamp(22px,3vw,30px);font-weight:400;margin-bottom:20px;color:var(--cream)}
+  .cat-covers{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .cover{position:relative;aspect-ratio:4/5;border-radius:8px;overflow:hidden;cursor:pointer;
+    border:1px solid var(--line);transition:.35s;background:var(--plum-2)}
+  .cover:hover{transform:translateY(-4px);border-color:rgba(200,169,106,.5)}
+  .cover img{width:100%;height:100%;object-fit:cover;transition:transform .6s;filter:brightness(.72)}
+  .cover:hover img{transform:scale(1.07);filter:brightness(.85)}
+  .cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 38%,rgba(13,11,15,.88))}
+  .cover .cv-name{position:absolute;left:15px;right:12px;bottom:14px;z-index:2;font-family:var(--serif);
+    font-size:19px;color:var(--cream);line-height:1.15}
+  .cover.on{border-color:var(--gold)}
+  .cover.on::after{background:linear-gradient(180deg,rgba(200,169,106,.12),rgba(13,11,15,.9))}
+  @media(max-width:560px){.cat-covers{grid-template-columns:repeat(2,1fr);gap:10px}.cover .cv-name{font-size:16px}}
+
+  /* hero boutique */
+  .brands-strip{padding:22px 0 8px;text-align:center;border-bottom:1px solid var(--line-soft)}
+  .brands-label{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:16px}
+  .brands-row{display:flex;justify-content:center;align-items:center;gap:clamp(20px,5vw,56px);flex-wrap:wrap}
+  .brands-row span{font-family:var(--serif);font-size:clamp(18px,2.4vw,26px);color:var(--mauve);transition:.3s}
+  .brands-row span:hover{color:var(--cream)}
+  .b-hero{text-align:center;padding:76px 0 44px;position:relative}
+  .b-hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(50% 80% at 50% 0%,rgba(200,169,106,.09),transparent 70%)}
+  .b-hero h1{font-size:clamp(44px,8vw,84px);margin:14px 0 16px;position:relative}
+  .b-hero p{color:var(--smoke);max-width:520px;margin:0 auto;font-size:15px;position:relative}
+
+  /* toolbar */
+  .toolbar{position:sticky;top:72px;z-index:40;background:rgba(13,11,15,.9);
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line-soft);
+    padding:16px 0}
+  .toolbar-inner{display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+    justify-content:space-between}
+  .chips{display:flex;gap:9px;flex-wrap:wrap;overflow-x:auto}
+  .chip{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--smoke);border:1px solid var(--line);padding:9px 16px;
+    border-radius:20px;cursor:pointer;white-space:nowrap;transition:.25s;background:none}
+  .chip:hover{border-color:var(--gold);color:var(--gold)}
+  .chip.on{background:var(--gold-grad);color:var(--ink);border-color:transparent;font-weight:500}
+  .tools{display:flex;gap:12px;align-items:center}
+  .search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);
+    border-radius:20px;padding:8px 15px;background:rgba(0,0,0,.25)}
+  .search input{background:none;border:none;color:var(--cream);font-family:var(--sans);
+    font-size:13px;width:150px}
+  .search input:focus{outline:none}
+  .search input::placeholder{color:var(--mauve-dim)}
+  .search svg{color:var(--mauve)}
+  select.sort{background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-radius:20px;color:var(--smoke);padding:9px 15px;font-family:var(--sans);
+    font-size:12px;cursor:pointer}
+  select.sort:focus{outline:none;border-color:var(--gold)}
+
+  /* grid */
+  .catalog{padding:44px 0 90px;min-height:50vh}
+  .count-line{color:var(--mauve);font-size:12.5px;letter-spacing:.06em;margin-bottom:24px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .prod{border:1px solid var(--line);border-radius:5px;overflow:hidden;
+    background:var(--plum-2);cursor:pointer;transition:.35s ease;
+    display:flex;flex-direction:column}
+  .prod:hover{transform:translateY(-5px);border-color:rgba(200,169,106,.42);
+    box-shadow:0 24px 50px -30px rgba(0,0,0,.9)}
+  .prod .ph{aspect-ratio:1;background:var(--ink);position:relative;overflow:hidden}
+  .prod .ph img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+  .prod:hover .ph img{transform:scale(1.06)}
+  .badge{position:absolute;top:12px;left:12px;font-size:9px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink);background:var(--gold-grad);
+    padding:5px 10px;border-radius:2px;font-weight:600}
+  .out{position:absolute;inset:0;background:rgba(13,11,15,.6);display:flex;
+    align-items:center;justify-content:center;font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--smoke)}
+  .prod .info{padding:18px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .prod .brand{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+  .prod h3{font-family:var(--serif);font-size:19px;font-weight:500;line-height:1.2;
+    color:var(--cream);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+    overflow:hidden;min-height:46px}
+  .prod .foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;
+    padding-top:10px}
+  .prod .price{font-size:16px;color:var(--cream)}
+  .prod .price s{color:var(--mauve);font-size:12px;margin-right:6px}
+  .prod .add{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);
+    background:none;color:var(--gold);cursor:pointer;font-size:18px;line-height:1;
+    transition:.25s;display:flex;align-items:center;justify-content:center}
+  .prod .add:hover{background:var(--gold-grad);color:var(--ink);border-color:transparent}
+
+  .loadmore{text-align:center;margin-top:52px}
+  .skeleton{background:linear-gradient(100deg,var(--plum-2) 30%,rgba(200,169,106,.06) 50%,var(--plum-2) 70%);
+    background-size:200% 100%;animation:sk 1.4s infinite;border-radius:5px;aspect-ratio:.78}
+  @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  .empty{text-align:center;padding:80px 0;color:var(--mauve)}
+  .empty svg{width:52px;height:26px;opacity:.5;margin-bottom:18px}
+
+  /* drawer / overlay compartido */
+  .scrim{position:fixed;inset:0;z-index:80;background:rgba(6,5,7,.66);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:.3s}
+  .scrim.open{opacity:1;visibility:visible}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,92vw);z-index:90;
+    background:linear-gradient(160deg,var(--plum),var(--ink));
+    border-left:1px solid var(--line);transform:translateX(100%);transition:transform .38s cubic-bezier(.4,0,.2,1);
+    display:flex;flex-direction:column}
+  .drawer.open{transform:translateX(0)}
+  .dr-head{display:flex;align-items:center;justify-content:space-between;
+    padding:26px 26px 18px;border-bottom:1px solid var(--line-soft)}
+  .dr-head h3{font-family:var(--serif);font-size:26px;font-weight:400}
+  .x{background:none;border:none;color:var(--mauve);font-size:26px;cursor:pointer;line-height:1}
+  .x:hover{color:var(--cream)}
+  .dr-body{flex:1;overflow-y:auto;padding:20px 26px}
+  .ci{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line-soft)}
+  .ci img{width:66px;height:66px;object-fit:cover;border-radius:4px;background:var(--ink)}
+  .ci .ci-info{flex:1;min-width:0}
+  .ci h4{font-family:var(--serif);font-size:17px;font-weight:500;line-height:1.2;
+    margin-bottom:4px}
+  .ci .ci-price{font-size:13px;color:var(--gold)}
+  .qty{display:flex;align-items:center;gap:10px;margin-top:8px}
+  .qty button{width:26px;height:26px;border:1px solid var(--line);background:none;
+    color:var(--cream);cursor:pointer;border-radius:3px;font-size:15px}
+  .qty button:hover{border-color:var(--gold);color:var(--gold)}
+  .qty span{font-size:13px;min-width:20px;text-align:center}
+  .ci-rm{background:none;border:none;color:var(--mauve-dim);font-size:11px;cursor:pointer;
+    text-decoration:underline;margin-top:6px}
+  .ci-rm:hover{color:#E0857C}
+  .cart-empty{text-align:center;color:var(--mauve);padding:60px 20px}
+  .dr-foot{padding:22px 26px;border-top:1px solid var(--line)}
+  .dr-total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px}
+  .dr-total span{color:var(--mauve);font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+  .dr-total b{font-family:var(--serif);font-size:30px;font-weight:500;color:var(--cream)}
+  .dr-foot .btn-gold{width:100%;padding:16px}
+  .dr-note{font-size:11px;color:var(--mauve);text-align:center;margin-top:12px}
+
+  /* modal producto */
+  .pm{position:fixed;inset:0;z-index:95;display:none;align-items:center;
+    justify-content:center;padding:24px}
+  .pm.open{display:flex}
+  .pm-card{width:100%;max-width:860px;max-height:88vh;overflow:hidden;
+    background:linear-gradient(160deg,var(--plum),var(--ink));border:1px solid var(--line);
+    border-radius:8px;display:grid;grid-template-columns:1fr 1fr;
+    box-shadow:0 40px 90px -30px rgba(0,0,0,.85)}
+  .pm-img{background:var(--ink);position:relative}
+  .pm-img img{width:100%;height:100%;object-fit:cover;min-height:340px}
+  /* Galería: 434 de los 469 productos traen entre 2 y 18 fotos en
+     `images`, y la ficha enseñaba una. Un producto con una sola foto
+     no se vende. */
+  .pm-img{display:flex;flex-direction:column}
+  .pm-img img#pmImg{flex:1;min-height:0}
+  .pm-nav{position:absolute;top:calc(50% - 46px);transform:translateY(-50%);width:38px;height:38px;
+    border-radius:50%;border:1px solid rgba(249,245,238,.22);background:rgba(13,11,15,.55);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:var(--cream);cursor:pointer;
+    display:none;align-items:center;justify-content:center;transition:.22s;z-index:2}
+  .pm-nav:hover{background:var(--gold);border-color:transparent;color:var(--ink)}
+  .pm-nav.prev{left:12px}.pm-nav.next{right:12px}
+  .pm-img.varias .pm-nav{display:flex}
+  .pm-count{position:absolute;top:12px;right:12px;font-size:11px;color:var(--cream);
+    background:rgba(13,11,15,.6);padding:3px 9px;border-radius:20px;display:none;z-index:2;
+    font-variant-numeric:tabular-nums}
+  .pm-img.varias .pm-count{display:block}
+  .pm-thumbs{display:none;gap:6px;padding:8px;background:rgba(13,11,15,.55);overflow-x:auto;
+    scrollbar-width:none;flex-shrink:0}
+  .pm-thumbs::-webkit-scrollbar{display:none}
+  .pm-img.varias .pm-thumbs{display:flex}
+  .pm-thumbs button{flex:0 0 52px;height:52px;padding:0;border:1px solid transparent;border-radius:4px;
+    overflow:hidden;background:none;cursor:pointer;opacity:.55;transition:.2s}
+  .pm-thumbs button:hover{opacity:1}
+  .pm-thumbs button.on{opacity:1;border-color:var(--gold)}
+  .pm-thumbs img{width:100%;height:100%;object-fit:cover;min-height:0}
+  @media(max-width:720px){
+    .pm-thumbs button{flex:0 0 44px;height:44px}
+    .pm-nav{top:calc(50% - 40px)}
+  }
+  .pm-body{padding:40px 38px;overflow-y:auto;position:relative}
+  .pm-body .x{position:absolute;top:16px;right:18px}
+  .pm-body .brand{font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:12px}
+  .pm-body h2{font-family:var(--serif);font-size:32px;font-weight:500;line-height:1.15;
+    margin-bottom:16px}
+  .pm-body .desc{color:var(--smoke);font-size:14px;line-height:1.7;margin-bottom:26px}
+  .pm-price{font-family:var(--serif);font-size:34px;color:var(--cream);margin-bottom:24px}
+  .pm-price s{font-size:18px;color:var(--mauve);margin-right:12px}
+  .pm-body .btn-gold{width:100%;padding:16px}
+  .pm-body .btn-gold:disabled{opacity:.45;cursor:not-allowed}
+  /* 61.7 · Seguridad del producto (GPSR): lo que la oferta tiene que decir
+     en la UE. Se ve sin desplegar nada, debajo del botón. */
+  .pm-nopais{color:#E0857C;font-size:13px;line-height:1.5;margin:-8px 0 14px}
+  .pm-seg{margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+  .pm-seg h3{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);
+    font-weight:500;margin-bottom:12px}
+  .pm-seg dl{display:grid;gap:12px;margin:0}
+  .pm-seg dt{font-size:11px;color:var(--mauve);margin-bottom:3px}
+  .pm-seg dd{margin:0;font-size:13px;line-height:1.6;color:var(--smoke);overflow-wrap:anywhere}
+  .pm-seg dd b{color:var(--cream);font-weight:500}
+  .pm-seg dd a{color:var(--smoke);text-decoration:underline;text-underline-offset:2px}
+  .pm-seg .lang{display:block;font-size:11px;color:var(--mauve);margin-top:3px}
+  .pm-seg .adv{white-space:pre-line}
+
+  /* auth mini */
+  .amodal{position:fixed;inset:0;z-index:100;display:none;align-items:center;
+    justify-content:center;padding:24px;background:rgba(6,5,7,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .amodal.open{display:flex}
+  .abox{width:100%;max-width:400px;background:linear-gradient(160deg,var(--plum),var(--ink));
+    border:1px solid var(--line);border-radius:8px;padding:40px 36px;position:relative;text-align:center}
+  .abox .inf{width:60px;height:30px;margin:0 auto 14px}
+  .abox h3{font-family:var(--serif);font-size:26px;font-weight:400;margin-bottom:6px}
+  .abox p{color:var(--mauve);font-size:13px;margin-bottom:22px}
+  .abox input{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line);
+    border-radius:3px;padding:13px 14px;color:var(--cream);font-family:var(--sans);
+    font-size:14px;margin-bottom:12px}
+  .abox input:focus{outline:none;border-color:var(--gold)}
+  .abox .btn-gold{width:100%;padding:15px;margin-top:6px}
+  .amsg{font-size:12px;margin-top:12px;min-height:16px;color:var(--mauve)}
+  .amsg.err{color:#E0857C}.amsg.ok{color:#8FC9A8}
+
+  footer{border-top:1px solid var(--line);padding:40px 0;text-align:center;
+    color:var(--mauve);font-size:12px}
+  footer a{color:var(--smoke)}footer a:hover{color:var(--gold)}
+
+  @media(max-width:960px){.grid{grid-template-columns:repeat(2,1fr);gap:16px}
+    .pm-card{grid-template-columns:1fr;max-height:92vh;overflow-y:auto}}
+
+  /* ── El acceso, dentro del menú de móvil ──────────────────────────
+     Por debajo del punto de plegado la cabecera esconde el botón de
+     Acceder, y el menú desplegable no lo tenía: para entrar había que
+     bajar hasta el pie. Ahora es lo primero del menú, que es donde
+     se busca.
+     `width:100%` con `box-sizing:border-box` y el padding lateral del
+     propio panel: no se sale ni a 320 px. */
+  .nav-acceso{display:none}
+  @media(max-width:1100px){
+    .nav-acceso{display:block;width:100%;margin:8px 0 12px;text-align:center}
+    .menu-toggle{display:block}
+    .nav-right>#langSwitch,.nav-right>.ship-to,.nav-right>#loginBtn{display:none}
+    .nav-lang-m{display:block;padding:16px 2px 4px;border-top:1px solid var(--line-soft);margin-top:6px}
+    .nav-links{position:fixed;top:70px;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;
+      background:rgba(13,11,15,.98);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);padding:8px 28px 22px;transform:translateY(-135%);
+      transition:transform .38s ease;z-index:40;display:flex}
+    .nav-links.open{transform:translateY(0)}
+    /* ── 31.1 · Los dieciséis idiomas, dentro del menú de móvil ──────
+       La lista ya se pintaba entera y en dos columnas —eso estaba bien—,
+       pero el panel del menú es `position:fixed` y NO TENÍA TOPE DE
+       ALTURA NI FORMA DE DESLIZARSE. Con siete enlaces encima y dieciséis
+       idiomas debajo, el contenido pasa de largo la pantalla y los
+       últimos idiomas quedaban físicamente fuera: no es que no se vieran,
+       es que no había manera de llegar a ellos.
+
+       `dvh` va DESPUÉS de `vh` a propósito: Safari viejo descarta entera
+       la declaración que no entiende y se queda con la de `vh`, que es
+       peor —la barra del navegador cuenta— pero funciona. */
+    .nav-links{max-height:calc(100vh - 74px);max-height:calc(100dvh - 74px);
+      overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+
+    .nav-links a{padding:15px 2px;border-bottom:1px solid var(--line-soft);font-size:14px}
+    .nav-links .ship-to{padding:14px 2px;border-bottom:1px solid var(--line-soft)}
+    .nav-links #loginBtn{margin-top:14px;width:100%}
+    .nav{flex-wrap:nowrap}.nav-right{gap:10px}.b-hero{padding-top:24px}
+  }
+  /* ═══════════════════════════════════════════════════════════════
+     LA BOUTIQUE EN MÓVIL · que respire
+     ───────────────────────────────────────────────────────────────
+     Medido a 390 px antes de escribir nada, y lo que salió no era
+     falta de espacio: era exceso de señales compitiendo en una
+     tarjeta de 159 px.
+
+       · el precio se partía en dos y el «€» caía solo a la línea de abajo
+       · «BABYLOON SELECTION» ocupaba DOS renglones, en dorado, en las
+         doce tarjetas a la vez
+       · el título iba a 19 px de serif en una columna de 121 px útiles,
+         así que se cortaba a media palabra: «SG So Edgy Deep eyeline…»
+       · el sello DESTACADO se montaba encima del corazón
+       · la barra de herramientas se apilaba en tres filas (222 px) con
+         «ENVÍO A» descolgado a la izquierda de una píldora
+
+     El aire no se consigue metiendo margen entre cosas que gritan: se
+     consigue bajando la voz de casi todas y dejando hueco vertical
+     entre filas, que es donde descansa el ojo. Así que aquí se baja el
+     cuerpo de la tipografía a lo que cabe de verdad, la marca deja de
+     ser dorada —repetida doce veces, el dorado es ruido y no lujo— y
+     el hueco entre filas pasa de 16 a 30 px.
+
+     Todo va en un bloque aparte y al final del <style>: no se toca
+     ninguna regla de escritorio, y si algo no convence se borra
+     entero sin dejar rastro.
+     ═══════════════════════════════════════════════════════════════ */
+  @media(max-width:680px){
+
+    /* — La portada de la boutique, a tamaño de móvil — */
+    .b-hero{padding:30px 0 26px}
+    .b-hero h1{font-size:clamp(34px,9.5vw,46px);margin:10px 0 14px;line-height:1.08}
+    .b-hero p{font-size:15px;line-height:1.55;max-width:34ch;margin-left:auto;margin-right:auto}
+
+    /* Las marcas se salían por los dos lados: «Versace» cortado a la
+       izquierda y «Hugo Boss» a la derecha. Con menos hueco y menos
+       cuerpo caben en dos filas limpias. */
+    .brands-strip{padding:18px 0 6px}
+    .brands-row{gap:14px 22px}
+    .brands-row span{font-size:17px}
+
+    /* — Los chips, en UNA fila que se desliza — ─────────────────
+       En el móvil de Andrés ocupaban CUATRO filas: Todos, Premium,
+       Maquillaje / Facial, Cabello, Uñas / Cejas, Masajes, Fragancia /
+       Belleza. Con el buscador y la fila de ordenar debajo, la barra
+       pegajosa se comía 450 px de una pantalla de 780. Eso es lo que
+       de verdad no dejaba respirar: no las tarjetas, la barra.
+       En una sola fila deslizable ocupa 44 px y se recorre con el
+       pulgar, que es como se navega una tienda en el teléfono. */
+    .chips{flex-wrap:nowrap;overflow-x:auto;gap:8px;
+      scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;
+      /* que llegue de borde a borde, y no parezca cortada a medias */
+      padding:2px 28px 2px 0;margin-right:-28px;
+      scrollbar-width:none}
+    .chips::-webkit-scrollbar{display:none}
+    .chip{flex:0 0 auto;scroll-snap-align:start;padding:8px 14px;font-size:11px}
+
+    /* — La foto del producto — ──────────────────────────────────
+       Casi todo el catálogo son fotos de producto sobre FONDO BLANCO.
+       En una página oscura, un rectángulo blanco no parece una foto:
+       parece un agujero. Y al lado de otra con fondo oscuro, parece
+       un error.
+       No se tocan las fotos —son las del proveedor— pero sí el marco:
+       una línea interior muy fina y un degradado cálido casi
+       imperceptible en el borde inferior atan la foto a la tarjeta, y
+       el blanco pasa de accidente a fondo de catálogo. */
+    .prod .ph{background:#EFEAE3}
+    .prod .ph::after{content:"";position:absolute;inset:0;pointer-events:none;
+      box-shadow:inset 0 0 0 1px rgba(13,11,15,.07);
+      background:linear-gradient(180deg,transparent 72%,rgba(27,18,25,.16))}
+
+    /* El corazón, encima de una foto clara, era un círculo gris
+       claro con un corazón blanco: no se veía. Se oscurece el fondo
+       y se le pone borde. */
+    .prod .fav{background:rgba(13,11,15,.62);border-color:rgba(249,245,238,.34);
+      -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+    .prod .fav svg{stroke-width:1.9}
+
+    /* — La barra: buscar arriba, ordenar y envío repartidos abajo — */
+    .toolbar-inner{gap:12px}
+    .toolbar-inner .tools{gap:10px}
+    .tools .search{flex:1 1 100%}
+    .tools .sort,.tools .ship-to{flex:1 1 0;min-width:0}
+    .ship-to{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+    .ship-to>span{font-size:8.5px;letter-spacing:.16em;padding-left:2px}
+    /* Ojo: el ordenador NO es un `.sort select`, es un `select.sort`.
+       Escrito como descendiente, la regla no casaba con nada y las dos
+       píldoras salían de anchos distintos (178 y 146). */
+    .tools .ship-to .country-sel,.tools select.sort{
+      width:100%;max-width:none;padding:10px 28px 10px 12px}
+    /* Y para que repartan el ancho a partes iguales hace falta darles
+       la misma base: con `flex-basis:0` a secas, cada uno se queda con
+       su ancho mínimo de contenido, que no es el mismo. */
+    .tools .sort,.tools .ship-to{flex:1 1 calc(50% - 5px)}
+
+    /* — El catálogo — */
+    .catalog{padding:26px 0 64px}
+    /* 12 px entre columnas y 30 entre filas: el aire va en vertical,
+       que es por donde se recorre una tienda con el pulgar. */
+    .grid{grid-template-columns:repeat(2,1fr);column-gap:12px;row-gap:30px}
+
+    .prod{border-radius:7px}
+    .prod .info{padding:13px 12px 15px;gap:4px}
+
+    /* La marca deja de gritar: un renglón, sin dorado, con puntos
+       suspensivos si no cabe. Cuando el producto trae marca de verdad
+       se lee igual; cuando no, «Babyloon Selection» pasa a segundo
+       plano en vez de encabezar las doce tarjetas. */
+    .prod .brand{font-size:8.5px;letter-spacing:.14em;color:var(--mauve);
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+
+    /* 14,5 px en una columna de 135 px admite dos líneas enteras: se
+       acabaron los cortes a media palabra. */
+    .prod h3{font-size:14.5px;line-height:1.3;min-height:38px}
+
+    /* El precio no se parte nunca. Ese «€» solo en su línea era el
+       detalle que más barato hacía parecer todo. */
+    .prod .foot{padding-top:8px;gap:8px;flex-wrap:nowrap}
+    .prod .price{font-size:14.5px;white-space:nowrap;min-width:0}
+    .prod .price s{font-size:10.5px;margin-right:5px}
+    .prod .add{width:30px;height:30px;font-size:16px;flex:0 0 auto}
+
+    /* El sello y el corazón dejan de pelearse por la misma esquina.
+       Ponerle techo de ancho al sello lo arreglaba a medias: dejaba
+       de chocar, sí, pero salía «DESTACA…», que es peor que no
+       ponerlo. En una tarjeta de 161 px no caben los dos arriba, así
+       que el corazón se queda donde se busca —arriba a la derecha— y
+       el sello baja a la esquina de abajo, sobre el degradado que ya
+       está puesto para atar la foto a la tarjeta. */
+    .badge{top:auto;bottom:10px;left:10px;font-size:7.5px;letter-spacing:.12em;
+      padding:4px 8px;max-width:calc(100% - 20px);
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .prod .fav{top:8px;right:8px;width:30px;height:30px}
+  }
+
+  /* A 380 px o menos (iPhone SE y parecidos) el título necesita un
+     punto menos para no volver a cortarse. */
+  @media(max-width:380px){
+    .prod .info{padding:11px 10px 13px}
+    .prod h3{font-size:13.5px;min-height:35px}
+    .prod .price{font-size:13.5px}
+  }
+
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  /* Ver la contraseña y recuperarla — igual que en auth.js y recuperar.html */
+  .pass-wrap{position:relative;display:block}
+  .pass-wrap input{width:100%;padding-right:46px}
+  .pass-ojo{position:absolute;top:50%;right:6px;transform:translateY(-50%);width:34px;height:34px;background:none;border:none;
+    cursor:pointer;color:#8C7482;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:.2s;padding:0}
+  .pass-ojo:hover{color:#C8A96A}
+  .pass-ojo svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.6}
+  .pass-olvide{background:none;border:none;color:#8C7482;font-family:inherit;font-size:12px;cursor:pointer;padding:0 0 12px;
+    display:block;margin:-4px 0 0;text-decoration:underline;text-underline-offset:3px}
+  .pass-olvide:hover{color:#C8A96A}
+  .amsg a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+</style>
+<link rel="stylesheet" href="movil.css?v=1" />
+
+<link rel="stylesheet" href="estetica.css?v=2" />
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#8E723F"/><stop offset="42%" stop-color="#F3E0BC"/>
+    <stop offset="72%" stop-color="#C9A96E"/><stop offset="100%" stop-color="#9C8050"/>
+  </linearGradient></defs></svg>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <svg class="inf" width="38" height="19" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>
+      Babyloon
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <button class="btn btn-ghost nav-acceso" id="loginBtnM" type="button">Entrar</button>
+      <a href="index.html" data-i18n="nav_inicio">Inicio</a>
+      <a href="index.html#servicios" data-i18n="p_svc_eyebrow">Servicios</a>
+      <a href="index.html#ciudades" data-i18n="cities_eyebrow">Presencia</a>
+      <a href="index.html#concepto" data-i18n="nav_concepto">Concepto</a>
+      <a href="boutique.html" class="on" data-i18n="nav_boutique">Boutique</a>
+      <a href="academia.html" data-i18n="nav_academia">Academia</a>
+      <a href="masterclass.html" data-i18n="mc_title">Clases en vivo</a>
+      <a href="index.html#app" data-i18n="nav_laapp">La app</a>
+      <div class="nav-lang-m"><div id="langSwitchM"></div></div>
+    </nav>
+    <div class="nav-right">
+      <div id="langSwitch"></div>
+      <button class="btn btn-ghost" id="loginBtn" style="padding:10px 18px">Entrar</button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menú"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <button class="cart-btn" id="cartBtn" aria-label="Carrito">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M6 6L5 3H2"/></svg>
+        <span class="cart-count hide" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="b-hero">
+  <div class="wrap">
+    <span class="eyebrow" data-i18n="bq_eyebrow">La Boutique</span>
+    <h1 class="display"><span data-i18n="bq_title_a">Belleza</span> <span class="gold-text" data-i18n="bq_title_b">seleccionada</span></h1>
+    <p data-i18n="bq_sub">Cuidado del cabello, piel, uñas, maquillaje, fragancia y herramientas —
+      elegidos por profesionales de Babyloon.</p>
+  </div>
+</section>
+
+<div class="wrap brands-strip">
+  <span class="brands-label" data-i18n="brands_label">Marcas seleccionadas</span>
+  <div class="brands-row">
+    <span>Versace</span><span>Bvlgari</span><span>Tom Ford</span><span>Chloé</span><span>Hugo Boss</span><span>Platinum Delux</span>
+  </div>
+</div>
+
+<div class="wrap bq-wrap-banner">
+  <div class="bq-banner">
+    <div class="bb-in">
+      <span class="eyebrow" data-i18n="bq_banner_eyebrow">Selección Babyloon</span>
+      <h2 data-i18n="bq_banner_title">Lo que usan los profesionales, en tu casa</h2>
+      <p data-i18n="bq_banner_sub">Productos probados en cada servicio. Calidad de salón, entrega a domicilio.</p>
+      <button class="btn btn-gold" id="bannerCta" data-i18n="bq_banner_cta">Descubrir</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap cat-covers-wrap">
+  <h3 class="covers-title" data-i18n="bq_categories">Explora por categoría</h3>
+  <div class="cat-covers" id="catCovers"></div>
+</div>
+
+<div class="toolbar">
+  <div class="wrap toolbar-inner">
+    <div class="chips" id="chips"></div>
+    <div class="tools">
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" data-i18n-ph="search" placeholder="Buscar…" />
+      </div>
+      <select class="sort" id="sort">
+        <option value="featured" data-i18n="sort_featured">Destacados</option>
+        <option value="price_asc" data-i18n="sort_price_asc">Precio ↑</option>
+        <option value="price_desc" data-i18n="sort_price_desc">Precio ↓</option>
+        <option value="new" data-i18n="sort_new">Novedades</option>
+      </select>
+      <label class="ship-to"><span data-i18n="ship_to">Envío a</span><select id="countrySel" class="country-sel" aria-label="País de envío"></select></label>
+    </div>
+  </div>
+</div>
+
+<section class="catalog">
+  <div class="wrap">
+    <div class="count-line" id="countLine">Cargando…</div>
+    <div class="grid" id="grid"></div>
+    <div class="loadmore"><button class="btn btn-ghost" id="loadMore" style="display:none" data-i18n="bq_mas">Cargar más</button></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Babyloon · Boutique — <a href="envios-y-devoluciones.html" data-i18n="pb_titulo">Envíos y devoluciones</a> · <a href="index.html" data-i18n="bq_volver">volver al inicio</a> · © 2026</div>
+</footer>
+
+<!-- carrito -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="cartDrawer">
+  <div class="dr-head"><h3 class="display" data-i18n="cart_title">Tu carrito</h3><button class="x" id="cartClose">×</button></div>
+  <div class="dr-body" id="cartBody"></div>
+  <div class="dr-foot" id="cartFoot" style="display:none">
+    <div class="dr-total"><span data-i18n="cart_total">Total</span><b id="cartTotal">&nbsp;</b></div>
+    <button class="btn btn-gold" id="checkout" data-i18n="cart_checkout">Finalizar compra</button>
+    <p class="dr-note" data-i18n="cart_ship">Envío calculado en el siguiente paso.</p>
+  </div>
+</aside>
+
+<!-- detalle producto -->
+<div class="pm" id="prodModal">
+  <div class="pm-card">
+    <div class="pm-img">
+      <img id="pmImg" alt="" />
+      <button class="pm-nav prev" id="pmPrev" type="button" aria-label="Anterior">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button class="pm-nav next" id="pmNext" type="button" aria-label="Siguiente">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      <div class="pm-count" id="pmCount"></div>
+      <div class="pm-thumbs" id="pmThumbs"></div>
+    </div>
+    <div class="pm-body">
+      <button class="x" id="pmClose">×</button>
+      <div class="brand" id="pmBrand"></div>
+      <h2 id="pmName"></h2>
+      <p class="desc" id="pmDesc"></p>
+      <div class="pm-price" id="pmPrice"></div>
+      <p class="pm-nopais" id="pmNoPais" hidden></p>
+      <button class="btn btn-gold" id="pmAdd" data-i18n="add_cart">Añadir al carrito</button>
+      <section class="pm-seg" id="pmSeg" hidden></section>
+    </div>
+  </div>
+</div>
+
+<!-- auth -->
+<div class="amodal" id="authModal">
+  <div class="abox">
+    <button class="x" id="aClose" style="position:absolute;top:14px;right:16px">×</button>
+    <svg class="inf" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>
+    <h3 class="display" data-i18n="auth_title">Inicia sesión</h3>
+    <p data-i18n="auth_sub">Accede para completar tu compra</p>
+    <div class="role-pick" id="aRole">
+      <div class="role sel" data-role="client"><span data-i18n="role_client">Cliente</span><small data-i18n="role_client_sub">Recibir belleza</small></div>
+      <div class="role" data-role="pro"><span data-i18n="role_pro">Profesional</span><small data-i18n="role_pro_sub">Ofrecer servicios</small></div>
+    </div>
+    <button class="btn-google" id="aGoogle" type="button">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.3 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.1 5.3-4.6 7l7.1 5.5c4.2-3.9 6.6-9.6 6.6-16z"/><path fill="#FBBC05" d="M10.5 28.3c-.5-1.4-.7-2.9-.7-4.3s.3-2.9.7-4.3l-7.9-6.1C1 16.9 0 20.3 0 24s1 7.1 2.6 10.4l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.3 0 11.6-2.1 15.5-5.6l-7.1-5.5c-2 1.3-4.5 2.1-8.4 2.1-6.3 0-11.6-3.8-13.5-9.1l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+      <span data-i18n="g_continue">Continuar con Google</span>
+    </button>
+    <div class="m-or"><span data-i18n="g_or">o</span></div>
+    <input type="email" id="aEmail" data-i18n-ph="auth_email" placeholder="Correo" autocomplete="email" />
+    <div class="pass-wrap"><input type="password" id="aPass" data-i18n-ph="auth_pass" placeholder="Contraseña" autocomplete="current-password" />
+      <button type="button" class="pass-ojo" id="aOjo" aria-label="Ver contraseña"></button></div>
+    <button type="button" class="pass-olvide" id="aOlvide">¿Has olvidado tu contraseña?</button>
+    <button class="btn btn-gold" id="aSubmit" data-i18n="auth_enter">Entrar</button>
+    <div class="amsg" id="aMsg"></div>
+    <p style="margin-top:16px;font-size:12px;color:var(--mauve)"><span data-i18n="auth_nocuenta">¿Sin cuenta?</span>
+      <a href="index.html" style="color:var(--gold)" data-i18n="auth_crea">Créala aquí</a></p>
+  </div>
+</div>
+
+<script src="seguro.js?v=1"></script>
+<script src="i18n.js?v=10"></script>
+<script src="i18n-politicas.js?v=1"></script>
+<script src="i18n-paginas.js?v=4"></script>
+<script src="i18n-masterclass.js?v=1"></script>
+<script src="i18n-index.js?v=4"></script>
+<script src="i18n-index-it.js?v=1"></script>
+<script src="i18n-index-nl.js?v=1"></script>
+<script src="i18n-index-pl.js?v=1"></script>
+<script src="i18n-index-el.js?v=1"></script>
+<script src="i18n-index-hu.js?v=1"></script>
+<script src="i18n-index-5.js?v=2"></script>
+<script src="i18n-regalo-completar.js?v=1"></script>
+<script src="i18n-seguridad.js?v=1"></script>
+  <script src="i18n-baby.js?v=1"></script>
+  <script src="i18n-5-resto.js?v=1"></script>
+  <script src="i18n-auth-extra.js?v=2"></script>
+  <script src="i18n-aceptacion.js?v=1"></script>
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="conexion.js?v=1"></script>
+<!-- 52.5 · `money.js` iba al FINAL de la página, y el bloque de abajo
+     llama a `Money.loadFX(sb)` y `Money.currencyForCountry(...)` en el
+     arranque. Como ese arranque es una función `async` suelta, cuando la
+     respuesta del servidor llega antes de que el navegador termine de
+     leer la página —caché caliente, conexión rápida— revienta con «Money
+     is not defined» y se lleva por delante el resto del arranque: sin
+     tipos de cambio, sin moneda del visitante, sin rejilla de productos.
+     Y sin un solo aviso, porque nadie escucha esa promesa.
+     Es la TERCERA vez que aparece el mismo fallo: `como-funciona.html`
+     (32.7) y `checkout.html` (35.3), las dos por esto mismo. Una
+     biblioteca se carga ANTES de quien la usa, no al final del fichero. -->
+<script src="money.js?v=2"></script>
+<script>
+  const SUPABASE_URL="https://qphatjblvojnfyghwmjy.supabase.co";
+  const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  window.__sbClient = sb;
+
+  /* ── categorías ────────────────────────────────────────────────────
+     Antes había TRES listas de categorías que no se hablaban:
+       · `CATS`, los chips, escrito a mano aquí — diez.
+       · `CARD_CAT`, el mapa portada→categoría, también a mano — nueve.
+       · `boutique_category_cards` en la base — once.
+     Se contradecían. «maquinaria» y «barbería» estaban activas en la base
+     y no salían nunca, porque `CARD_CAT` no las conocía. Y los productos
+     de la categoría «Perfumes» no tenían chip ni portada: quien navegara
+     por categorías no los encontraba jamás.
+
+     Ahora la lista la da el servidor (`categorias_boutique`), que además
+     sabe cuántos productos vivos tiene cada una y esconde las vacías. Se
+     edita desde el panel, en Boutique → Portadas.
+
+     Los chips conservan su clave de traducción cuando la tienen: el
+     diccionario de la web tiene los once idiomas y la base, doce nombres
+     sueltos; se usa el mejor de los dos. */
+  const CLAVES_I18N={cabello:'cat_cabello',maquillaje:'cat_maquillaje',unas:'cat_unas',
+    facial:'cat_facial',fragancia:'cat_fragancia',masajes:'cat_masajes',cejas:'cat_cejas',
+    Premium:'cat_premium',belleza:'cat_belleza'};
+  let CATEGORIAS=[];                 // lo que diga el servidor
+  const chipsEl=document.getElementById('chips');
+  const coversEl=document.getElementById('catCovers');
+
+  /** El nombre de una categoría en el idioma de quien mira. */
+  function nombreCat(c){
+    const k=CLAVES_I18N[c.categoria];
+    if(k){ const t=BBL.t(k); if(t && t!==k) return t; }
+    return (c.nombres && (c.nombres[BBL.lang]||c.nombres.es)) || c.categoria || c.slug;
+  }
+
+  async function loadCovers(){
+    const wrap=coversEl?coversEl.closest('.cat-covers-wrap'):null;
+    try{
+      const {data,error}=await sb.rpc('categorias_boutique');
+      if(error) throw error;
+      CATEGORIAS=(data||[]).filter(c=>c.categoria&&c.foto);
+      renderChips();
+      if(!CATEGORIAS.length){ if(wrap)wrap.style.display='none'; return; }
+      if(wrap)wrap.style.display='';
+      coversEl.innerHTML=CATEGORIAS.map(c=>{
+        const nm=nombreCat(c);
+        return `<div class="cover${c.categoria===state.cat?' on':''}" data-cat="${esc(c.categoria)}">
+          <img src="${safeUrl(c.foto)}" alt="${esc(nm)}" loading="lazy">
+          <div class="cv-name">${esc(nm)}</div></div>`;
+      }).join('');
+      coversEl.querySelectorAll('.cover').forEach(cv=>cv.addEventListener('click',()=>{
+        const same = cv.dataset.cat===state.cat;
+        state.cat = same ? '' : cv.dataset.cat;
+        coversEl.querySelectorAll('.cover').forEach(x=>x.classList.toggle('on',x===cv && !same));
+        renderChips(); load(true);
+        document.querySelector('.toolbar').scrollIntoView({behavior:'smooth'});
+      }));
+    }catch(e){
+      console.error(e);
+      if(wrap)wrap.style.display='none';
+      // Sin portadas la tienda sigue: los chips se quedan con «Todos» y
+      // la rejilla de productos no depende de esto.
+      renderChips();
+    }
+  }
+
+  function renderChips(){
+    if(!chipsEl) return;
+    const chips=[{cat:'',nombre:BBL.t('cat_all')}]
+      .concat(CATEGORIAS.map(c=>({cat:c.categoria,nombre:nombreCat(c)})));
+    chipsEl.innerHTML=chips.map(c=>
+      `<button class="chip${c.cat===state.cat?' on':''}" data-cat="${esc(c.cat)}">${esc(c.nombre)}</button>`).join('');
+  }
+
+  // ── estado ──
+  const PAGE=16;
+  const MARKETS=[['ES','🇪🇸'],['US','🇺🇸'],['GB','🇬🇧'],['DE','🇩🇪'],['FR','🇫🇷'],['PT','🇵🇹'],['IT','🇮🇹'],['SE','🇸🇪']];
+  let state={cat:'',q:'',sort:'featured',page:0,done:false,loading:false,country:'ES'};
+  function getCountry(){ try{return localStorage.getItem('bbl_country');}catch(_){return null;} }
+  async function detectCountry(){
+    let c=null;
+    try{ c=new URLSearchParams(location.search).get('ship'); }catch(_){}
+    if(!c) c=getCountry();
+    if(!c){ try{
+      const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),3000);
+      const r=await fetch('/cdn-cgi/trace',{signal:ctrl.signal}); clearTimeout(to); const t=await r.text();
+      const m=t.match(/loc=([A-Z]{2})/); if(m) c=m[1];
+    }catch(_){} }
+    c=(c||'ES').toUpperCase();
+    if(!MARKETS.some(m=>m[0]===c)) c='ES';
+    try{localStorage.setItem('bbl_country',c);}catch(_){}
+    return c;
+  }
+  // Los nombres de los ocho países, escritos. `Intl.DisplayNames` es
+  // cómodo pero depende del navegador y del idioma pedido, y cuando
+  // falla devuelve el código ISO o nada. En el móvil de Andrés el
+  // desplegable salía COMPLETAMENTE VACÍO, y un selector de envío en
+  // blanco no es un detalle: es no saber a dónde te lo mandan.
+  // Ocho nombres escritos no fallan en ningún teléfono.
+  const PAIS_NOMBRE={
+    es:{ES:'España',US:'Estados Unidos',GB:'Reino Unido',DE:'Alemania',FR:'Francia',PT:'Portugal',IT:'Italia',SE:'Suecia'},
+    en:{ES:'Spain',US:'United States',GB:'United Kingdom',DE:'Germany',FR:'France',PT:'Portugal',IT:'Italy',SE:'Sweden'},
+    pt:{ES:'Espanha',US:'Estados Unidos',GB:'Reino Unido',DE:'Alemanha',FR:'França',PT:'Portugal',IT:'Itália',SE:'Suécia'},
+    fr:{ES:'Espagne',US:'États-Unis',GB:'Royaume-Uni',DE:'Allemagne',FR:'France',PT:'Portugal',IT:'Italie',SE:'Suède'},
+    de:{ES:'Spanien',US:'USA',GB:'Vereinigtes Königreich',DE:'Deutschland',FR:'Frankreich',PT:'Portugal',IT:'Italien',SE:'Schweden'},
+    it:{ES:'Spagna',US:'Stati Uniti',GB:'Regno Unito',DE:'Germania',FR:'Francia',PT:'Portogallo',IT:'Italia',SE:'Svezia'},
+    nl:{ES:'Spanje',US:'Verenigde Staten',GB:'Verenigd Koninkrijk',DE:'Duitsland',FR:'Frankrijk',PT:'Portugal',IT:'Italië',SE:'Zweden'},
+    pl:{ES:'Hiszpania',US:'Stany Zjednoczone',GB:'Wielka Brytania',DE:'Niemcy',FR:'Francja',PT:'Portugalia',IT:'Włochy',SE:'Szwecja'},
+    el:{ES:'Ισπανία',US:'ΗΠΑ',GB:'Ηνωμένο Βασίλειο',DE:'Γερμανία',FR:'Γαλλία',PT:'Πορτογαλία',IT:'Ιταλία',SE:'Σουηδία'},
+    hu:{ES:'Spanyolország',US:'Egyesült Államok',GB:'Egyesült Királyság',DE:'Németország',FR:'Franciaország',PT:'Portugália',IT:'Olaszország',SE:'Svédország'},
+    ru:{ES:'Испания',US:'США',GB:'Великобритания',DE:'Германия',FR:'Франция',PT:'Португалия',IT:'Италия',SE:'Швеция'},
+    ar:{ES:'إسبانيا',US:'الولايات المتحدة',GB:'المملكة المتحدة',DE:'ألمانيا',FR:'فرنسا',PT:'البرتغال',IT:'إيطاليا',SE:'السويد'},
+    zh:{ES:'西班牙',US:'美国',GB:'英国',DE:'德国',FR:'法国',PT:'葡萄牙',IT:'意大利',SE:'瑞典'},
+    ja:{ES:'スペイン',US:'アメリカ',GB:'イギリス',DE:'ドイツ',FR:'フランス',PT:'ポルトガル',IT:'イタリア',SE:'スウェーデン'},
+    ko:{ES:'스페인',US:'미국',GB:'영국',DE:'독일',FR:'프랑스',PT:'포르투갈',IT:'이탈리아',SE:'스웨덴'},
+    sv:{ES:'Spanien',US:'USA',GB:'Storbritannien',DE:'Tyskland',FR:'Frankrike',PT:'Portugal',IT:'Italien',SE:'Sverige'}
+  };
+  function countryName(code){
+    const l=(window.BBL&&BBL.lang)||'es';
+    return (PAIS_NOMBRE[l]&&PAIS_NOMBRE[l][code]) || (PAIS_NOMBRE.en&&PAIS_NOMBRE.en[code]) || code;
+  }
+  let _cambioEnvio=false;   // el escuchador, una sola vez
+  function mountCountry(){
+    const sel=document.getElementById('countrySel'); if(!sel)return;
+    const elegido=state.country||getCountry()||'ES';
+    sel.innerHTML=MARKETS.map(([c,flag])=>
+      `<option value="${c}"${c===elegido?' selected':''}>${flag} ${countryName(c)}</option>`).join('');
+    sel.value=elegido;
+    if(!_cambioEnvio){
+      _cambioEnvio=true;   // antes se añadía uno nuevo en CADA cambio de
+                           // idioma, y con él una recarga más del catálogo
+      sel.addEventListener('change',()=>{ state.country=sel.value;
+        try{localStorage.setItem('bbl_country',state.country);}catch(_){}
+        load(true); });
+    }
+  }
+  const grid=document.getElementById('grid');
+  const countLine=document.getElementById('countLine');
+  const loadMoreBtn=document.getElementById('loadMore');
+  // ── moneda por ubicación (convierte desde EUR base) ──
+  // La moneda por pais sale de money.js, que es la misma tabla que
+  // currency_for_country_code en SQL y que CurrencyService en las apps.
+  // Antes habia aqui una tabla propia que ofrecia coronas suecas y
+  // yenes SIN tipo de cambio en exchange_rates: un visitante sueco
+  // veia el importe en euros con una 'kr' detras.
+  // Los simbolos tambien salen de money.js: el '$' pelado servia a la
+  // vez para el peso mexicano, el colombiano, el argentino y el chileno.
+  // Los tipos de cambio los guarda money.js, que los lee de la misma
+  // tabla exchange_rates que usa el backend.
+  let IS_PRO=false;
+  // Los tipos de cambio, desde money.js: misma tabla, misma logica.
+  async function loadFX(){ await Money.loadFX(sb); }
+  // 61.68 · Los precios, en la moneda de quien compra (Money.mine: la de su
+  // cuenta o, sin cuenta, la del pais desde el que mira; si no se sabe,
+  // dolares), y no en la del pais al que se envia: el checkout cobra en la
+  // suya, y quien regalaba desde Madrid a Londres veia libras y pagaba
+  // euros. «Envio a» sigue decidiendo que se vende y la ficha de seguridad.
+  function dispCur(){ return Money.myCode(); }
+  // La conversion vive en money.js, compartida con el checkout y con
+  // el resto del sitio. Una sola implementacion: si cada pagina tiene
+  // la suya, el precio que se ensena deja de ser el que se cobra.
+  function convert(price, fromCur){ return Money.convert(price, fromCur, dispCur()); }
+  function fmtPrice(price, fromCur){ return Money.priceIn(price, fromCur, dispCur()); }
+
+  function cardHTML(p){
+    const price=p.price!=null?fmtPrice(p.price,p.currency):'';
+    const orig=p.original_price&&p.original_price>p.price?`<s>${fmtPrice(p.original_price,p.currency)}</s>`:'';
+    return `<article class="prod" data-id="${p.id}">
+      <div class="ph">
+        ${p.is_featured?`<span class="badge">${BBL.t('featured')}</span>`:''}
+        <button class="fav${WISH.has(p.id)?' on':''}" data-fav="${p.id}" aria-label="Favorito"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M12 21s-7-4.5-9.5-9C1 9 2.5 5 6 5c2 0 3 1 4 2.5C11 6 12 5 14 5c3.5 0 5 4 3.5 7-2.5 4.5-9.5 9-9.5 9z"/></svg></button>
+        <img src="${safeUrl(p.image_url)}" alt="${esc(BBL.prodName(p))}" loading="lazy"
+             onerror="this.parentNode.innerHTML='<div class=out>—</div>'"/>
+        ${p.in_stock===false?`<div class="out">${BBL.t('soldout')}</div>`:''}
+      </div>
+      <div class="info">
+        ${p.brand?`<span class="brand">${esc(p.brand)}</span>`:`<span class="brand">${BBL.t('by_babyloon')}</span>`}
+        <h3>${esc(BBL.prodName(p))}</h3>
+        <div class="foot">
+          <div class="price">${orig}${price}</div>
+          <button class="add" data-add="${p.id}" aria-label="Añadir">+</button>
+        </div>
+      </div>
+    </article>`;
+  }
+  function esc(s){return (s||'').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));}
+
+  let cache={};
+  async function load(reset){
+    if(state.loading||(state.done&&!reset))return;
+    state.loading=true;
+    if(reset){state.page=0;state.done=false;grid.innerHTML=
+      Array(8).fill('<div class="skeleton"></div>').join('');}
+    let qb=sb.from('boutique_products')
+      .select('id,name,name_en,name_de,name_fr,name_pt,brand,category,price,original_price,currency,image_url,images,in_stock,is_featured,is_luxury,description_es,description_en,description_de,description_fr,description_pt,description_sv,description_ja,description_ar,description_zh,description_ko,description_ru')
+      .eq('is_active',true).not('image_url','is',null);
+    // 61.7 · Donde se VENDE, no sólo donde envía el proveedor: en la UE,
+    // sin ficha de seguridad firmada no se vende (lo calcula la base).
+    if(state.country) qb=qb.contains('paises_de_venta',[state.country]);
+    if(state.cat) qb=qb.eq('category',state.cat);
+    if(state.q) qb=qb.ilike('name',`%${state.q}%`);
+    if(state.sort==='price_asc') qb=qb.order('price',{ascending:true,nullsFirst:false});
+    else if(state.sort==='price_desc') qb=qb.order('price',{ascending:false,nullsFirst:false});
+    else if(state.sort==='new') qb=qb.order('created_at',{ascending:false,nullsFirst:false});
+    else qb=qb.order('is_luxury',{ascending:false,nullsFirst:false}).order('is_featured',{ascending:false,nullsFirst:false}).order('rank',{nullsFirst:false});
+    const from=state.page*PAGE;
+    qb=qb.range(from,from+PAGE-1);
+    try{
+      const {data,error}=await Promise.race([qb,
+        new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),8000))]);
+      if(error)throw error;
+      if(reset)grid.innerHTML='';
+      (data||[]).forEach(p=>{cache[p.id]=p;});
+      grid.insertAdjacentHTML('beforeend',(data||[]).map(cardHTML).join(''));
+      state.page++;
+      if(!data||data.length<PAGE)state.done=true;
+      loadMoreBtn.style.display=state.done?'none':'inline-block';
+      const shown=grid.querySelectorAll('.prod').length;
+      countLine.textContent = shown===0?'':`${shown} ${shown!==1?BBL.t('products_many'):BBL.t('products_one')}${state.done?'':' · '+BBL.t('swipe_more')}`;
+      if(shown===0)grid.innerHTML=`<div class="empty" style="grid-column:1/-1">
+        <svg viewBox="0 0 120 60" class="inf"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>
+        <p>${BBL.t('empty_search')}</p></div>`;
+    }catch(e){
+      const conn=/fetch|network|Failed|Load failed|timeout/i.test(e&&(e.message||''));
+      countLine.textContent=conn?BBL.t('err_conn'):BBL.t('err_load');
+      console.error(e);
+    }finally{state.loading=false;}
+  }
+
+  // filtros
+  chipsEl.addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;
+    chipsEl.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===b));
+    state.cat=b.dataset.cat;
+    if(coversEl) coversEl.querySelectorAll('.cover').forEach(cv=>cv.classList.toggle('on',cv.dataset.cat===state.cat && state.cat!==''));
+    load(true);});
+  document.getElementById('sort').addEventListener('change',e=>{state.sort=e.target.value;load(true);});
+  let st;document.getElementById('search').addEventListener('input',e=>{
+    clearTimeout(st);st=setTimeout(()=>{state.q=e.target.value.trim();load(true);},350);});
+  loadMoreBtn.addEventListener('click',()=>load(false));
+  addEventListener('scroll',()=>{if(state.done||state.loading)return;
+    if(innerHeight+scrollY>document.body.offsetHeight-600)load(false);});
+
+  // ── favoritos (boutique_wishlist) ──
+  let WISH=new Set();
+  async function loadWish(){
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session){WISH=new Set();markWish();return;}
+    const {data}=await sb.from('boutique_wishlist').select('product_id').eq('client_id',session.user.id);
+    WISH=new Set((data||[]).map(r=>r.product_id)); markWish();
+  }
+  function markWish(){document.querySelectorAll('[data-fav]').forEach(b=>b.classList.toggle('on',WISH.has(b.dataset.fav)));}
+  async function toggleFav(pid,btn){
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session){openAuth();return;}
+    if(WISH.has(pid)){await sb.from('boutique_wishlist').delete().eq('client_id',session.user.id).eq('product_id',pid);WISH.delete(pid);btn.classList.remove('on');}
+    else{const {error}=await sb.from('boutique_wishlist').insert({client_id:session.user.id,product_id:pid});if(!error){WISH.add(pid);btn.classList.add('on');}}
+  }
+
+  // abrir detalle / añadir
+  grid.addEventListener('click',e=>{
+    const fav=e.target.closest('[data-fav]');
+    if(fav){e.stopPropagation();toggleFav(fav.dataset.fav,fav);return;}
+    const add=e.target.closest('[data-add]');
+    if(add){e.stopPropagation();addToCart(cache[add.dataset.add]);pulse(add);return;}
+    const card=e.target.closest('.prod');
+    if(card)openProduct(cache[card.dataset.id]);
+  });
+  function pulse(el){el.textContent='✓';el.style.background='linear-gradient(135deg,#8E723F,#C9A96E)';
+    el.style.color='#0D0B0F';setTimeout(()=>{el.textContent='+';el.style.background='';el.style.color='';},900);}
+
+  // ── modal producto ──
+  const pm=document.getElementById('prodModal');let pmCurrent=null;
+  // ── galería del producto ─────────────────────────────────────────
+  // `images` es un array de urls; `image_url` es la portada. Se juntan
+  // sin repetir y respetando el orden: la portada primero.
+  let pmFotos=[], pmI=0;
+  function fotosDe(p){
+    const out=[];
+    const mete=u=>{ u=(u||'').toString().trim(); if(u && out.indexOf(u)<0) out.push(u); };
+    mete(p.image_url);
+    let arr=p.images;
+    if(typeof arr==='string'){ try{ arr=JSON.parse(arr); }catch(_){ arr=null; } }
+    if(Array.isArray(arr)) arr.forEach(x=>mete(typeof x==='string'?x:(x&&(x.url||x.src))));
+    return out;
+  }
+  function pintaFoto(i){
+    if(!pmFotos.length) return;
+    pmI=(i+pmFotos.length)%pmFotos.length;
+    document.getElementById('pmImg').src=pmFotos[pmI];
+    document.getElementById('pmCount').textContent=(pmI+1)+' / '+pmFotos.length;
+    document.querySelectorAll('#pmThumbs button').forEach((b,k)=>b.classList.toggle('on',k===pmI));
+  }
+  function montaGaleria(p){
+    pmFotos=fotosDe(p); pmI=0;
+    const caja=document.querySelector('.pm-img');
+    const tiras=document.getElementById('pmThumbs');
+    caja.classList.toggle('varias', pmFotos.length>1);
+    tiras.innerHTML=pmFotos.length>1
+      ? pmFotos.map((u,k)=>`<button type="button" data-k="${k}"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('')
+      : '';
+    pintaFoto(0);
+  }
+  function openProduct(p){if(!p)return;pmCurrent=p;
+    montaGaleria(p);
+    document.getElementById('pmBrand').textContent=p.brand||BBL.t('by_babyloon');
+    document.getElementById('pmName').textContent=BBL.prodName(p);
+    document.getElementById('pmDesc').textContent=(BBL.prodDesc(p)||'').slice(0,420);
+    const price=p.price!=null?fmtPrice(p.price,p.currency):'';
+    const orig=p.original_price&&p.original_price>p.price?`<s>${fmtPrice(p.original_price,p.currency)}</s>`:'';
+    document.getElementById('pmPrice').innerHTML=orig+price;
+    cargaSeguridad(p);
+    pm.classList.add('open');document.body.style.overflow='hidden';}
+  /* 61.7 · Seguridad del producto (GPSR). Sólo se enseña una ficha
+     FIRMADA, la da el servidor, y lo que escribió el fabricante no se
+     traduce: se dice en qué lengua está. Si el servidor no contesta, la
+     ficha se queda sin el bloque y el botón sigue: quien decide si se
+     vende es el servidor, al cobrar. */
+  let segPedida=0;
+  async function cargaSeguridad(p){
+    const caja=document.getElementById('pmSeg'), nop=document.getElementById('pmNoPais'),
+          add=document.getElementById('pmAdd');
+    caja.hidden=true; caja.innerHTML=''; nop.hidden=true; add.disabled=false;
+    const yo=++segPedida;
+    let r=null;
+    try{
+      const res=await Promise.race([
+        sb.rpc('ficha_de_seguridad',{p_producto:p.id,p_idioma:(BBL.lang||'es'),p_pais:state.country||null}),
+        new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),6000))]);
+      if(res.error) return;
+      r=res.data;
+    }catch(_){ return; }
+    if(yo!==segPedida||!r) return;          // se abrió otra ficha entretanto
+    if(r.se_vende_en_el_pais===false){
+      nop.textContent=BBL.t('fs_no_pais').replace('{pais}',countryName(state.country));
+      nop.hidden=false; add.disabled=true;
+    }
+    if(!r.hay) return;
+    const t=(k)=>BBL.t(k);
+    const operador=(o)=>{
+      const web=(o.web&&/^https?:\/\//i.test(o.web))
+        ? `<a href="${esc(o.web)}" target="_blank" rel="noopener nofollow">${esc(o.web.replace(/^https?:\/\//i,''))}</a>` : '';
+      const mail=o.email?`<a href="mailto:${esc(o.email)}">${esc(o.email)}</a>`:'';
+      return `<b>${esc(o.nombre)}</b><br>${esc(o.direccion)} · ${esc(countryName(o.pais))}`
+        + ([mail,web].filter(Boolean).length?`<br>${[mail,web].filter(Boolean).join(' · ')}`:'');
+    };
+    const filas=[];
+    if(r.fabricante) filas.push([t('fs_fabricante'),operador(r.fabricante)]);
+    if(r.responsable) filas.push([t('fs_responsable'),operador(r.responsable)
+      +(r.responsable.rol?`<span class="lang">${esc(t('fs_rol_'+r.responsable.rol))}</span>`:'')]);
+    if(r.tipo_o_modelo) filas.push([t('fs_modelo'),esc(r.tipo_o_modelo)]);
+    if(r.lote_o_serie) filas.push([t('fs_lote'),esc(r.lote_o_serie)]);
+    if(r.sin_advertencias) filas.push([t('fs_advertencias'),esc(t('fs_sin_advertencias'))]);
+    else if(r.advertencias&&r.advertencias.texto){
+      const otra=r.advertencias.idioma&&r.advertencias.idioma!==BBL.lang;
+      filas.push([t('fs_advertencias'),`<span class="adv">${esc(r.advertencias.texto)}</span>`
+        +(otra?`<span class="lang">${esc(t('fs_idioma_texto').replace('{idioma}',String(r.advertencias.idioma).toUpperCase()))}</span>`:'')]);
+    }
+    if(r.inci) filas.push([t('fs_inci'),esc(r.inci)]);
+    if(r.pao_meses) filas.push(['',esc(t('fs_pao').replace('{n}',String(r.pao_meses)))]);
+    if(!filas.length) return;
+    caja.innerHTML=`<h3>${esc(t('fs_titulo'))}</h3><dl>`
+      + filas.map(([k,v])=>`<div>${k?`<dt>${esc(k)}</dt>`:''}<dd>${v}</dd></div>`).join('') + '</dl>';
+    caja.hidden=false;
+  }
+  function closePm(){pm.classList.remove('open');document.body.style.overflow='';}
+  document.getElementById('pmClose').addEventListener('click',closePm);
+  pm.addEventListener('click',e=>{if(e.target===pm)closePm();});
+  document.getElementById('pmPrev').addEventListener('click',e=>{e.stopPropagation();pintaFoto(pmI-1);});
+  document.getElementById('pmNext').addEventListener('click',e=>{e.stopPropagation();pintaFoto(pmI+1);});
+  document.getElementById('pmThumbs').addEventListener('click',e=>{
+    const b=e.target.closest('button[data-k]'); if(!b)return;
+    e.stopPropagation(); pintaFoto(Number(b.dataset.k));});
+  addEventListener('keydown',e=>{
+    if(!pm.classList.contains('open')||pmFotos.length<2)return;
+    if(e.key==='ArrowLeft') pintaFoto(pmI-1);
+    if(e.key==='ArrowRight') pintaFoto(pmI+1);});
+  // En el móvil se pasa la foto con el dedo, que es como se mira una ficha.
+  (function(){
+    const caja=document.querySelector('.pm-img'); let x0=null;
+    caja.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+    caja.addEventListener('touchend',e=>{
+      if(x0===null||pmFotos.length<2){x0=null;return;}
+      const dx=e.changedTouches[0].clientX-x0; x0=null;
+      if(Math.abs(dx)>40) pintaFoto(pmI+(dx<0?1:-1));},{passive:true});
+  })();
+  document.getElementById('pmAdd').addEventListener('click',()=>{addToCart(pmCurrent);closePm();openCart();});
+
+  // ── carrito ──
+  let cart=loadCart();
+  function loadCart(){try{return JSON.parse(localStorage.getItem('bbl_cart')||'[]');}catch(_){return window._cart||[];}}
+  function saveCart(){try{localStorage.setItem('bbl_cart',JSON.stringify(cart));}catch(_){window._cart=cart;}}
+  function addToCart(p){if(!p)return;
+    try{ if(window.BBLPresencia) BBLPresencia.evento('anadir_al_carrito',
+      {producto:p.id, nombre:(p.name||'').slice(0,60), precio:p.price, moneda:p.currency||'EUR'}); }catch(_){}
+const ex=cart.find(i=>i.id===p.id);
+    if(ex)ex.qty++;else cart.push({id:p.id,name:BBL.prodName(p),price:p.price,currency:p.currency,image_url:p.image_url,qty:1});
+    saveCart();renderCart();}
+  function renderCart(){
+    const n=cart.reduce((a,i)=>a+i.qty,0);
+    const cc=document.getElementById('cartCount');
+    cc.textContent=n;cc.classList.toggle('hide',n===0);
+    const body=document.getElementById('cartBody');
+    if(!cart.length){body.innerHTML=`<div class="cart-empty">${BBL.t('cart_empty')}<br>${BBL.t('cart_empty_sub')}</div>`;
+      document.getElementById('cartFoot').style.display='none';return;}
+    body.innerHTML=cart.map(i=>`<div class="ci">
+      <img src="${safeUrl(i.image_url)}" alt=""/>
+      <div class="ci-info"><h4>${esc(i.name)}</h4>
+        <div class="ci-price">${fmtPrice(i.price,i.currency)}</div>
+        <div class="qty"><button data-dec="${i.id}">−</button><span>${i.qty}</span><button data-inc="${i.id}">+</button></div>
+        <button class="ci-rm" data-rm="${i.id}">${BBL.t('cart_remove')}</button>
+      </div></div>`).join('');
+    // El total del carrito: se convierte cada linea y se suman ya
+    // convertidas, igual que hace cart_get en el backend. El redondeo
+    // a .99 no es lineal, asi que convertir el total daria otra cifra.
+    const total=cart.reduce((a,i)=>a+convert(i.price,i.currency)*i.qty,0);
+    document.getElementById('cartTotal').textContent=Money.format(total, dispCur());
+    document.getElementById('cartFoot').style.display='block';
+  }
+  document.getElementById('cartBody').addEventListener('click',e=>{
+    const inc=e.target.closest('[data-inc]'),dec=e.target.closest('[data-dec]'),rm=e.target.closest('[data-rm]');
+    if(inc){const it=cart.find(i=>i.id===inc.dataset.inc);it.qty++;}
+    else if(dec){const it=cart.find(i=>i.id===dec.dataset.dec);it.qty--;if(it.qty<1)cart=cart.filter(i=>i.id!==it.id);}
+    else if(rm){cart=cart.filter(i=>i.id!==rm.dataset.rm);}
+    else return;saveCart();renderCart();});
+
+  const scrim=document.getElementById('scrim'),drawer=document.getElementById('cartDrawer');
+  function openCart(){drawer.classList.add('open');scrim.classList.add('open');document.body.style.overflow='hidden';}
+  function closeCart(){drawer.classList.remove('open');scrim.classList.remove('open');document.body.style.overflow='';}
+  document.getElementById('cartBtn').addEventListener('click',openCart);
+  document.getElementById('cartClose').addEventListener('click',closeCart);
+  scrim.addEventListener('click',closeCart);
+  addEventListener('keydown',e=>{if(e.key==='Escape'){closeCart();closePm();closeAuth();}});
+
+  // ── checkout (requiere sesión) → página de pago con Stripe ──
+  document.getElementById('checkout').addEventListener('click',async()=>{
+    if(!cart.length)return;
+    const {data}=await sb.auth.getSession();
+    if(!data.session){openAuth();return;}
+    try{ if(window.BBLPresencia) BBLPresencia.evento('empezar_pago',
+      {articulos: cart.reduce(function(n,i){return n+(i.qty||1);},0)}); }catch(_){}
+    location.href='checkout.html';
+  });
+
+  // ── auth ──
+  const am=document.getElementById('authModal');
+  function openAuth(){am.classList.add('open');document.body.style.overflow='hidden';}
+  function closeAuth(){am.classList.remove('open');document.body.style.overflow='';document.getElementById('aMsg').textContent='';}
+  const loginBtn=document.getElementById('loginBtn');
+  /* El mismo acceso dentro del menú de móvil: un solo comportamiento,
+     dos botones. `ponAcceso` mantiene los dos diciendo lo mismo. */
+  const loginBtnM=document.getElementById('loginBtnM');
+  if(loginBtnM) loginBtnM.addEventListener('click',()=>loginBtn.click());
+  const ponAcceso=txt=>{loginBtn.textContent=txt; if(loginBtnM) loginBtnM.textContent=txt;};
+  let authRole='client';
+  document.querySelectorAll('#aRole .role').forEach(r=>r.addEventListener('click',()=>{
+    authRole=r.dataset.role;
+    document.querySelectorAll('#aRole .role').forEach(x=>x.classList.toggle('sel',x===r));
+  }));
+  async function goPanel(){ const {data}=await sb.auth.getSession(); if(!data.session)return null;
+    let d='cliente.html'; try{const {data:p}=await sb.from('professionals').select('id').eq('user_id',data.session.user.id).maybeSingle(); if(p)d='profesional.html';}catch(_){} return d; }
+  loginBtn.addEventListener('click',async()=>{const dest=await goPanel();
+    if(dest){location.href=dest;}else{openAuth();}});
+  document.getElementById('aGoogle').addEventListener('click',async()=>{
+    const dest=authRole==='pro'?'/profesional.html':'/cliente.html';
+    try{await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+dest}});}
+    catch(_){const m=document.getElementById('aMsg');m.textContent='Google no disponible ahora.';m.classList.add('err');}
+  });
+  document.getElementById('aClose').addEventListener('click',closeAuth);
+  am.addEventListener('click',e=>{if(e.target===am)closeAuth();});
+  /* ── Ver la contraseña y recuperarla ── (mismo comportamiento que auth.js y la portada;
+     se responde SIEMPRE lo mismo exista o no la cuenta) */
+  (function(){
+    const T2=(k,d)=>{ try{ const v=BBL.t(k); return v&&v!==k?v:d; }catch(_){ return d; } };
+    const OJO_C='<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+    const OJO_A='<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.8-7 10-7c2 0 3.7.6 5.1 1.4M22 12s-3.8 7-10 7c-2 0-3.7-.6-5.1-1.4"/><path d="M4 4l16 16"/></svg>';
+    const ojo=document.getElementById('aOjo'), pass=document.getElementById('aPass'), olv=document.getElementById('aOlvide');
+    const textos=()=>{ ojo.setAttribute('aria-label', T2(pass.type==='password'?'au_ver':'au_ocultar', pass.type==='password'?'Ver contraseña':'Ocultar contraseña'));
+      olv.textContent=T2('au_olvide','¿Has olvidado tu contraseña?'); };
+    ojo.innerHTML=OJO_C; textos();
+    ojo.addEventListener('click',()=>{ const ver=pass.type==='password'; pass.type=ver?'text':'password';
+      ojo.innerHTML=ver?OJO_A:OJO_C; textos(); pass.focus(); });
+    document.addEventListener('bbl:lang', textos);
+    olv.addEventListener('click', async ()=>{
+      const email=document.getElementById('aEmail').value.trim(), m=document.getElementById('aMsg');
+      m.className='amsg';
+      if(!email){ m.textContent=T2('au_r_falta','Escribe tu correo arriba y vuelve a pulsar.'); m.classList.add('err'); document.getElementById('aEmail').focus(); return; }
+      olv.disabled=true; m.textContent=T2('au_espera','Un momento…');
+      let espera=false;
+      try{ const { error }=await sb.auth.resetPasswordForEmail(email,{ redirectTo: location.origin+'/recuperar.html' });
+        espera=!!(error && /second|seconds|rate|security purposes/i.test(error.message||'')); }catch(_){}
+      olv.disabled=false;
+      if(espera){ m.textContent=T2('au_r_espera','Espera un minuto antes de pedir otro.'); m.classList.add('err'); return; }
+      m.textContent=T2('au_r_enviado_v2','Si ese correo tiene cuenta, te hemos enviado un correo para cambiar la contraseña. Mira también el correo no deseado.')+' ';
+      const a=document.createElement('a'); a.href='recuperar.html?email='+encodeURIComponent(email);
+      a.textContent=T2('au_r_tengo','Ya tengo el código'); m.appendChild(a); m.classList.add('ok');
+    });
+  })();
+  document.getElementById('aSubmit').addEventListener('click',async()=>{
+    const email=document.getElementById('aEmail').value.trim(),pass=document.getElementById('aPass').value;
+    const m=document.getElementById('aMsg');m.className='amsg';
+    if(!email||!pass){m.textContent='Introduce correo y contraseña.';m.classList.add('err');return;}
+    try{const {error}=await sb.auth.signInWithPassword({email,password:pass});
+      if(error)throw error;
+      if(authRole==='pro'){location.href='profesional.html';return;}
+      /* 61.5 · Aquí se entra sin recargar la página, así que el aviso que
+         sale al cargar no salta: se pregunta ahora, antes de cerrar. */
+      if(window.BBLAceptacion && !(await BBLAceptacion.asegurar({forzar:true}))) return;
+      m.textContent='Sesión iniciada.';m.classList.add('ok');
+      ponAcceso(BBL.t('nav_micuenta'));setTimeout(closeAuth,700);
+    }catch(err){m.textContent=/Invalid login/i.test(err.message)?BBL.t('auth_bad'):err.message;m.classList.add('err');}
+  });
+  sb.auth.getSession().then(({data})=>{if(data.session)ponAcceso(BBL.t('nav_micuenta'));});
+
+  // ── i18n / idioma ──
+  function applyDynamic(){
+    const so=document.getElementById('sort');
+    if(so){so.options[0].text=BBL.t('sort_featured');so.options[1].text=BBL.t('sort_price_asc');
+      so.options[2].text=BBL.t('sort_price_desc');so.options[3].text=BBL.t('sort_new');}
+    const lm=document.getElementById('loadMore');if(lm)lm.textContent=BBL.t('loadmore');
+    const lb=document.getElementById('loginBtn');
+    if(lb&&lb.textContent!=='Mi cuenta')lb.textContent=BBL.t('nav_entrar');
+  }
+  BBL.mountSwitcher(document.getElementById('langSwitch'));
+  BBL.mountSwitcher(document.getElementById('langSwitchM'));
+  (function(){
+    const mt=document.getElementById('menuToggle'), nl=document.getElementById('navLinks'), nr=document.querySelector('.nav-right');
+    if(mt)mt.addEventListener('click',()=>nl.classList.toggle('open'));
+    if(nl)nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nl.classList.remove('open')));
+    const login=document.getElementById('loginBtn'), cart=document.getElementById('cartBtn');
+    function place(){
+      if(window.innerWidth<=920){ if(login&&login.parentElement!==nl)nl.appendChild(login); }
+      else{ if(login&&login.parentElement!==nr)nr.insertBefore(login,cart); }
+    }
+    place(); window.addEventListener('resize',place);
+  })();
+  try{const _cat=new URLSearchParams(location.search).get('cat'); if(_cat) state.cat=_cat;}catch(_){}
+  renderChips();applyDynamic();loadCovers();
+  const bcta=document.getElementById('bannerCta');
+  if(bcta)bcta.addEventListener('click',()=>document.querySelector('.toolbar').scrollIntoView({behavior:'smooth'}));
+  document.addEventListener('bbl:lang',()=>{renderChips();applyDynamic();renderCart();loadCovers();load(true);mountCountry();});
+
+  // init
+  renderCart();
+  // Se pinta con lo que ya se sabe (lo guardado, o España) ANTES de
+  // preguntar a la red. Si la detección tarda o falla, el selector ya
+  // está puesto; si llega, se repinta con el país bueno. Antes todo
+  // colgaba de que esa promesa resolviera, y si no resolvía el
+  // desplegable se quedaba vacío para siempre.
+  state.country = getCountry() || 'ES';
+  mountCountry();
+  // 61.68 · La moneda de quien compra se pide a la vez que el pais de envio.
+  const _moneda = Money.mine(sb);
+  detectCountry().then(async c=>{ state.country=c; mountCountry();
+    await Promise.all([loadFX(), _moneda]);
+    renderCart();
+    try{ const {data:{session}}=await sb.auth.getSession(); if(session){ const {data:pro}=await sb.from('professionals').select('id').eq('user_id',session.user.id).maybeSingle(); IS_PRO=!!pro; } }catch(_){}
+    load(true); loadWish(); });
+</script>
+<script src="cookies.js?v=2"></script>
+<script src="presencia.js?v=2"></script>
+<script src="baby.js?v=2"></script>
+<script src="lujo.js?v=1"></script>
+<script src="aceptacion.js?v=1"></script>
+</body>
+</html>

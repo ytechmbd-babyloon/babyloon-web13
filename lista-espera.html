@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lista de espera para profesionales · Babyloon</title>
+<meta name="description" content="Babyloon abre en todo el mundo. Si eres profesional de la belleza y tu ciudad todavía no está, apúntate: las próximas ciudades se deciden con quién se apunta." />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0D0B0F" />
+<link rel="canonical" href="https://babyloon.app/lista-espera.html" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Babyloon" />
+<meta property="og:title" content="Lista de espera para profesionales · Babyloon" />
+<meta property="og:description" content="Babyloon abre en todo el mundo. Las próximas ciudades se deciden con quién se apunta." />
+<meta property="og:url" content="https://babyloon.app/lista-espera.html" />
+<meta property="og:image" content="https://babyloon.app/og-image.png" />
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<style>
+  :root{--ink:#0D0B0F;--plum:#241820;--plum-2:#1B1219;--gold:#C8A96A;--gold-lite:#F3E0BC;--cream:#F9F5EE;
+    --smoke:#E8E0D5;--mauve:#8C7482;--line:rgba(200,169,106,.16);--line-soft:rgba(249,245,238,.07);
+    --ok:#3DD68C;--warn:#E0A052;--serif:'Cormorant Garamond',serif;--sans:'Jost',system-ui,sans-serif;
+    --gold-grad:linear-gradient(135deg,#8E723F,#F3E0BC 42%,#C9A96E 72%,#9C8050)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:var(--sans);font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:980px;margin:0 auto;padding:0 28px}
+  .inf path{stroke:url(#gg);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .gold-text{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .eyebrow{font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold)}
+  header{position:sticky;top:0;z-index:50;background:rgba(13,11,15,.85);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:16px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:24px}
+  .nav a.back{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--smoke)}
+  .nav a.back:hover{color:var(--gold)}
+
+  .hero{text-align:center;padding:72px 0 44px;position:relative}
+  .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(55% 75% at 50% 0%,rgba(200,169,106,.1),transparent 70%)}
+  .hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(38px,6vw,64px);line-height:1.05;margin:16px auto 18px;max-width:14ch;text-wrap:balance;position:relative}
+  .hero p{color:var(--smoke);max-width:60ch;margin:0 auto;font-size:16px;position:relative}
+
+  /* ciudades abiertas */
+  .live{padding:8px 0 40px}
+  .live h2{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--mauve);text-align:center;margin-bottom:16px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .chip{border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:12.5px;color:var(--smoke);
+    display:inline-flex;align-items:center;gap:7px}
+  .chip i{width:5px;height:5px;border-radius:50%;background:var(--ok);font-style:normal;flex-shrink:0}
+
+  /* formulario */
+  .card{background:var(--plum-2);border:1px solid var(--line);border-radius:16px;padding:32px;margin-bottom:64px}
+  .card h2{font-family:var(--serif);font-size:30px;font-weight:400;margin-bottom:6px}
+  .card .lead{color:var(--mauve);font-size:13.5px;margin-bottom:26px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+  .fld{display:flex;flex-direction:column;gap:6px}
+  .fld label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+  .fld input,.fld select{background:rgba(249,245,238,.04);border:1px solid var(--line-soft);border-radius:8px;
+    padding:12px 14px;color:var(--cream);font-family:var(--sans);font-size:14.5px;font-weight:300;width:100%}
+  .fld input:focus,.fld select:focus{outline:none;border-color:var(--gold)}
+  .fld input::placeholder{color:var(--mauve)}
+  .fld select option{background:#241820;color:var(--cream)}
+  .fld .hint{font-size:11px;color:var(--mauve)}
+  .cats{display:flex;flex-wrap:wrap;gap:8px}
+  .cat{border:1px solid var(--line-soft);border-radius:999px;padding:8px 14px;font-size:12.5px;color:var(--smoke);
+    cursor:pointer;user-select:none;transition:.2s;background:none;font-family:var(--sans);font-weight:300}
+  .cat:hover{border-color:var(--line)}
+  .cat[aria-pressed="true"]{border-color:var(--gold);color:var(--gold);background:rgba(200,169,106,.08)}
+  .cat:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .check{display:flex;gap:11px;align-items:flex-start;margin-top:4px}
+  .check input{width:16px;height:16px;accent-color:var(--gold);margin-top:3px;flex-shrink:0}
+  .check span{font-size:12.5px;color:var(--mauve);line-height:1.5}
+  .check a{color:var(--smoke);text-decoration:underline}
+  .btn-gold{background:var(--gold-grad);background-size:180% 180%;color:var(--ink);border:none;border-radius:4px;
+    padding:15px 34px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;cursor:pointer;
+    transition:.3s;font-family:var(--sans)}
+  .btn-gold:hover{background-position:100% 0}
+  .btn-gold:disabled{opacity:.45;cursor:not-allowed}
+  .btn-ghost{color:var(--cream);border:1px solid var(--line);background:none;border-radius:4px;padding:14px 28px;
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;font-family:var(--sans);display:inline-block}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+  .actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:24px}
+  .msg{font-size:13px;padding:12px 15px;border-radius:8px;margin-top:18px;display:none}
+  .msg.on{display:block}
+  .msg.err{background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.3);color:#F0A0A0}
+
+  /* pantalla de gracias */
+  .done{display:none;text-align:center;padding:16px 0 10px}
+  .done.on{display:block}
+  .done .mark{width:56px;height:56px;border-radius:50%;margin:0 auto 20px;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:24px}
+  .done h2{font-family:var(--serif);font-size:32px;font-weight:400;margin-bottom:10px}
+  .done p{color:var(--smoke);max-width:52ch;margin:0 auto 22px;font-size:14.5px}
+  .done .open-note{border:1px solid rgba(61,214,140,.3);background:rgba(61,214,140,.06);border-radius:10px;
+    padding:16px 18px;max-width:52ch;margin:0 auto 22px;color:var(--smoke);font-size:13.5px}
+
+  footer{border-top:1px solid var(--line);padding:38px 0;text-align:center;color:var(--mauve);font-size:12px}
+  footer a{color:var(--smoke)}footer a:hover{color:var(--gold)}
+  @media(max-width:700px){.row{grid-template-columns:1fr}.card{padding:24px 20px}}
+</style>
+<link rel="stylesheet" href="movil.css?v=1" />
+
+<link rel="stylesheet" href="estetica.css?v=2" />
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8E723F"/><stop offset=".42" stop-color="#F3E0BC"/><stop offset=".72" stop-color="#C9A96E"/><stop offset="1" stop-color="#9C8050"/></linearGradient></defs></svg>
+
+<header><div class="wrap nav">
+  <a href="index.html" class="brand"><svg class="inf" width="36" height="18" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>Babyloon</a>
+  <div style="display:flex;align-items:center;gap:18px">
+    <span id="langSwitch"></span>
+    <a href="index.html" class="back" data-i18n="back_home">← Inicio</a>
+    <!-- 26.1 · Quien llega aquí viene a darse de alta. Lo que se le
+         cuenta de lo que gana está en la otra página, y no había forma
+         de llegar a ella. -->
+    <a href="para-profesionales.html" class="back" data-i18n="pp_cta2">Ver los números</a>
+  </div>
+</div></header>
+
+<main>
+  <section class="hero"><div class="wrap">
+    <span class="eyebrow" data-i18n="wl_eyebrow">Profesionales · Lista de espera</span>
+    <h1><span data-i18n="wl_h1a">Babyloon abre</span> <span class="gold-text" data-i18n="wl_h1b">en todo el mundo</span></h1>
+    <p data-i18n="wl_lead">Empezamos por un grupo de ciudades y vamos abriendo el resto. Si la tuya todavía no está, apúntate: las próximas se deciden mirando dónde hay profesionales esperando, no por intuición.</p>
+  </div></section>
+
+  <section class="live"><div class="wrap">
+    <h2 data-i18n="wl_live_title">Ya estamos aquí</h2>
+    <div class="chips" id="liveCities"></div>
+  </div></section>
+
+  <section><div class="wrap">
+    <div class="card">
+
+      <form id="wlForm">
+        <h2 data-i18n="wl_form_title">Apúntate</h2>
+        <p class="lead" data-i18n="wl_form_lead">Dos minutos. Te escribimos en cuanto abramos tu ciudad.</p>
+
+        <div class="row">
+          <div class="fld">
+            <label for="wlName" data-i18n="wl_name">Nombre y apellidos</label>
+            <input id="wlName" name="name" required autocomplete="name" />
+          </div>
+          <div class="fld">
+            <label for="wlEmail" data-i18n="wl_email">Correo</label>
+            <input id="wlEmail" name="email" type="email" required autocomplete="email" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="fld">
+            <label for="wlCity" data-i18n="wl_city">Ciudad</label>
+            <input id="wlCity" name="city" required autocomplete="address-level2" />
+            <span class="hint" id="cityHint"></span>
+          </div>
+          <div class="fld">
+            <label for="wlCountry" data-i18n="wl_country">País</label>
+            <input id="wlCountry" name="country" autocomplete="country-name" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="fld">
+            <label for="wlPhone" data-i18n="wl_phone">Teléfono (opcional)</label>
+            <input id="wlPhone" name="phone" type="tel" autocomplete="tel" />
+          </div>
+          <div class="fld">
+            <label for="wlInsta" data-i18n="wl_instagram">Instagram (opcional)</label>
+            <input id="wlInsta" name="instagram" placeholder="@" />
+          </div>
+        </div>
+
+        <div class="fld" style="margin-bottom:16px">
+          <label data-i18n="wl_services">Qué haces</label>
+          <div class="cats" id="cats"></div>
+        </div>
+
+        <div class="row">
+          <div class="fld">
+            <label for="wlYears" data-i18n="wl_years">Años de experiencia</label>
+            <select id="wlYears" name="years">
+              <option value="" data-i18n="wl_choose">Elige…</option>
+              <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+              <option value="5">4 – 6</option><option value="8">7 – 10</option>
+              <option value="12" data-i18n="wl_years_more">Más de 10</option>
+            </select>
+          </div>
+          <div class="fld">
+            <label for="wlClients" data-i18n="wl_clients">¿Tienes clientela propia?</label>
+            <select id="wlClients" name="clients">
+              <option value="" data-i18n="wl_choose">Elige…</option>
+              <option value="si" data-i18n="wl_yes">Sí</option>
+              <option value="no" data-i18n="wl_no">No</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="wlConsent" required />
+          <span data-i18n="wl_consent">Acepto que Babyloon guarde estos datos para avisarme cuando abra mi ciudad. Puedo pedir que se borren cuando quiera.</span>
+        </label>
+
+        <div class="actions">
+          <button type="submit" class="btn-gold" id="wlSubmit" data-i18n="wl_submit">Apuntarme</button>
+          <span class="hint" data-i18n="wl_no_spam">Sin publicidad. Solo te escribimos por esto.</span>
+        </div>
+
+        <div class="msg err" id="wlErr"></div>
+      </form>
+
+      <div class="done" id="wlDone">
+        <div class="mark">✓</div>
+        <h2 data-i18n="wl_done_title">Estás dentro</h2>
+        <div class="open-note" id="openNote" style="display:none"></div>
+        <p id="doneText" data-i18n="wl_done_text">Te escribiremos en cuanto abramos tu ciudad. Mientras tanto, puedes ir preparando tu portfolio: es lo primero que se mira.</p>
+        <a href="index.html" class="btn-ghost" data-i18n="wl_done_cta">Volver al inicio</a>
+      </div>
+
+    </div>
+  </div></section>
+</main>
+
+<footer><div class="wrap">
+  Babyloon — <a href="index.html" data-i18n="back_home">Inicio</a> ·
+  <a href="privacidad.html" data-i18n="wl_privacy">Privacidad</a> · © 2026
+</div></footer>
+
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="conexion.js?v=1"></script>
+<script src="i18n.js?v=10"></script>
+<script src="i18n-paginas.js?v=4"></script>
+<script src="i18n-ciudad-nombres.js?v=2"></script>
+<script src="i18n-index.js?v=4"></script>
+<script src="i18n-index-it.js?v=1"></script>
+<script src="i18n-index-nl.js?v=1"></script>
+<script src="i18n-index-pl.js?v=1"></script>
+<script src="i18n-index-el.js?v=1"></script>
+<script src="i18n-index-hu.js?v=1"></script>
+<script src="i18n-index-5.js?v=2"></script>
+<script src="i18n-regalo-completar.js?v=1"></script>
+  <script src="i18n-baby.js?v=1"></script>
+  <script src="i18n-5-resto.js?v=1"></script>
+  <script src="i18n-auth.js?v=1"></script>
+  <script src="i18n-auth-extra.js?v=2"></script>
+  <script src="i18n-aceptacion.js?v=1"></script>
+<script>
+(function(){
+  const SUPABASE_URL="https://qphatjblvojnfyghwmjy.supabase.co";
+  const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  // Si el CDN de Supabase no carga —red corporativa, bloqueador, país con
+  // restricciones—, la página tiene que seguir pintándose y avisar al enviar.
+  // Antes, un fallo aquí mataba el script entero y quedaba un formulario muerto
+  // sin categorías y sin un solo mensaje.
+  let sb = null;
+  try {
+    if (window.supabase && window.supabase.createClient) {
+      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      window.__sbClient = sb;
+    }
+  } catch(_) { sb = null; }
+
+  const $  = id => document.getElementById(id);
+  const esc = s => (s||'').toString().replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+
+  // Las categorías se guardan SIEMPRE con su nombre canónico en español, que es
+  // el que usa city_service_pricing. Lo que cambia con el idioma es la etiqueta.
+  const CATS = ['Cabello','Maquillaje','Uñas','Barbería','Facial','Cejas',
+                'Pestañas','Depilación','Masajes','Facial Hombre','Depilación Hombre'];
+  const CAT_KEY = { 'Cabello':'cat_cabello','Maquillaje':'cat_maquillaje','Uñas':'cat_unas',
+    'Barbería':'wl_cat_barberia','Facial':'cat_facial','Cejas':'cat_cejas','Pestañas':'wl_cat_pestanas',
+    'Depilación':'wl_cat_depilacion','Masajes':'cat_masajes','Facial Hombre':'wl_cat_facial_h',
+    'Depilación Hombre':'wl_cat_depilacion_h' };
+
+  let ABIERTAS = [];   // [{city, country}]
+  const elegidas = new Set();
+
+  const T = (k, fb) => { try { const v = BBL.t(k); return (v && v !== k) ? v : fb; } catch(_) { return fb; } };
+
+  function pintarCategorias(){
+    $('cats').innerHTML = CATS.map(c =>
+      `<button type="button" class="cat" aria-pressed="${elegidas.has(c)}" data-c="${esc(c)}">${esc(T(CAT_KEY[c], c))}</button>`
+    ).join('');
+    $('cats').querySelectorAll('.cat').forEach(b => b.addEventListener('click', () => {
+      const c = b.dataset.c;
+      if (elegidas.has(c)) elegidas.delete(c); else elegidas.add(c);
+      b.setAttribute('aria-pressed', elegidas.has(c));
+    }));
+  }
+
+  async function cargarCiudades(){
+    try {
+      if (!sb) throw new Error('sin conexión');
+      const { data } = await sb.from('city_cost_index').select('city,country').order('city');
+      ABIERTAS = data || [];
+    } catch(_) { ABIERTAS = []; }
+    const seccion = document.querySelector('.live');
+    if (ABIERTAS.length) {
+      $('liveCities').innerHTML = ABIERTAS.map(c => `<span class="chip"><i></i>${esc(nombreCiudad(c.city))}</span>`).join('');
+      seccion.style.display = '';
+    } else {
+      // Sin ciudades no se deja el titulo colgando sobre un hueco vacio
+      seccion.style.display = 'none';
+    }
+    comprobarCiudad();
+  }
+
+  const normaliza = s => (s||'').toString().trim().toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'');
+
+  /* 32.1 · El nombre de la ciudad, en el idioma de quien mira. La base
+     las guarda en español y aquí se enseñaban tal cual: con la web en
+     inglés ponía «Estocolmo». Lo que se COMPARA sigue siendo el nombre
+     de la base, no éste: si alguien escribe «Stockholm» lo reconoce
+     igualmente porque `ciudadAbierta` compara contra la base. */
+  const nombreCiudad = c => (window.BBL && BBL.ciudad) ? BBL.ciudad(c) : c;
+
+  function ciudadAbierta(txt){
+    const n = normaliza(txt);
+    if (!n) return null;
+    return ABIERTAS.find(c => normaliza(c.city) === n) || null;
+  }
+
+  function comprobarCiudad(){
+    const hit = ciudadAbierta($('wlCity').value);
+    $('cityHint').textContent = hit
+      ? T('wl_city_open','Esa ciudad ya está abierta — puedes darte de alta hoy mismo.')
+      : '';
+    $('cityHint').style.color = hit ? 'var(--ok)' : 'var(--mauve)';
+  }
+  $('wlCity').addEventListener('input', comprobarCiudad);
+
+  $('wlForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const err = $('wlErr'); err.classList.remove('on');
+
+    if (!$('wlConsent').checked) {
+      err.textContent = T('wl_err_consent','Necesitamos tu permiso para guardar los datos.');
+      err.classList.add('on'); return;
+    }
+    if (elegidas.size === 0) {
+      err.textContent = T('wl_err_cats','Dinos al menos un servicio que ofrezcas.');
+      err.classList.add('on'); return;
+    }
+
+    if (!sb) {
+      err.textContent = T('wl_err_offline','Ahora mismo no podemos conectar. Revisa tu conexión y vuelve a intentarlo.');
+      err.classList.add('on'); return;
+    }
+
+    const btn = $('wlSubmit');
+    btn.disabled = true;
+    btn.textContent = T('wl_sending','Enviando…');
+
+    const años = $('wlYears').value;
+    const cli  = $('wlClients').value;
+    const fila = {
+      full_name       : $('wlName').value.trim(),
+      email           : $('wlEmail').value.trim(),
+      phone           : $('wlPhone').value.trim() || null,
+      instagram       : $('wlInsta').value.trim() || null,
+      city            : $('wlCity').value.trim(),
+      country         : $('wlCountry').value.trim() || null,
+      categories      : Array.from(elegidas),
+      experience_years: años ? Number(años) : null,
+      has_own_clients : cli ? (cli === 'si') : null,
+      source          : 'web',
+      locale          : (document.documentElement.lang || 'es'),
+      consent         : true,
+      // El id de la visita. Con él, el servidor sabe por qué campaña y
+      // desde qué página de ciudad llegó esta profesional. Sin él,
+      // `source` se queda en el 'web' de siempre, que no dice nada.
+      session_id      : (window.BBLPresencia ? BBLPresencia.sesion() : null),
+    };
+
+    const { error } = await sb.from('professional_waitlist').insert(fila);
+    btn.disabled = false;
+    btn.textContent = T('wl_submit','Apuntarme');
+
+    if (error) {
+      // 23505 = ya estaba apuntada con ese correo. No es un fallo para ella.
+      if ((error.code === '23505') || /duplicate|unique/i.test(error.message || '')) {
+        mostrarGracias(nombreCiudad(fila.city), true);
+        return;
+      }
+      err.textContent = T('wl_err_send','No hemos podido guardarlo. Inténtalo de nuevo en un momento.');
+      err.classList.add('on');
+      return;
+    }
+    // El alta es la conversión que importa de esta página.
+    try { if (window.BBLPresencia) BBLPresencia.evento('alta_lista_espera',
+      { ciudad: fila.city, pais: fila.country, categorias: fila.categories.length }); } catch(_) {}
+    mostrarGracias(nombreCiudad(fila.city), false);
+  });
+
+  function mostrarGracias(ciudad, yaEstaba){
+    $('wlForm').style.display = 'none';
+    $('wlDone').classList.add('on');
+
+    if (yaEstaba) {
+      $('wlDone').querySelector('h2').textContent = T('wl_already_title','Ya te teníamos');
+      $('doneText').textContent = T('wl_already_text','Ese correo ya estaba en la lista. No hace falta que hagas nada más.');
+    }
+
+    const hit = ciudadAbierta(ciudad);
+    if (hit) {
+      const n = $('openNote');
+      n.style.display = 'block';
+      n.innerHTML = esc(T('wl_open_note_a','Una cosa: en')) + ' <strong>' + esc(nombreCiudad(hit.city)) + '</strong> '
+                  + esc(T('wl_open_note_b','ya estamos operando. No tienes que esperar a nada: descárgate la app y date de alta hoy.'));
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // El selector de idioma del resto de la web, y repintar al cambiarlo
+  try { if (BBL.mountSwitcher) BBL.mountSwitcher(document.getElementById('langSwitch')); } catch(_){}
+  document.addEventListener('bbl:lang', () => { pintarCategorias(); comprobarCiudad(); });
+
+  pintarCategorias();
+  cargarCiudades();
+})();
+</script>
+<script src="cookies.js?v=2"></script>
+<script src="presencia.js?v=2"></script>
+<script src="baby.js?v=2"></script>
+<script src="lujo.js?v=1"></script>
+<script src="auth.js?v=5"></script>
+<script src="aceptacion.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="referrer" content="no-referrer" />
+<title>Babyloon · Tu ficha de belleza</title>
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<!--
+  bienvenida.html · gestor_pp
+  La ficha de bienvenida: la clienta (sin cuenta) llega desde el enlace que le manda
+  su profesional o desde el recordatorio de su cita. Elige del catálogo sus alergias y
+  preferencias, da su consentimiento, y su profesional lo tiene antes de la cita.
+  · Nunca enseña datos de salud ya guardados: el enlace sólo sirve para escribir.
+  · ?baja=1 · dejar de recibir recordatorios (con botón: un lector de correo que abra
+    los enlaces no la da de baja sin querer).
+-->
+<script src="i18n.js?v=10"></script>
+<script src="i18n-auth.js?v=1"></script>
+<script src="i18n-auth-extra.js?v=2"></script>
+<script src="i18n-aceptacion.js?v=1"></script>
+<script src="i18n-pasaporte.js?v=3"></script>
+<script src="pasaporte.js?v=3"></script>
+<script src="supabase-js-2.117.1.min.js"></script>
+<style>
+  :root{--fondo:#140D12;--panel:#1B1219;--gold:#C8A96A;--oro2:#E3CB95;--cream:#EDE5DA;--mauve:#A89BA3;--line:rgba(200,169,106,.22);--serif:'Cormorant Garamond',Georgia,serif;--bien:#7FB894;--mal:#E07A7A}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--fondo);color:var(--cream);font:400 15px/1.5 'Jost',system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  body{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:calc(26px + env(safe-area-inset-top,0px)) 16px calc(36px + env(safe-area-inset-bottom,0px))}
+  .marca{font-family:var(--serif);font-size:30px;letter-spacing:.06em;color:var(--gold);margin:4px 0 18px}
+  .caja{width:100%;max-width:640px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px 22px}
+  h1{font-family:var(--serif);font-weight:500;font-size:28px;margin:0 0 8px;line-height:1.15}
+  .sub{color:var(--mauve);font-size:14px;margin:0 0 18px}
+  .cita{border:1px solid rgba(200,169,106,.4);background:rgba(200,169,106,.07);border-radius:12px;padding:12px 14px;margin:0 0 18px;font-size:14px}
+  .cita b{color:var(--gold);font-weight:500}
+  .bloque{margin:18px 0 0}
+  .bloque h2{font-family:var(--serif);font-weight:500;font-size:20px;margin:0 0 4px}
+  .bloque p.n{color:var(--mauve);font-size:13px;margin:0 0 12px}
+  .campo{margin:0 0 14px}
+  .campo>label{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mauve);margin-bottom:6px}
+  .campo input[type=text],.campo input[type=email]{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:8px;padding:11px 12px;color:var(--cream);font:inherit;font-size:14px}
+  .campo input:focus{outline:none;border-color:var(--gold)}
+  details{border-top:1px solid var(--line);margin-top:18px;padding-top:6px}
+  summary{cursor:pointer;color:var(--gold);font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:10px 0;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:'+ '}
+  details[open] summary::before{content:'− '}
+  .grupo{color:var(--gold);font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin:16px 0 8px}
+  .chk{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;margin:6px 0 14px;cursor:pointer}
+  .chk input{accent-color:var(--gold);width:18px;height:18px;flex:none;margin-top:2px}
+  .consent{border:1px solid rgba(200,169,106,.45);border-radius:12px;padding:14px;margin-top:20px}
+  .consent small{display:block;color:var(--mauve);font-size:12px;margin-top:4px}
+  .consent a{color:var(--gold)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:15px 28px;font:600 12px/1 inherit;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;margin-top:16px}
+  .oro{background:linear-gradient(135deg,var(--oro2),var(--gold));color:#1B1219}
+  .linea{background:transparent;border:1px solid rgba(200,169,106,.5);color:var(--gold)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .msg{min-height:22px;font-size:14px;margin-top:10px}.msg.bien{color:var(--bien)}.msg.mal{color:var(--mal)}
+  .pie{color:var(--mauve);font-size:12px;text-align:center;max-width:52ch;margin-top:22px}
+  .ok{text-align:center}
+  .ok .ico{font-size:34px;color:var(--gold)}
+  @media (max-width:480px){.caja{padding:22px 16px}h1{font-size:24px}.btn{width:100%}}
+</style>
+</head>
+<body>
+<div class="marca">Babyloon</div>
+<main class="caja" id="caja"><p class="sub" id="cargando">…</p></main>
+<p class="pie" id="pie"></p>
+
+<script>
+(function(){
+  'use strict';
+  var URL_SB="https://qphatjblvojnfyghwmjy.supabase.co";
+  var CLAVE="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  var sb=window.supabase.createClient(URL_SB,CLAVE); window.__sbClient=sb;
+  var T=function(k,alt){ try{ var s=BBL.t(k); return (s&&s!==k)?s:alt; }catch(_){ return alt; } };
+  var con=function(t,v){ return String(t).replace(/\{(\w+)\}/g,function(_,k){ return v[k]!=null?v[k]:''; }); };
+  var esc=function(s){ return (s==null?'':String(s)).replace(/[<>&"]/g,function(c){ return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]; }); };
+  var q=new URLSearchParams(location.search), TOK=q.get('t')||'', BAJA=q.get('baja')==='1';
+  var caja=document.getElementById('caja');
+  // El token no se queda en el historial ni en la barra (se ha leído ya)
+  try{ history.replaceState(null,'',location.pathname); }catch(_){}
+
+  var GRUPOS=[
+    ['pp_g_cabello','Cabello',['color_cabello','textura','porosidad','corte','peinado','historial_cabello']],
+    ['pp_g_piel','Piel y maquillaje',['tipo_piel','subtono','tono_base','maquillaje','acabado']],
+    ['pp_g_unas','Uñas',['forma_unas','sistema_unas']],
+    ['pp_g_mirada','Pestañas y cejas',['pestanas','cejas']],
+    ['pp_g_masaje','Masaje',['presion_masaje']]];
+  var ROT={alergias:['pp_d_alergias','Alergias'],contraindicaciones:['pp_d_contraindicaciones','Contraindicaciones']};
+  var rot=function(k){ return ROT[k]?T(ROT[k][0],ROT[k][1]):T('pp_d_'+k,k); };
+  var campo=function(k){ return '<div class="campo"><label>'+esc(rot(k))+'</label>'+
+      BBLPasaporte.sel(BBLPasaporte.CAMPO_DOM[k],'',{proponer:false}).replace('class="pp-sel"','class="pp-sel" data-pf="'+k+'"')+'</div>'; };
+  var cuando=function(f){ try{ return new Date(f).toLocaleString(BBL.lang||'es',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}); }catch(_){ return String(f); } };
+
+  function error(txt){ caja.innerHTML='<h1>'+esc(T('pp_bv_caducado_t','Este enlace ya no sirve'))+'</h1><p class="sub">'+esc(txt)+'</p>'; }
+
+  async function iniciar(){
+    if(TOK.length<20){ error(T('pp_bv_caducado','Pide a tu profesional que te envíe un enlace nuevo.')); return; }
+    var r=await sb.rpc('ficha_bienvenida',{p_token:TOK}), d=r.data;
+    if(!d||d.ok!==true){ error(T('pp_bv_caducado','Pide a tu profesional que te envíe un enlace nuevo.')); return; }
+    document.title='Babyloon · '+T('pp_bv_titulo','Tu ficha de belleza');
+    document.getElementById('pie').textContent=con(T('pp_bv_pie','Babyloon guarda tu ficha para {pro}. Solo la veis tu profesional y tú.'),{pro:d.profesional||''});
+    if(BAJA){ pintarBaja(d); return; }
+    await BBLPasaporte.catalogo(sb);
+    pintarFicha(d);
+  }
+
+  function pintarBaja(d){
+    caja.innerHTML='<h1>'+esc(T('pp_bv_baja_t','Recordatorios por email'))+'</h1>'+
+      '<p class="sub">'+esc(con(T('pp_bv_baja_n','Babyloon te avisa de tus citas con {pro} el día antes. ¿Prefieres no recibir estos emails?'),{pro:d.profesional||''}))+'</p>'+
+      '<button class="btn oro" id="bajaSi">'+esc(T('pp_bv_baja_si','No quiero recibir recordatorios'))+'</button> '+
+      '<button class="btn linea" id="bajaNo">'+esc(T('pp_bv_baja_no','Seguir recibiéndolos'))+'</button><div class="msg" id="msg"></div>';
+    var hacer=async function(si){
+      var r=await sb.rpc('recordatorios_email',{p_token:TOK,p_si:si}), m=document.getElementById('msg');
+      if(!r.data||!r.data.ok){ m.className='msg mal'; m.textContent=T('pp_e_guardar','No se pudo guardar.'); return; }
+      m.className='msg bien'; m.textContent=si?T('pp_bv_alta_ok','Hecho: seguirás recibiendo los recordatorios.'):T('pp_bv_baja_ok','Hecho: ya no recibirás recordatorios por email.');
+    };
+    document.getElementById('bajaSi').onclick=function(){ hacer(false); };
+    document.getElementById('bajaNo').onclick=function(){ hacer(true); };
+  }
+
+  function pintarFicha(d){
+    var v={n:d.nombre||'',pro:d.profesional||'',c:d.ciudad||''};
+    caja.innerHTML=
+      '<h1>'+esc(d.nombre?con(T('pp_bv_hola','Hola, {n}'),v):T('pp_bv_titulo','Tu ficha de belleza'))+'</h1>'+
+      '<p class="sub">'+esc(con(T('pp_bv_intro','{pro} te ha preparado tu ficha de belleza. Cuéntale tus alergias y preferencias y acertará desde el primer minuto.'),v))+'</p>'+
+      (d.cita?'<div class="cita"><b>'+esc(T('pp_bv_tu_cita','Tu cita'))+':</b> '+esc(cuando(d.cita.inicio))+(d.cita.que?' · '+esc(d.cita.que):'')+(d.cita.donde?' · '+esc(d.cita.donde):'')+'</div>':'')+
+      (d.ya_rellenada?'<p class="sub">'+esc(T('pp_bv_ya','Ya rellenaste tu ficha. Si algo ha cambiado, vuelve a rellenarla y quedará la nueva.'))+'</p>':'')+
+      '<div class="bloque"><h2>'+esc(T('pp_g_salud','Salud'))+'</h2><p class="n">'+esc(T('pp_bv_salud_n','Lo más importante: así tu profesional sabe qué evitar.'))+'</p>'+
+        campo('alergias')+campo('contraindicaciones')+'</div>'+
+      '<details><summary>'+esc(T('pp_bv_mas','Más sobre ti (opcional)'))+'</summary>'+
+        GRUPOS.map(function(g){ return '<div class="grupo">'+esc(T(g[0],g[1]))+'</div>'+g[2].map(campo).join(''); }).join('')+
+        '<label class="chk"><input type="checkbox" data-pf="cuero_sensible" value="1"> '+esc(T('pp_d_cuero_sensible','Cuero cabelludo sensible'))+'</label>'+
+        '<div class="campo"><label>'+esc(T('pp_d_notas','Otras notas'))+'</label><input type="text" maxlength="500" data-pf="notas"></div>'+
+      '</details>'+
+      (d.pide_email?'<div class="campo" style="margin-top:18px"><label>'+esc(T('pp_nc_email','Email'))+'</label><input type="email" id="bvMail" maxlength="160" autocomplete="email"><p class="n" style="color:var(--mauve);font-size:12px;margin:6px 0 0">'+esc(T('pp_bv_email_n','Opcional. Con tu email podrás tener tu pasaporte de belleza en Babyloon.'))+'</p></div>':'')+
+      '<label class="chk consent"><input type="checkbox" id="bvOk"><span>'+esc(con(T('pp_bv_consent','Doy mi consentimiento para que {pro} guarde estos datos, incluidos los de salud, para atenderme.'),v))+
+        '<small>'+esc(T('pp_bv_consent_n','Puedes pedir que se borren cuando quieras.'))+' <a href="privacidad.html" target="_blank" rel="noopener">'+esc(T('pp_bv_privacidad','Privacidad'))+'</a></small></span></label>'+
+      '<button class="btn oro" id="bvGuardar" disabled>'+esc(T('pp_bv_guardar','Guardar mi ficha'))+'</button><div class="msg" id="msg"></div>';
+    BBLPasaporte.montar(caja, sb);
+    var ok=document.getElementById('bvOk'), g=document.getElementById('bvGuardar');
+    ok.onchange=function(){ g.disabled=!ok.checked; };
+    g.onclick=async function(){
+      var datos={}, m=document.getElementById('msg');
+      caja.querySelectorAll('[data-pf]').forEach(function(el){
+        datos[el.dataset.pf]=el.classList.contains('pp-sel')?BBLPasaporte.valor(el):el.type==='checkbox'?(el.checked?'true':''):el.value.trim(); });
+      var mail=document.getElementById('bvMail');
+      g.disabled=true; m.className='msg'; m.textContent='';
+      var r=await sb.rpc('ficha_bienvenida_guardar',{p_token:TOK,p_datos:datos,p_consiente:ok.checked,p_email:mail&&mail.value.trim()||null});
+      g.disabled=false;
+      var d2=r.data;
+      if(!d2||!d2.ok){ m.className='msg mal'; m.textContent=d2&&d2.error==='email_no_valido'?T('pp_e_email','El email no es válido.'):d2&&d2.error==='enlace_caducado'?T('pp_bv_caducado','Pide a tu profesional que te envíe un enlace nuevo.'):T('pp_e_guardar','No se pudo guardar.'); return; }
+      pintarGracias(d);
+    };
+  }
+
+  function pintarGracias(d){
+    var v={pro:d.profesional||''};
+    caja.innerHTML='<div class="ok"><div class="ico">✓</div><h1>'+esc(T('pp_bv_gracias','¡Gracias!'))+'</h1>'+
+      '<p class="sub">'+esc(con(T('pp_bv_gracias_n','{pro} ya tiene tu ficha de belleza.'),v))+'</p>'+
+      (d.tiene_cuenta?'':'<p>'+esc(T('pp_bv_cuenta','Crea tu cuenta en Babyloon con tu email y tendrás tu pasaporte de belleza: tu historial, tus fórmulas y tus alergias, contigo vayas donde vayas.'))+'</p>'+
+      '<button class="btn oro" id="bvCuenta">'+esc(T('pp_bv_crear','Crear mi cuenta'))+'</button>')+'</div>';
+    var b=document.getElementById('bvCuenta');
+    if(b) b.onclick=function(){ if(window.BBLAuth) BBLAuth.abrir({modo:'alta',rol:'cliente',alEntrar:function(){ location.href='cliente.html'; }}); else location.href='index.html'; };
+  }
+
+  var arrancar=function(){ iniciar().catch(function(){ error(T('pp_bv_caducado','Pide a tu profesional que te envíe un enlace nuevo.')); }); };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',arrancar); else arrancar();
+})();
+</script>
+<script src="auth.js?v=5"></script>
+</body>
+</html>

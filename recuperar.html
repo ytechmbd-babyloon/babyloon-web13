@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nueva contraseña · Babyloon</title>
+<meta name="robots" content="noindex,nofollow" />
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0D0B0F;--plum:#241820;--plum-2:#1B1219;--gold:#C8A96A;
+    --cream:#F9F5EE;--smoke:#E8E0D5;--mauve:#8C7482;--mauve-dim:#6B5766;
+    --line:rgba(200,169,106,.16);--online:#3DD68C;--err:#E0857C;
+    --serif:'Cormorant Garamond',serif;--sans:'Jost',system-ui,sans-serif;
+    --gold-grad:linear-gradient(135deg,#8E723F 0%,#F3E0BC 42%,#C9A96E 72%,#9C8050 100%);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:var(--sans);font-weight:300;
+    line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;
+    display:flex;align-items:center;justify-content:center;padding:24px}
+  a{color:var(--gold);text-decoration:none}
+  .caja{width:min(430px,100%);border:1px solid var(--line);border-radius:16px;
+    background:var(--plum-2);padding:34px 30px;text-align:center}
+  .inf{margin:0 auto 16px;display:block}
+  .inf path{stroke:url(#gg);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  h1{font-family:var(--serif);font-weight:300;font-size:30px;line-height:1.15;margin-bottom:8px}
+  .sub{color:var(--mauve);font-size:13.5px;margin-bottom:24px}
+  .campo{text-align:left;margin-bottom:14px;position:relative}
+  .campo label{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--mauve);margin-bottom:6px}
+  .campo input{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--line);
+    border-radius:10px;color:var(--cream);font-family:var(--sans);font-size:15px;
+    padding:13px 46px 13px 14px}
+  .campo input:focus{outline:none;border-color:var(--gold)}
+  .ojo{position:absolute;right:6px;bottom:5px;width:34px;height:34px;background:none;border:none;
+    cursor:pointer;color:var(--mauve);display:flex;align-items:center;justify-content:center;padding:0}
+  .ojo:hover{color:var(--gold)}
+  .ojo svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.6}
+  .fuerza{height:3px;border-radius:2px;background:rgba(249,245,238,.08);overflow:hidden;margin:-6px 0 16px}
+  .fuerza i{display:block;height:100%;width:0;background:var(--gold-grad);transition:width .3s}
+  .go{width:100%;font-family:var(--sans);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    font-weight:500;color:var(--ink);padding:14px;border-radius:10px;border:none;
+    background:var(--gold-grad);background-size:180% 180%;cursor:pointer;transition:.3s}
+  .go:hover{background-position:100% 0}
+  .go:disabled{opacity:.5;cursor:default}
+  .msg{margin-top:16px;font-size:13.5px;line-height:1.55;min-height:20px}
+  .msg.err{color:var(--err)} .msg.ok{color:var(--online)}
+  .pie{margin-top:22px;font-size:12.5px;color:var(--mauve-dim)}
+  .reenviar{display:block;margin:14px auto 0;background:none;border:none;color:#8C7482;font:inherit;font-size:12.5px;
+    cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .reenviar:hover{color:#C8A96A} .reenviar:disabled{opacity:.5;cursor:default}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <linearGradient id="gg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#8E723F"/><stop offset=".42" stop-color="#F3E0BC"/>
+    <stop offset=".72" stop-color="#C9A96E"/><stop offset="1" stop-color="#9C8050"/>
+  </linearGradient></defs></svg>
+
+<div class="caja">
+  <svg class="inf" width="46" height="23" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>
+  <h1 id="rTitulo">Nueva contraseña</h1>
+  <p class="sub" id="rSub">Elige una contraseña nueva para tu cuenta.</p>
+
+  <form id="rCodForm" autocomplete="on" novalidate style="display:none">
+    <div class="campo">
+      <label for="rEmail" id="rEmailL">Correo electrónico</label>
+      <input id="rEmail" type="email" autocomplete="email" />
+    </div>
+    <div class="campo">
+      <label for="rCod" id="rCodL">Código</label>
+      <input id="rCod" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" />
+    </div>
+    <button class="go" id="rVerif" type="submit">Verificar código</button>
+    <button type="button" class="reenviar" id="rReenv">¿No te ha llegado? Enviar otro</button>
+  </form>
+
+  <form id="rForm" autocomplete="on" novalidate>
+    <div class="campo">
+      <label for="rPass" id="rPassL">Contraseña nueva</label>
+      <input id="rPass" type="password" autocomplete="new-password" minlength="6" />
+      <button type="button" class="ojo" id="rOjo" aria-label="Ver contraseña"></button>
+    </div>
+    <div class="fuerza"><i id="rFuerza"></i></div>
+    <div class="campo">
+      <label for="rPass2" id="rPass2L">Repítela</label>
+      <input id="rPass2" type="password" autocomplete="new-password" minlength="6" />
+    </div>
+    <button class="go" id="rGo" type="submit">Guardar</button>
+  </form>
+
+  <div class="msg" id="rMsg"></div>
+  <p class="pie"><a href="index.html" id="rVolver">← Volver a Babyloon</a></p>
+</div>
+
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="conexion.js?v=1"></script>
+<script src="i18n.js?v=10"></script>
+<script src="i18n-auth.js?v=1"></script>
+<script src="i18n-5-resto.js?v=1"></script>
+<script src="i18n-auth-extra.js?v=2"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   La pantalla que recoge el enlace del correo
+
+   Sin esto, «recuperar contraseña» manda un correo cuyo enlace
+   aterriza en una página que no existe. Media función es peor que
+   ninguna: la persona hace lo que le pides y se queda tirada.
+
+   Cómo llega aquí: Supabase abre este enlace con un token en el
+   FRAGMENTO de la URL (#access_token=…&type=recovery). La librería
+   lo detecta sola y crea una sesión temporal; con esa sesión se
+   puede llamar a `updateUser` y cambiar la contraseña. Por eso no
+   hace falta pedir la contraseña vieja.
+
+   El token va en el fragmento y no en la query a propósito: lo que
+   va detrás de la almohadilla NO se manda al servidor y no queda en
+   los registros de acceso de nadie.
+   ═══════════════════════════════════════════════════════════════ */
+(function(){
+  const SUPABASE_URL = "https://qphatjblvojnfyghwmjy.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const $ = id => document.getElementById(id);
+  const t = (k, d) => (window.BBL && BBL.t) ? (BBL.t(k) !== k ? BBL.t(k) : d) : d;
+  const decir = (txt, clase) => { const m = $('rMsg'); m.textContent = txt; m.className = 'msg ' + (clase||''); };
+
+  const OJO_CERRADO = '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const OJO_ABIERTO = '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.8-7 10-7c2 0 3.7.6 5.1 1.4M22 12s-3.8 7-10 7c-2 0-3.7-.6-5.1-1.4"/><path d="M4 4l16 16"/></svg>';
+  $('rOjo').innerHTML = OJO_CERRADO;
+  $('rOjo').addEventListener('click', ()=>{
+    const i = $('rPass'), ver = i.type === 'password';
+    i.type = ver ? 'text' : 'password';
+    $('rOjo').innerHTML = ver ? OJO_ABIERTO : OJO_CERRADO;
+    i.focus();
+  });
+
+  // Una barra de fuerza honesta: mide largo y variedad, no le pone
+  // notas a nadie. Orienta; no bloquea.
+  $('rPass').addEventListener('input', e=>{
+    const v = e.target.value;
+    let p = Math.min(v.length / 14, 1) * 55;
+    if (/[a-z]/.test(v) && /[A-Z]/.test(v)) p += 15;
+    if (/\d/.test(v)) p += 15;
+    if (/[^\w\s]/.test(v)) p += 15;
+    $('rFuerza').style.width = Math.min(Math.round(p), 100) + '%';
+  });
+
+  let listo = false;
+  let modo = 'clave';   // 'clave' = ya hay sesión: elegir contraseña · 'codigo' = falta verificar el código
+
+  /* SIN ENLACE, CON CÓDIGO
+     El correo de «Reset Password» trae un enlace y un código de 6 dígitos.
+     El enlace sólo sirve si se abre en el mismo navegador; el código vale en
+     cualquiera (correo en el móvil, web en el ordenador). Se verifica con
+     type 'recovery': es el tipo que genera resetPasswordForEmail. Con
+     'email' (el de iniciar sesión con código) NO cuadraría nunca — fue el
+     fallo que tuvo el panel de administración. */
+  const enlaceCaducado = /error_code=otp_expired|error=access_denied/.test(location.hash + location.search);
+  function pideCodigo(){
+    modo = 'codigo';
+    $('rForm').style.display = 'none';
+    $('rCodForm').style.display = '';
+    try{ const e = new URLSearchParams(location.search).get('email'); if (e) $('rEmail').value = e; }catch(_){}
+    pintar();
+    ($('rEmail').value ? $('rCod') : $('rEmail')).focus();
+  }
+  function pideClave(){
+    modo = 'clave';
+    $('rCodForm').style.display = 'none';
+    $('rForm').style.display = '';
+    pintar();
+    $('rPass').focus();
+  }
+  $('rCodForm').addEventListener('submit', async e=>{
+    e.preventDefault();
+    const email = $('rEmail').value.trim(), cod = $('rCod').value.replace(/\D/g,'');
+    if (!email || cod.length < 6){ decir(t('au_r_cod_falta','Escribe tu correo y el código.'), 'err'); return; }
+    $('rVerif').disabled = true; decir(t('au_espera','Un momento…'), '');
+    try{
+      const { error } = await sb.auth.verifyOtp({ email, token: cod, type: 'recovery' });
+      if (error) throw error;
+      listo = true; decir('', ''); pideClave();
+    }catch(_){
+      decir(t('au_r_cod_mal','El código no es correcto o ha caducado. Pide otro.'), 'err');
+    }
+    $('rVerif').disabled = false;
+  });
+  $('rReenv').addEventListener('click', async ()=>{
+    const email = $('rEmail').value.trim();
+    if (!email){ decir(t('au_r_falta','Escribe tu correo arriba y vuelve a pulsar.'), 'err'); $('rEmail').focus(); return; }
+    $('rReenv').disabled = true;
+    try{
+      const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/recuperar.html' });
+      // Se dice lo mismo exista o no la cuenta; sólo el límite de envíos se avisa aparte
+      if (error && /second|seconds|rate|security purposes/i.test(error.message||'')) decir(t('au_r_espera','Espera un minuto antes de pedir otro.'), 'err');
+      else decir(t('au_r_reenviado','Te hemos enviado otro correo. Mira también el correo no deseado.'), 'ok');
+    }catch(_){ decir(t('au_r_reenviado','Te hemos enviado otro correo. Mira también el correo no deseado.'), 'ok'); }
+    setTimeout(()=>{ $('rReenv').disabled = false; }, 4000);
+  });
+
+  // ¿Ha llegado con un enlace válido?
+  sb.auth.onAuthStateChange((evento, sesion)=>{
+    if (evento === 'PASSWORD_RECOVERY' || sesion) { listo = true; if (modo === 'codigo') pideClave(); }
+  });
+
+  (async ()=>{
+    // Se le da un momento a la librería para leer el fragmento.
+    await new Promise(r=>setTimeout(r, 450));
+    try{
+      const { data } = await sb.auth.getSession();
+      if (data && data.session) listo = true;
+    }catch(_){}
+    if (!listo){
+      pideCodigo();
+      if (enlaceCaducado) decir(t('au_r_caducado',
+        'Este enlace ya no vale. Los enlaces de recuperación caducan por seguridad: pide uno nuevo desde «Acceder».'), 'err');
+    }
+  })();
+
+  $('rForm').addEventListener('submit', async e=>{
+    e.preventDefault();
+    const p1 = $('rPass').value, p2 = $('rPass2').value;
+    if (p1.length < 6){ decir(t('au_e_pass','La contraseña necesita al menos 6 caracteres.'), 'err'); return; }
+    if (p1 !== p2){ decir(t('au_r_distintas','Las dos contraseñas no coinciden.'), 'err'); return; }
+    if (!listo){ decir(t('au_r_caducado','Este enlace ya no vale. Pide uno nuevo desde «Acceder».'), 'err'); return; }
+    $('rGo').disabled = true; decir(t('au_espera','Un momento…'), '');
+    try{
+      const { error } = await sb.auth.updateUser({ password: p1 });
+      if (error) throw error;
+      $('rForm').style.display = 'none';
+      decir(t('au_r_hecho','Contraseña cambiada. Ya puedes entrar con la nueva.'), 'ok');
+      setTimeout(()=>{ location.href = 'index.html'; }, 2200);
+    }catch(err){
+      decir((err && err.message) || 'No se pudo cambiar la contraseña.', 'err');
+      $('rGo').disabled = false;
+    }
+  });
+
+  // Los textos, cuando el diccionario esté cargado y al cambiar idioma
+  function pintar(){
+    $('rTitulo').textContent  = modo === 'codigo' ? t('au_r_cod_titulo','Recupera tu acceso') : t('au_r_titulo','Nueva contraseña');
+    $('rSub').textContent     = modo === 'codigo'
+      ? t('au_r_cod_sub','Escribe tu correo y el código de 6 dígitos que te hemos enviado.')
+      : t('au_r_sub','Elige una contraseña nueva para tu cuenta.');
+    $('rEmailL').textContent  = t('au_r_email','Correo electrónico');
+    $('rCodL').textContent    = t('au_r_codigo','Código');
+    $('rVerif').textContent   = t('au_r_verificar','Verificar código');
+    $('rReenv').textContent   = t('au_r_reenviar','¿No te ha llegado? Enviar otro');
+    $('rVolver').textContent  = '← ' + t('au_r_volver','Volver a Babyloon');
+    $('rPassL').textContent   = t('au_r_nueva','Contraseña nueva');
+    $('rPass2L').textContent  = t('au_r_repite','Repítela');
+    $('rGo').textContent      = t('au_r_guardar','Guardar');
+    $('rOjo').setAttribute('aria-label', t('au_ver','Ver contraseña'));
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pintar);
+  else pintar();
+  document.addEventListener('bbl:lang', pintar);
+})();
+</script>
+</body>
+</html>

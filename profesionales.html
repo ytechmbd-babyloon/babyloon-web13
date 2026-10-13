@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profesionales de belleza cerca de ti · Babyloon</title>
+<meta name="description" content="Encuentra profesionales de belleza de lujo verificados cerca de ti por código postal: maquillaje, peluquería, uñas, estética y masajes. Explora perfiles y portfolio; reserva en la app." />
+<meta name="keywords" content="profesionales de belleza cerca de mí, maquillador a domicilio, peluquero a domicilio, manicura a domicilio, belleza de lujo a domicilio" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0D0B0F" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<style>
+  :root{--ink:#0D0B0F;--plum:#241820;--plum-2:#1B1219;--gold:#C8A96A;--gold-lite:#F3E0BC;--cream:#F9F5EE;
+    --smoke:#E8E0D5;--mauve:#8C7482;--line:rgba(200,169,106,.16);--line-soft:rgba(249,245,238,.07);
+    --ok:#3DD68C;--serif:'Cormorant Garamond',serif;--sans:'Jost',system-ui,sans-serif;
+    --gold-grad:linear-gradient(135deg,#8E723F,#F3E0BC 42%,#C9A96E 72%,#9C8050)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 28px}
+  .inf path{stroke:url(#gg);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .gold-text{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .eyebrow{font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold)}
+  header{position:sticky;top:0;z-index:50;background:rgba(13,11,15,.85);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  /* 32.5 · A 320 px esta barra se salía 10 px, y ya lo hacía en español:
+     dos elementos en una fila que no puede partirse, y el segundo es una
+     frase entera («Profesionales · Lista de espera»). En polaco y en
+     griego es más larga todavía. Se deja envolver, y el enlace encoge. */
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;
+    gap:10px;flex-wrap:wrap}
+  .nav a.back{min-width:0;overflow-wrap:anywhere}
+  @media(max-width:400px){ .nav{height:auto;min-height:72px;padding-top:10px;padding-bottom:10px}
+    .nav a.back{font-size:11px;letter-spacing:.08em} }
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:24px}
+  .nav a.back{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--smoke)}
+  .nav a.back:hover{color:var(--gold)}
+
+  /* buscador */
+  .search-head{padding:44px 0 30px;text-align:center;position:relative;
+    background:radial-gradient(60% 80% at 50% 0%,rgba(200,169,106,.07),transparent 70%)}
+  .search-head h1{font-family:var(--serif);font-weight:300;font-size:clamp(34px,5vw,54px);margin:12px 0 8px}
+  .search-head p{color:var(--mauve);font-size:14px}
+  .searchbar{display:flex;gap:0;max-width:720px;margin:26px auto 0;background:rgba(249,245,238,.05);
+    border:1px solid var(--line);border-radius:10px;padding:8px;flex-wrap:wrap;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+  .sb-field{flex:1;min-width:150px;text-align:left;padding:10px 16px;display:flex;flex-direction:column;gap:5px}
+  .sb-field label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+  .sb-field select,.sb-field input{background:none;border:none;color:var(--cream);font-family:var(--sans);font-size:14.5px;width:100%}
+  .sb-field select:focus,.sb-field input:focus{outline:none}
+  .sb-field select option{background:#241820;color:var(--cream)}
+  .sb-field input::placeholder{color:var(--mauve)}
+  .sb-sep{width:1px;background:var(--line);margin:8px 0}
+  .sb-btn{margin-left:6px;background:var(--gold-grad);background-size:180% 180%;color:var(--ink);border:none;
+    border-radius:6px;padding:0 26px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:.3s}
+  .sb-btn:hover{background-position:100% 0}
+  @media(max-width:640px){.searchbar{flex-direction:column;padding:12px}.sb-sep{display:none}
+    .sb-field{border-bottom:1px solid var(--line-soft)}.sb-btn{margin:10px 0 0;padding:14px}}
+
+  /* resultados */
+  .results{padding:34px 0 90px}
+  .results .count{color:var(--mauve);font-size:12.5px;letter-spacing:.06em;margin-bottom:22px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .pro{background:var(--plum-2);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;transition:.3s;display:flex;flex-direction:column}
+  .pro:hover{transform:translateY(-4px);border-color:rgba(200,169,106,.45)}
+  .pro-photo{aspect-ratio:1;position:relative;overflow:hidden;background:linear-gradient(160deg,var(--plum),var(--ink))}
+  .pro-photo img{width:100%;height:100%;object-fit:cover;transition:transform .8s}
+  .pro:hover .pro-photo img{transform:scale(1.06)}
+  .pro-photo .noimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--mauve);font-family:var(--serif);font-size:40px}
+  .pro-photo .vbadge{position:absolute;top:10px;right:10px;background:rgba(13,11,15,.7);border:1px solid var(--line);border-radius:20px;
+    padding:5px 10px;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:5px}
+  .pro-body{padding:16px 17px 18px}
+  .pro-body h3{font-family:var(--serif);font-size:21px;font-weight:500;line-height:1.1}
+  .pro-body .spec{color:var(--mauve);font-size:12.5px;margin-top:3px}
+  .pro-body .meta{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+  .pro-body .rate{color:var(--gold);font-size:13.5px}
+  .pro-body .city{color:var(--mauve);font-size:11.5px}
+  .empty{text-align:center;color:var(--mauve);padding:70px 20px;font-size:14px}
+  .loading{color:var(--mauve);padding:60px 10px;text-align:center}
+
+  /* perfil (modal) */
+  .overlay{position:fixed;inset:0;z-index:100;background:rgba(5,4,6,.8);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    display:none;align-items:flex-start;justify-content:center;padding:40px 18px;overflow-y:auto}
+  .overlay.on{display:flex}
+  .profile{width:100%;max-width:760px;background:linear-gradient(170deg,var(--plum),var(--ink));
+    border:1px solid var(--line);border-radius:16px;overflow:hidden;animation:pop .4s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  .profile-hero{display:flex;gap:22px;padding:30px;border-bottom:1px solid var(--line-soft);position:relative}
+  .profile-hero .av{width:120px;height:120px;border-radius:14px;object-fit:cover;flex-shrink:0;background:var(--plum-2)}
+  .profile-hero .pv{flex:1}
+  .profile-hero h2{font-family:var(--serif);font-size:32px;font-weight:500;line-height:1.05}
+  .profile-hero .spec{color:var(--gold);font-size:13px;letter-spacing:.06em;margin-top:5px}
+  .profile-hero .stats{display:flex;gap:24px;margin-top:16px;flex-wrap:wrap}
+  .profile-hero .stat b{font-family:var(--serif);font-size:22px;color:var(--cream);display:block}
+  .profile-hero .stat span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mauve)}
+  .profile-close{position:absolute;top:16px;right:18px;background:none;border:none;color:var(--smoke);font-size:26px;cursor:pointer;line-height:1}
+  .profile-body{padding:26px 30px 30px}
+  .profile-body h4{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 12px}
+  .profile-body .bio{color:var(--smoke);font-size:14.5px;line-height:1.6;margin-bottom:26px}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+  .tags span{border:1px solid var(--line);border-radius:20px;padding:6px 13px;font-size:12px;color:var(--smoke)}
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:28px}
+  .gallery img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px}
+  .book-bar{position:sticky;bottom:0;background:linear-gradient(0deg,var(--ink),rgba(27,18,25,.9));
+    border-top:1px solid var(--line);padding:18px 30px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .book-bar .note{font-size:12px;color:var(--mauve)}
+  .btn-gold{background:var(--gold-grad);background-size:180% 180%;color:var(--ink);border:none;border-radius:4px;
+    padding:14px 30px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:.3s}
+  .btn-gold:hover{background-position:100% 0}
+  @media(max-width:1000px){.grid{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:760px){.grid{grid-template-columns:1fr 1fr;gap:14px}.profile-hero{flex-direction:column}.profile-hero .av{width:96px;height:96px}}
+  @media(max-width:460px){.grid{grid-template-columns:1fr 1fr;gap:12px}.gallery{grid-template-columns:1fr 1fr}}
+</style>
+<link rel="stylesheet" href="movil.css?v=1" />
+
+<link rel="stylesheet" href="estetica.css?v=2" />
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8E723F"/><stop offset=".42" stop-color="#F3E0BC"/><stop offset=".72" stop-color="#C9A96E"/><stop offset="1" stop-color="#9C8050"/></linearGradient></defs></svg>
+
+<header><div class="wrap nav">
+  <a href="index.html" class="brand"><svg class="inf" width="36" height="18" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>Babyloon</a>
+  <div style="display:flex;align-items:center;gap:20px">
+    <a href="lista-espera.html" class="back" data-i18n="wl_eyebrow">Profesionales · Lista de espera</a>
+    <a href="novias.html" class="back" data-i18n="nv_eyebrow">Novias</a>
+    <a href="index.html" class="back">← Inicio</a>
+  </div>
+</div></header>
+
+<section class="search-head"><div class="wrap">
+  <span class="eyebrow" data-i18n="pf_eyebrow">Profesionales</span>
+  <h1><span data-i18n="pf_h1a">Encuentra tu</span> <span class="gold-text" data-i18n="pf_h1b">profesional</span></h1>
+  <p data-i18n="pf_sub">Verificados, valorados y cerca de ti.</p>
+  <form class="searchbar" id="searchbar">
+    <div class="sb-field">
+      <label data-i18n="pf_service">Qué buscas</label>
+      <select id="fService">
+        <option value="" data-i18n="pf_all">Todos</option>
+        <option data-i18n="pf_c_maquillaje">Maquillaje</option><option data-i18n="pf_c_peluqueria">Peluquería</option><option data-i18n="pf_c_unas">Uñas</option>
+        <option data-i18n="pf_c_barberia">Barbería</option><option data-i18n="pf_c_estetica">Estética</option><option data-i18n="pf_c_masajes">Masajes</option>
+      </select>
+    </div>
+    <div class="sb-sep"></div>
+    <div class="sb-field">
+      <label data-i18n="pf_postal">Código postal</label>
+      <input id="fPostal" placeholder="Ej. 29600" inputmode="numeric"/>
+    </div>
+    <button type="submit" class="sb-btn" data-i18n="pf_search">Buscar</button>
+  </form>
+</div></section>
+
+<section class="results"><div class="wrap">
+  <div class="count" id="count"></div>
+  <div class="grid" id="grid"><div class="loading">Cargando profesionales…</div></div>
+</div></section>
+
+<!-- 17.A4 · P2B: con qué parámetros se ordena, y quién paga por salir
+     antes. Lo pinta `orden.js` desde `parametros_del_orden()`; si el
+     servidor no contesta, no se pinta nada inventado. -->
+<div class="wrap"><div id="bblOrden" hidden></div></div>
+
+<!-- PERFIL -->
+<div class="overlay" id="overlay">
+  <div class="profile" id="profile"></div>
+</div>
+
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="conexion.js?v=1"></script>
+<script src="i18n.js?v=10"></script>
+<script src="i18n-paginas.js?v=4"></script>
+<script src="i18n-ciudad-nombres.js?v=2"></script>
+<script src="i18n-index.js?v=4"></script>
+<script src="i18n-index-it.js?v=1"></script>
+<script src="i18n-index-nl.js?v=1"></script>
+<script src="i18n-index-pl.js?v=1"></script>
+<script src="i18n-index-el.js?v=1"></script>
+<script src="i18n-index-hu.js?v=1"></script>
+<script src="i18n-index-5.js?v=2"></script>
+<script src="i18n-regalo-completar.js?v=1"></script>
+<script src="i18n-orden.js?v=3"></script>
+  <script src="i18n-baby.js?v=1"></script>
+  <script src="i18n-5-resto.js?v=1"></script>
+  <script src="i18n-auth.js?v=1"></script>
+  <script src="i18n-auth-extra.js?v=2"></script>
+  <script src="i18n-aceptacion.js?v=1"></script>
+<script src="app-link.js"></script>
+<script>
+  const SUPABASE_URL="https://qphatjblvojnfyghwmjy.supabase.co";
+  const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  window.__sbClient = sb;
+  const esc=s=>(s||'').toString().replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  const qs=new URLSearchParams(location.search);
+  /* 32.1 · La ciudad de una profesional también se lee. Si es una de las
+     nuestras se traduce; si trabaja en un pueblo que no está en la lista,
+     `BBL.ciudad` devuelve lo que le des, que es lo correcto: el nombre de
+     Torremolinos es Torremolinos en los dieciséis idiomas. */
+  const ciudadDe = p => {
+    const c = p.city || '';
+    return (window.BBL && BBL.ciudad) ? BBL.ciudad(c) : c;
+  };
+  const initials=n=>(n||'?').trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+  const stars=r=>{r=Number(r||0);return '★'.repeat(Math.round(r))+'☆'.repeat(5-Math.round(r))+' '+r.toFixed(1);};
+
+  // prefijar desde el buscador del hero
+  if(qs.get('service')) document.getElementById('fService').value=qs.get('service');
+  if(qs.get('postal')) document.getElementById('fPostal').value=qs.get('postal');
+
+  document.getElementById('searchbar').addEventListener('submit',e=>{e.preventDefault();load();});
+
+  let PROS=[];
+  async function load(){
+    const grid=document.getElementById('grid'), cnt=document.getElementById('count');
+    grid.innerHTML='<div class="loading">'+esc(BBL.t('pf_loading'))+'</div>';
+    const service=document.getElementById('fService').value.trim();
+    const postal=document.getElementById('fPostal').value.trim();
+    /* ── 16.5b · el directorio deja de leer la tabla ────────────────────
+       Esto hacía `select` sobre `professionals` con trece columnas. La
+       tabla tiene noventa y ocho, y la política de filas era «cualquiera
+       con cuenta ve todas»: mientras el directorio leyera la tabla, no
+       se podía estrechar esa política sin dejar la página en blanco.
+
+       Ahora llama a `escaparate_profesionales`, que devuelve exactamente
+       lo que se pinta, filtra en el servidor —país, ciudad, código
+       postal y servicio— y pasa la biografía por `limpiar_contacto`,
+       así que nadie puede colar su teléfono en ella.
+
+       El filtrado se hace ARRIBA, no aquí: antes se pedían 60 fichas y
+       se tiraban las que no cuadraban, así que buscar «uñas» en el 29600
+       podía devolver cero teniendo diez, simplemente porque las diez no
+       estaban entre las 60 primeras por valoración. */
+    const {data,error}=await sb.rpc('escaparate_profesionales',{
+      p_pais: null,
+      p_ciudad: null,
+      p_cp: postal || null,
+      p_servicio: service || null,
+      p_solo_en_linea: false,
+      p_limite: 60
+    });
+    if(error){grid.innerHTML='<div class="empty">'+esc(BBL.t('pf_error'))+'</div>';return;}
+    const list=data||[];
+    PROS=list;
+    cnt.textContent = list.length
+      ? `${list.length} ${list.length>1?BBL.t('pf_many'):BBL.t('pf_one')}${postal?' · CP '+esc(postal):''}${service?' · '+esc(service):''}`
+      : '';
+    if(!list.length){grid.innerHTML='<div class="empty">'+esc(BBL.t('pf_empty'))+'</div>';return;}
+    grid.innerHTML=list.map((p,i)=>{
+      const nm=esc(p.full_name||'Profesional');
+      const rating=(p.rating_global||p.google_rating||0);
+      const verified=p.verification_status==='verified';
+      return `<article class="pro" data-i="${i}">
+        <div class="pro-photo">${p.avatar_url?`<img src="${esc(p.avatar_url)}" alt="${nm}" loading="lazy">`:`<div class="noimg">${initials(p.full_name)}</div>`}
+          ${verified?'<div class="vbadge">✓ '+esc(BBL.t('pf_verified'))+'</div>':''}</div>
+        <div class="pro-body"><h3>${nm}</h3>
+          <div class="spec">${esc(p.specialty||BBL.t('pf_beauty'))}</div>
+          <div class="meta"><span class="rate">★ ${Number(rating).toFixed(1)}</span><span class="city">${esc(ciudadDe(p))}</span></div>
+        </div></article>`;
+    }).join('');
+    grid.querySelectorAll('.pro').forEach(el=>el.addEventListener('click',()=>openProfile(PROS[el.dataset.i])));
+  }
+
+  async function openProfile(p){
+    if(!p)return;
+    const ov=document.getElementById('overlay'), box=document.getElementById('profile');
+    const nm=esc(p.full_name||'Profesional');
+    const rating=(p.rating_global||p.google_rating||0);
+    const specs=(p.specialties||p.services||'').toString().split(/[,;]+/).map(x=>x.trim()).filter(Boolean);
+    box.innerHTML=`
+      <div class="profile-hero">
+        <button class="profile-close" id="pClose">×</button>
+        ${p.avatar_url?`<img class="av" src="${esc(p.avatar_url)}" alt="${nm}">`:`<div class="av" style="display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:40px;color:var(--mauve)">${initials(p.full_name)}</div>`}
+        <div class="pv">
+          <h2>${nm}</h2>
+          <div class="spec">${esc(p.specialty||BBL.t('pf_beauty'))}${p.verification_status==='verified'?' · ✓ '+esc(BBL.t('pf_verified')):''}</div>
+          <div class="stats">
+            <div class="stat"><b>★ ${Number(rating).toFixed(1)}</b><span>${esc(BBL.t('pf_rating'))}</span></div>
+            <div class="stat"><b>${p.completed_services||0}</b><span>${esc(BBL.t('pf_services'))}</span></div>
+            ${p.city?`<div class="stat"><b style="font-size:15px;font-family:var(--sans)">${esc(ciudadDe(p))}</b><span>${esc(BBL.t('pf_zone'))}</span></div>`:''}
+          </div>
+        </div>
+      </div>
+      <div class="profile-body">
+        ${p.bio?`<h4>${esc(BBL.t('pf_about'))}</h4><div class="bio">${esc(p.bio)}</div>`:''}
+        ${specs.length?`<h4>${esc(BBL.t('pf_specialties'))}</h4><div class="tags">${specs.map(s=>`<span>${esc(s)}</span>`).join('')}</div>`:''}
+        <h4>${esc(BBL.t('pf_portfolio'))}</h4>
+        <div class="gallery" id="gallery"><div class="loading" style="grid-column:1/-1">Cargando…</div></div>
+      </div>
+      <div class="book-bar">
+        <span class="note">${esc(BBL.t('pf_book_note'))}</span>
+        <button class="btn-gold" id="bookBtn">${esc(BBL.t('pf_book'))}</button>
+      </div>`;
+    ov.classList.add('on'); document.body.style.overflow='hidden';
+    document.getElementById('pClose').addEventListener('click',closeProfile);
+    document.getElementById('bookBtn').addEventListener('click',()=>{ const o=document.querySelector('[data-app-open]'); if(o){o.click();} else location.href='index.html#app'; });
+    // portfolio
+    const g=document.getElementById('gallery');
+    try{
+      const {data}=await sb.from('pro_portfolio').select('image_url,caption').eq('professional_id',p.id).order('sort_order',{ascending:true}).limit(9);
+      if(data&&data.length){ g.innerHTML=data.map(x=>`<img src="${esc(x.image_url)}" alt="${esc(x.caption||'')}" loading="lazy">`).join(''); }
+      else{ g.innerHTML='<div class="empty" style="grid-column:1/-1;padding:24px">'+esc(BBL.t('pf_no_portfolio'))+'</div>'; }
+    }catch(_){ g.innerHTML=''; }
+  }
+  function closeProfile(){ document.getElementById('overlay').classList.remove('on'); document.body.style.overflow=''; }
+  document.getElementById('overlay').addEventListener('click',e=>{ if(e.target.id==='overlay') closeProfile(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeProfile(); });
+
+  load();
+  document.addEventListener('bbl:lang',load);
+</script>
+<script src="cookies.js?v=2"></script>
+<script src="presencia.js?v=2"></script>
+<script src="baby.js?v=2"></script>
+<script src="lujo.js?v=1"></script>
+<script src="auth.js?v=5"></script>
+<script src="orden.js?v=3"></script>
+<script src="aceptacion.js?v=1"></script>
+</body>
+</html>

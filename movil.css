@@ -1,0 +1,106 @@
+/* ═══════════════════════════════════════════════════════════════
+   Babyloon Web · Lo que hay que arreglar en un móvil
+   ───────────────────────────────────────────────────────────────
+   Medido en un iPhone de 375 px, página por página. Tres cosas
+   salían mal en todas y ninguna se ve en un portátil:
+
+     1. El botón del menú medía 26×30 px. Un pulgar acierta a partir
+        de 44. El del carrito, 24×24.
+     2. Los campos de formulario van a 14 px. Safari en iOS hace zoom
+        automático sobre cualquier campo por debajo de 16 px, y al
+        salir del campo no lo deshace: la página se queda torcida.
+        Ese es el motivo de los 16 px de aquí abajo, no el gusto.
+     3. Etiquetas a 9 px. En papel se leen; en un móvil, no.
+
+   El primer intento agrandaba los botones con `padding` y un
+   `margin` negativo que lo compensaba. Medido, sacaba la página
+   8 px por la derecha: el botón del menú va pegado al borde y el
+   margen negativo deja el borde del botón fuera del contenedor.
+   Por eso la zona de toque se hace con un pseudo-elemento
+   absoluto y centrado: el dedo tiene sus 44 px y la maquetación no
+   se entera de nada.
+
+   Va en un fichero aparte y no en el <style> de cada página porque
+   son cincuenta y seis páginas — cuarenta y tres son de ciudad — y
+   un arreglo de esto no puede depender de acordarse de cincuenta y
+   seis sitios. Se carga DESPUÉS del <style> de la página, así que
+   gana sin subir la especificidad de cada regla.
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 920px) {
+
+  /* ── 1. Zonas de toque ─────────────────────────────────────── */
+  header .menu-toggle,
+  .nav .menu-toggle,
+  #menuToggle,
+  #cartBtn,
+  .cart-btn {
+    position: relative;
+  }
+  header .menu-toggle::after,
+  .nav .menu-toggle::after,
+  #menuToggle::after,
+  #cartBtn::after,
+  .cart-btn::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+
+  .bbl-lang-btn {
+    min-height: 40px;
+    min-width: 44px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .bbl-lang-menu button {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Cerrar un panel o un modal es lo que más se busca con prisa. */
+  .x, .pm-close, #pmClose, #authClose, .bau-x {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* ── 3. Texto que no se lee ─────────────────────────────────── */
+  .eyebrow { font-size: 10.5px; letter-spacing: .3em; }
+  .hs-field label,
+  .field label,
+  form label { font-size: 11px; }
+  .badge, .vbadge, .soon-label, .brands-label, .gc-label { font-size: 10.5px; }
+}
+
+@media (max-width: 480px) {
+
+  /* ── 2. El zoom de Safari ──────────────────────────────────── */
+  /* 16 px es el umbral exacto por debajo del cual iOS hace zoom al
+     enfocar. No es una preferencia tipográfica: es el número. */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+  /* Los campos crecen con la letra, y las filas de formulario que
+     estaban calculadas para 14 px necesitan aire. El buscador de la
+     portada lleva su propia altura porque el campo va dentro de una
+     fila que ya tiene etiqueta y relleno. */
+  input:not([type=checkbox]):not([type=radio]),
+  select {
+    min-height: 44px;
+  }
+  .hs-field select,
+  .hs-field input {
+    min-height: 26px;
+  }
+
+  /* Un botón a lo ancho se acierta siempre. */
+  .btn-gold, .btn-ghost, .hs-btn {
+    min-height: 46px;
+  }
+}

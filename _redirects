@@ -1,0 +1,106 @@
+# Babyloon · redirecciones
+#
+# Las tres páginas de ciudad escritas a mano —madrid, malaga, miami— se
+# sustituyen por las generadas desde la base (`ciudad-<slug>.html`), que
+# son 43 y llevan la tarifa real de cada ciudad.
+#
+# No se borran sin más: estaban en el sitemap, así que Google las tiene
+# indexadas y un 404 tira a la basura todo lo que hayan acumulado. Un 301
+# traslada ese valor a la página nueva.
+#
+# OJO si alguna vez editas esto: aquí NO se pone «301!». El signo de
+# admiración es sintaxis de Netlify y Cloudflare lo lee como un código de
+# estado 0, y entonces el despliegue entero se cae con «Valid status codes
+# are 200, 301, 302, 303, 307 or 308. Got 0».
+#
+# Tampoco hace falta: Cloudflare sigue los redirects SIEMPRE, exista o no
+# un archivo con esa ruta. Es decir, `madrid.html` sigue en la carpeta
+# como red de seguridad, pero nadie llega a verlo nunca: la redirección
+# manda antes.
+/madrid.html    /ciudad-madrid.html    301
+/malaga.html    /ciudad-malaga.html    301
+/miami.html     /ciudad-miami.html     301
+
+# ── 60.6 · Miami Beach ya no es una ciudad ────────────────────────────
+#
+# Las tres de arriba eran páginas escritas a mano que una generada
+# sustituyó. Ésta es otra cosa: Miami Beach se ABSORBIÓ en el mercado de
+# Miami (bloque 58.26) porque los dos radios se solapaban y una clienta
+# de South Beach la pedía dos veces en dos ciudades.
+#
+# Pero su página siguió publicándose siete semanas más, con su propia
+# tabla de tarifas y su propio «buscamos a quien preste los primeros
+# servicios de la ciudad», ofreciéndose como un mercado aparte que ya no
+# existe. La absorción se decidió en la base y nadie la bajó a la web.
+#
+# Ahora `ciudades_publicas()` ya no la devuelve, así que el generador no
+# la vuelve a escribir y sale del sitemap. Esto es para quien llegue por
+# un enlace viejo o por Google: va a Miami, que es donde de verdad se
+# atiende South Beach.
+/ciudad-miami-beach.html    /ciudad-miami.html    301
+
+# ══════════════════════════════════════════════════════════════════════
+# Bloque 49.3 · la dirección corta de empleo
+#
+# Andrés pidió `job.babyloon.app` sólo para «trabaja con nosotros».
+# Decidido: la dirección corta existe, pero REDIRIGE aquí en vez de ser un
+# sitio aparte. El motivo no es pereza:
+#
+#   · Un subdominio es otro ORIGEN para el navegador, y todo lo nuestro
+#     vive en `localStorage`: el idioma elegido (`bbl_lang`), la decisión
+#     de cookies y la sesión. Quien navegue en japonés y pulse «Empleo»
+#     aterrizaría en español y se le volvería a preguntar por las cookies.
+#   · La autoridad de búsqueda se partiría en dos sitios que empiezan de
+#     cero. Uber puede permitírselo; una marca que abre en 2027, no.
+#   · Y habría que duplicar la CSP y las veintisiete tipografías servidas
+#     desde nuestro dominio (bloque 17.A8c).
+#
+# Con esto tienes la dirección corta para un anuncio, una tarjeta o una
+# firma, y el sitio sigue siendo uno solo.
+#
+# AQUÍ NO PUEDE IR, Y LO DIJO EL DESPLIEGUE.
+#
+# Escribí estas dos líneas:
+#
+#     https://job.babyloon.app/*    https://babyloon.app/empleo    301
+#     https://jobs.babyloon.app/*   https://babyloon.app/empleo    301
+#
+# y `npx wrangler deploy` las rechazó en seco:
+#
+#     Invalid _redirects configuration:
+#     Line 57: Only relative URLs are allowed.
+#     Line 58: Only relative URLs are allowed.   [code: 100324]
+#
+# El motivo es que este sitio se sirve con **Workers Assets**, no con
+# Cloudflare Pages. Los dos leen un fichero `_redirects` con la misma
+# sintaxis, pero no admiten lo mismo: Pages acepta una URL absoluta a otro
+# host y Workers Assets **sólo acepta rutas del propio sitio**. Y tiene
+# sentido: este fichero se consulta cuando la petición YA ha llegado a
+# este Worker, y una petición a `job.babyloon.app` no llega aquí mientras
+# ese nombre no apunte a algún sitio. Un `_redirects` no inventa un
+# subdominio ni puede hablar por uno que no existe.
+#
+# DÓNDE VA DE VERDAD: un salto de un HOSTNAME a otro se hace en el borde,
+# antes de llegar a ningún Worker. En el panel de Cloudflare:
+#   1. DNS → añadir `job` (y/o `jobs`) como registro **AAAA a `100::`
+#      con la nube naranja** —es la dirección de descarte; el tráfico no
+#      va a ninguna máquina, sólo hace falta que el nombre sea proxiado
+#      para que las reglas se apliquen.
+#   2. Rules → **Redirect Rules** → Create rule:
+#        Si  `hostname equals job.babyloon.app`
+#        → Static redirect a `https://babyloon.app/empleo`, código 301,
+#          preservando la cadena de consulta.
+# El plan gratuito trae reglas de redirección suficientes para esto.
+#
+# `jobs` en plural es la convención en inglés y es lo que usa Uber; sirve
+# la misma regla con el otro nombre, o una sola con `hostname in
+# {"job.babyloon.app" "jobs.babyloon.app"}`.
+
+# Lo que sí cabe aquí es el alias dentro del propio sitio. `/trabajo` no
+# es ningún fichero de la carpeta, así que no hay bucle posible.
+#
+# Y OJO CON EL DESTINO: va sin `.html` a propósito. Comprobado contra
+# producción el 28-sep: Cloudflare ya redirige `/empleo.html` → `/empleo`
+# por su cuenta. Escribir la regla al revés —`/empleo` → `/empleo.html`—
+# habría hecho un BUCLE INFINITO y dejado la página inalcanzable.
+/trabajo        /empleo    301

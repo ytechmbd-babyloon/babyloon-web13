@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Trabajar en Babyloon</title>
+<meta name="description" content="Todo el trabajo de Babyloon es remoto y en línea, desde cualquier parte del mundo. Abrimos en enero de 2027 en dieciséis idiomas y cuarenta y tres ciudades." />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0D0B0F" />
+<link rel="canonical" href="https://babyloon.app/empleo.html" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Babyloon" />
+<meta property="og:title" content="Trabajar en Babyloon · desde donde estés" />
+<meta property="og:description" content="Remoto, en línea, en cualquier parte del mundo. El equipo que abre en enero de 2027 se está formando ahora." />
+<meta property="og:url" content="https://babyloon.app/empleo.html" />
+<meta property="og:image" content="https://babyloon.app/og-image.png" />
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<link href="compania.css?v=4" rel="stylesheet" />
+<link href="empleo.css?v=3" rel="stylesheet" />
+</head>
+<body class="emp">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#8E723F"/><stop offset=".42" stop-color="#F3E0BC"/>
+<stop offset=".72" stop-color="#C9A96E"/><stop offset="1" stop-color="#9C8050"/></linearGradient></defs></svg>
+
+<a class="saltar" href="#puestos" data-i18n="ep_saltar">Ir a los puestos abiertos</a>
+
+<!-- ── Cabecera ──────────────────────────────────────────────────────────
+     Empieza transparente sobre la portada y se vuelve sólida al bajar. La
+     navegación interna es lo que convierte una página larga en un sitio:
+     sin ella, ocho pantallas de scroll son ocho pantallas de scroll.
+     ────────────────────────────────────────────────────────────────── -->
+<header id="cab"><div class="wrap nav">
+  <a href="index.html" class="brand"><svg class="inf" width="36" height="18" viewBox="0 0 120 60" aria-hidden="true"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>Babyloon</a>
+  <nav class="emp-nav" aria-label="En esta página">
+    <a href="#puestos" data-i18n="ep_nav_puestos">Puestos</a>
+    <a href="#ciudades" data-i18n="ep_nav_ciudades">Ciudades</a>
+    <a href="#condiciones" data-i18n="ep_nav_como">Cómo trabajamos</a>
+    <a href="#proceso" data-i18n="ep_nav_proceso">Proceso</a>
+  </nav>
+  <a href="#presentarme" class="emp-cta-nav" data-i18n="ep_nav_presentarme">Presentarme</a>
+</div></header>
+
+<!-- ── Portada ───────────────────────────────────────────────────────────
+     A SANGRE, CON LAS CIUDADES. Ocho fotos que se suceden despacio con un
+     acercamiento lento, y encima el nombre de la ciudad y la hora que es
+     ahí ahora mismo. Es el argumento de la página dicho en imagen: el
+     trabajo es desde donde estés, y «donde estés» es esto.
+
+     No es un carrusel —no hay flechas ni puntos ni nada que pulsar— y por
+     eso no necesita controles: es un fondo, y un fondo no es un mando.
+
+     El hueco del vídeo sigue montado. Si se pone un `<video id="heroVideo">`
+     dentro de `.hero-fondo`, `empleo.js` lo enciende y manda sobre las
+     fotos; si el fichero no está, si el navegador no puede con él o si el
+     sistema pide quietud, vuelven las fotos. Nunca se queda en negro.
+     ────────────────────────────────────────────────────────────────── -->
+<section class="emp-hero sin-video sin-fotos" id="portada">
+  <div class="hero-fondo" aria-hidden="true">
+    <div class="hero-fotos" id="heroFotos"></div>
+    <div class="hero-dibujo"></div>
+    <div class="hero-velo"></div>
+  </div>
+
+  <div class="wrap hero-cuerpo">
+    <span class="eyebrow rv" data-i18n="ep_eyebrow">Trabajar en Babyloon</span>
+    <h1 class="rv" data-i18n="ep_h1">Desde donde estés.</h1>
+    <p class="lead rv" data-i18n-html="ep_lead">Todo el trabajo de Babyloon es <strong>remoto y en línea</strong>, en cualquier parte del mundo. No hay oficina a la que ir ni ciudad en la que haya que vivir. Abrimos en enero de 2027 en dieciséis idiomas y cuarenta y tres ciudades, y el equipo que lo abra se está formando ahora.</p>
+
+    <form class="hero-buscar rv" id="fBuscarHero" role="search">
+      <label class="oculto" for="qHero" data-i18n="ep_buscar_lbl">Buscar un puesto</label>
+      <input id="qHero" type="search" autocomplete="off" data-i18n-ph="ep_buscar_ph" placeholder="Busca por puesto, área o palabra" />
+      <button type="submit" data-i18n="ep_buscar_btn">Ver puestos</button>
+    </form>
+  </div>
+
+  <p class="hero-ciudad" id="heroCiudad" aria-hidden="true"></p>
+
+  <div class="hero-reloj">
+    <div class="wrap">
+      <div class="reloj-rej" id="reloj" aria-hidden="true"></div>
+      <p class="reloj-pie" data-i18n="ep_reloj_pie">Aquí no hay una hora de entrada común. Esto es sólo dónde es de día ahora mismo, en siete de las cuarenta y tres ciudades donde abrimos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Cifras ────────────────────────────────────────────────────────────
+     Cuentan al entrar en pantalla. Ninguna está escrita a mano: los
+     puestos salen del administrador y los días se cuentan contra el
+     calendario. ─────────────────────────────────────────────────────── -->
+<section class="emp-cifras-band" id="cifras">
+  <div class="wrap emp-cifras">
+    <div class="rv"><b id="cfPuestos" data-cuenta="0">—</b><span data-i18n="ep_c_puestos">Puestos abiertos</span></div>
+    <div class="rv"><b data-cuenta="16">16</b><span data-i18n="ep_c_idiomas">Idiomas de atención</span></div>
+    <div class="rv"><b data-cuenta="43">43</b><span data-i18n="ep_c_ciudades">Ciudades al abrir</span></div>
+    <div class="rv"><b id="cfDias" data-cuenta="0">—</b><span data-i18n="ep_c_dias">Días para abrir</span></div>
+  </div>
+</section>
+
+<!-- ── 1 · Por qué aquí ─────────────────────────────────────────────── -->
+<section class="emp-sec" id="porque"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="ep_s1_eyebrow">Por qué aquí</span>
+  <h2 class="rv" data-i18n="ep_s1_h2">Cuatro cosas ciertas antes de que sigas leyendo</h2>
+  <p class="rv" data-i18n="ep_s1_p">Ninguna de las cuatro es una promesa de cultura de empresa. Son hechos que se pueden comprobar el primer día, y que dejan de ser ciertos si dejamos de cumplirlos.</p>
+
+  <div class="razones">
+    <article class="razon rv">
+      <span class="n">01</span>
+      <div class="r-izq">
+        <span class="k" data-i18n="ep_r1_k">El precio</span>
+        <h3 data-i18n="ep_r1_t">Aquí nadie pone una tarifa</h3>
+      </div>
+      <div class="r-der">
+        <p data-i18n="ep_r1_a">El precio de cada servicio lo decide una subasta entre profesionales, no una lista. Eso cambia el diseño de todas las pantallas de reserva, el cálculo del cobro, la agenda y hasta el orden en que se enseñan los resultados.</p>
+        <p class="mas" data-i18n="ep_r1_b">Si alguna vez has diseñado una pantalla donde el precio no se sabe hasta que alguien puja, ya sabes por qué es interesante.</p>
+      </div>
+    </article>
+    <article class="razon rv">
+      <span class="n">02</span>
+      <div class="r-izq">
+        <span class="k" data-i18n="ep_r2_k">Dieciséis idiomas</span>
+        <h3 data-i18n="ep_r2_t">Traducir no es el último paso</h3>
+      </div>
+      <div class="r-der">
+        <p data-i18n="ep_r2_a">La web habla dieciséis idiomas y las aplicaciones doce, desde el primer día y no desde la ronda siguiente. Los avisos, las facturas, las condiciones y los mensajes de error viven en la base de datos en todos ellos, y cuando falta uno el sistema lo dice en voz alta en vez de caer al español.</p>
+        <p class="mas" data-i18n="ep_r2_b">Trabajar así obliga a escribir de otra manera. Se nota en el primer mes.</p>
+      </div>
+    </article>
+    <article class="razon rv">
+      <span class="n">03</span>
+      <div class="r-izq">
+        <span class="k" data-i18n="ep_r3_k">Por escrito</span>
+        <h3 data-i18n="ep_r3_t">Las decisiones viven en documentos</h3>
+      </div>
+      <div class="r-der">
+        <p data-i18n="ep_r3_a">Con el equipo repartido por husos horarios, lo que no está escrito no existe. Cada cambio del producto se audita antes, se mide después y se deja documentado con sus cifras: por qué se hizo, qué se probó y qué quedó abierto.</p>
+        <p class="mas" data-i18n="ep_r3_b">No son actas de reuniones. Son la forma de trabajar.</p>
+      </div>
+    </article>
+    <article class="razon rv">
+      <span class="n">04</span>
+      <div class="r-izq">
+        <span class="k" data-i18n="ep_r4_k">Antes de abrir</span>
+        <h3 data-i18n="ep_r4_t">Todavía no hay nada que mantener</h3>
+      </div>
+      <div class="r-der">
+        <p data-i18n="ep_r4_a">Babyloon abre en enero de 2027. Lo que se construya este año es lo que abrirá, y quien entre ahora va a tomar decisiones que se notarán durante años.</p>
+        <p class="mas" data-i18n="ep_r4_b">A cambio: es una empresa pequeña y sin plantilla que la sostenga. Hay que estar a gusto con eso.</p>
+      </div>
+    </article>
+  </div>
+</div></section>
+
+<!-- ── 2 · En qué se trabaja ────────────────────────────────────────────
+     SIN FOTOGRAFÍA, Y POR UNA RAZÓN QUE SE SOSTIENE: no hay equipo
+     todavía, así que cualquier foto de «nuestro equipo» sería de un banco
+     de imágenes. Una foto prestada en la página que dice que aquí se
+     escribe todo y no se inventa nada la desmiente en el primer golpe de
+     vista. Cada área lleva una marca dibujada, que sí es nuestra.
+     ────────────────────────────────────────────────────────────────── -->
+<section class="emp-sec emp-sec-alt" id="areas"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="ep_s2_eyebrow">En qué se trabaja</span>
+  <h2 class="rv" data-i18n="ep_s2_h2">Cuatro áreas, y ninguna decorativa</h2>
+  <p class="rv" data-i18n="ep_s2_p">Babyloon es un mercado con dos lados: quien pide un servicio y quien lo presta. Entre los dos hay una subasta, un pago, una agenda y una obligación legal distinta en cada país. Cada una de esas cosas tiene detrás un área.</p>
+
+  <div class="areas">
+    <article class="area rv" data-area="producto">
+      <svg class="marca" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="26" /><circle cx="40" cy="40" r="14" /><path d="M40 4v20M40 56v20M4 40h20M56 40h20" /></svg>
+      <h3 data-i18n="ep_a1_t">Producto y tecnología</h3>
+      <p data-i18n="ep_a1_d">Dos aplicaciones nativas, la web, el administrador y la base de datos que hay debajo. Se escribe todo aquí: no hay agencia detrás ni plantilla comprada.</p>
+      <p class="semana"><span data-i18n="ep_semana">Una semana cualquiera</span><em data-i18n="ep_a1_s">Auditar cómo se comporta algo hoy, arreglarlo, probarlo contra los datos de verdad y dejar escrito con qué cifras.</em></p>
+    </article>
+
+    <article class="area rv" data-area="atencion">
+      <svg class="marca" viewBox="0 0 80 80" aria-hidden="true"><path d="M14 26h52v30H34L20 68V56h-6z" /><path d="M28 38h24M28 46h14" /></svg>
+      <h3 data-i18n="ep_a2_t">Atención en dieciséis idiomas</h3>
+      <p data-i18n="ep_a2_d">Responder en el idioma de quien escribe, no en el nuestro. El equipo de atención se forma por idioma y por huso horario, no por turno de oficina.</p>
+      <p class="semana"><span data-i18n="ep_semana">Una semana cualquiera</span><em data-i18n="ep_a2_s">Conversaciones con la clientela y con quien presta el servicio, y la parte que no se ve: convertir lo que te cuentan en algo que se pueda arreglar.</em></p>
+    </article>
+
+    <article class="area rv" data-area="cumplimiento">
+      <svg class="marca" viewBox="0 0 80 80" aria-hidden="true"><path d="M40 8l26 10v22c0 16-11 27-26 32C25 67 14 56 14 40V18z" /><path d="M29 40l8 8 15-16" /></svg>
+      <h3 data-i18n="ep_a3_t">Cumplimiento y pagos</h3>
+      <p data-i18n="ep_a3_d">Facturación en cada país donde operamos, retenciones, devoluciones y el dinero que llega a cada profesional. Diecinueve paquetes fiscales, cada uno con sus fechas.</p>
+      <p class="semana"><span data-i18n="ep_semana">Una semana cualquiera</span><em data-i18n="ep_a3_s">Cerrar un trimestre, revisar una devolución al céntimo, y decir que no cuando un número no cuadra.</em></p>
+    </article>
+
+    <article class="area rv" data-area="crecimiento">
+      <svg class="marca" viewBox="0 0 80 80" aria-hidden="true"><path d="M10 62l16-20 14 12 12-20 18 14" /><circle cx="26" cy="42" r="4" /><circle cx="40" cy="54" r="4" /><circle cx="52" cy="34" r="4" /></svg>
+      <h3 data-i18n="ep_a4_t">Crecimiento y contenido</h3>
+      <p data-i18n="ep_a4_d">Cuarenta y tres ciudades con su propia página, la academia profesional, el espacio de novias y la boutique. Todo en dieciséis idiomas.</p>
+      <p class="semana"><span data-i18n="ep_semana">Una semana cualquiera</span><em data-i18n="ep_a4_s">Escribir, medir si se lee, y tirar lo que no funcione sin defenderlo.</em></p>
+    </article>
+  </div>
+</div></section>
+
+<!-- ── 2b · Lo que no hay ───────────────────────────────────────────────
+     La página de empleo de una empresa grande enseña gente: la oficina,
+     el equipo, alguien sonriendo en una pizarra. Aquí no hay nada de eso
+     que enseñar, y la salida fácil era una foto de banco de imágenes.
+
+     Esta sección es la salida difícil: decirlo. Y decirlo funciona mejor,
+     porque quien encaja aquí se está preguntando exactamente esto.
+     ────────────────────────────────────────────────────────────────── -->
+<section class="emp-sec emp-desnuda" id="sinplantilla"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="ep_np_eyebrow">Lo que no hay</span>
+  <h2 class="rv" data-i18n="ep_np_h2">Hoy Babyloon es una persona</h2>
+  <div class="desnuda-txt">
+    <p class="rv" data-i18n="ep_np_a">No hay oficina que enseñarte, ni un equipo en el que encajar, ni una cultura ya escrita que baste con leerse. Lo que hay es un producto entero construido y todavía sin abrir: dos aplicaciones, una web en dieciséis idiomas, un administrador y la base de datos que lo sostiene todo.</p>
+    <p class="rv destacado" data-i18n="ep_np_b">Quien entre ahora no se suma a algo que ya funciona. Decide cómo va a funcionar.</p>
+    <p class="rv" data-i18n="ep_np_c">Y tiene una cara mala que es justo decir: no hay a quien preguntarle cómo se hacen las cosas aquí, porque todavía no se han hecho. Si eso te suena a problema, lo es. Si te suena a sitio, escríbenos.</p>
+  </div>
+</div></section>
+
+<!-- ── 3 · Las ciudades ─────────────────────────────────────────────────
+     Sección nueva. Es la respuesta visual a «desde donde estés»: la hora
+     de cada una es la de verdad y la foto la sirve `<picture>` en el
+     HTML. Sin fotografía la tarjeta se sostiene sola, con su degradado y
+     su hora. ────────────────────────────────────────────────────────── -->
+<section class="emp-sec" id="ciudades"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="ep_s7_eyebrow">Dónde se nota</span>
+  <h2 class="rv" data-i18n="ep_s7_h2">Cuarenta y tres ciudades, ninguna obligatoria</h2>
+  <p class="rv" data-i18n="ep_s7_p">Estas son las ciudades para las que se trabaja, no las ciudades en las que hay que vivir. Cada una tiene su página, su tarifa y su idioma de atención, y la hora que lees es la suya ahora mismo.</p>
+
+  <!-- El globo. No es un adorno con chinchetas: la frontera entre lo
+       claro y lo oscuro es el terminador de verdad, calculado con la
+       posición del sol de este instante. Es el mismo dato que la banda
+       de la portada, dicho en redondo.
+
+       El lienzo NO es la vía accesible y no se intenta que lo sea: las
+       mismas ciudades están justo debajo como enlaces con su texto, su
+       foco y su orden de tabulación. Si no hay canvas, `empleo.js`
+       quita esta caja entera y no se nota que faltaba. -->
+  <div class="globo-caja rv" id="globoCaja">
+    <canvas id="globo" aria-hidden="true"></canvas>
+    <p class="globo-pie" data-i18n="ep_globo_pie">La línea entre lo claro y lo oscuro no está dibujada a ojo: es el borde entre el día y la noche ahora mismo. Encendidas están las ciudades donde en este momento es de día.</p>
+  </div>
+
+  <div class="ciudades-rej" id="ciudadesRej"></div>
+
+  <a class="ir rv" href="index.html#ciudades" data-i18n="ep_s7_cta">Ver las cuarenta y tres</a>
+</div></section>
+
+<!-- ── 4 · Cómo trabajamos · sale del administrador ─────────────────── -->
+<section class="emp-sec emp-sec-alt" id="condiciones"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="ep_s3_eyebrow">Cómo trabajamos</span>
+  <h2 class="rv" data-i18n="ep_s3_h2">Las condiciones, escritas</h2>
+  <p class="rv" data-i18n="ep_s3_p">Jornada, vacaciones, cómo se contrata y cómo se paga, qué herramientas pones tú y cuáles ponemos nosotros. Sale de la misma pantalla desde la que se gestiona la contratación, así que lo que leas aquí es lo que hay.</p>
+  <div class="cond" id="cond"></div>
+</div></section>
+
+<!-- ── 5 · Los puestos ──────────────────────────────────────────────────
+     El buscador de verdad: texto, área y modalidad, con el número de
+     puestos al lado de cada filtro y el estado en la dirección, para que
+     un enlace filtrado se pueda mandar por escrito.
+     ────────────────────────────────────────────────────────────────── -->
+<section class="emp-sec" id="puestos"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="ep_s4_eyebrow">Puestos abiertos</span>
+  <h2 class="rv" data-i18n="ep_s4_h2">Lo que hay hoy</h2>
+  <p class="rv" data-i18n="ep_s4_p">Esta lista sale del mismo sitio desde el que gestionamos la contratación: cuando se abre un puesto aparece aquí y cuando se cierra desaparece. No hay otra versión en ningún otro sitio.</p>
+</div>
+
+  <div class="barra-busq" id="barraBusq"><div class="wrap">
+    <form class="busq" id="fBuscar" role="search">
+      <label class="oculto" for="q" data-i18n="ep_buscar_lbl">Buscar un puesto</label>
+      <span class="busq-campo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+        <input id="q" type="search" autocomplete="off" data-i18n-ph="ep_buscar_ph" placeholder="Busca por puesto, área o palabra" />
+      </span>
+      <button type="button" id="limpiar" class="limpiar" hidden data-i18n="ep_f_limpiar">Quitar filtros</button>
+    </form>
+    <div class="filtros-fila">
+      <div class="emp-filtros" id="filtros" role="group" data-i18n-al="ep_f_area" aria-label="Filtrar por área"></div>
+      <div class="emp-filtros modal" id="filtrosModo" role="group" data-i18n-al="ep_f_modalidad" aria-label="Filtrar por modalidad"></div>
+    </div>
+    <p class="cuenta-res" id="cuentaRes" role="status" aria-live="polite"></p>
+  </div></div>
+
+  <div class="wrap">
+    <div class="emp-vac" id="vacantes"><p class="emp-cargando" data-i18n="ep_cargando">Cargando los puestos…</p></div>
+  </div>
+</section>
+
+<!-- ── 6 · Aviso de vacantes ────────────────────────────────────────────
+     Lo que hace una página de empleo cuando hoy no hay nada para ti: no
+     despedirte. ─────────────────────────────────────────────────────── -->
+<section class="emp-sec emp-alerta" id="avisarme"><div class="wrap">
+  <div class="alerta-caja rv">
+    <div>
+      <span class="eyebrow" data-i18n="ep_al_eyebrow">Aviso de vacantes</span>
+      <h2 data-i18n="ep_al_h2">Que te avisemos cuando abramos el tuyo</h2>
+      <p data-i18n="ep_al_p">Dinos el área que te interesa y te escribimos el día que se publique un puesto. Nada más: ni boletín, ni noticias, ni nada que no sea eso.</p>
+    </div>
+    <form class="alerta-form" id="fAviso" novalidate>
+      <label class="campo">
+        <span data-i18n="ep_al_email">Correo electrónico</span>
+        <input id="avEmail" type="email" autocomplete="email" maxlength="160" required />
+      </label>
+      <label class="campo">
+        <span data-i18n="ep_al_area">Área que te interesa</span>
+        <select id="avArea"></select>
+      </label>
+      <div class="enviar">
+        <button type="submit" id="avEnviar" data-i18n="ep_al_btn">Avisarme</button>
+        <span class="estado" id="avEstado" role="status" aria-live="polite"></span>
+      </div>
+      <p class="nota" data-i18n="ep_al_legal">Guardamos sólo el correo y el área, y los borramos en cuanto te des de baja o al cabo de doce meses. Cada aviso lleva su enlace para darse de baja.</p>
+    </form>
+  </div>
+</div></section>
+
+<!-- ── 7 · Cómo contratamos ─────────────────────────────────────────── -->
+<section class="emp-sec emp-sec-alt" id="proceso"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="ep_s5_eyebrow">Cómo contratamos</span>
+  <h2 class="rv" data-i18n="ep_s5_h2">Cuatro pasos, y los cuatro con fecha</h2>
+  <p class="rv" data-i18n="ep_s5_p">El proceso es el mismo para todos los puestos y en todos los países. Se escribe aquí para que puedas exigirlo.</p>
+
+  <!-- El contador sigue al paso que se está leyendo. No es decoración:
+       cuatro bloques seguidos se leen como una lista y se olvidan; con
+       el contador se leen como un recorrido que va a algún sitio. Lleva
+       `aria-hidden` porque cada paso ya dice su número en su propio
+       `<span class="n">`, y repetirlo sólo añade ruido a quien escucha. -->
+  <div class="pasos-cuenta" id="pasosCuenta" aria-hidden="true"><b>01</b><i></i><span>04</span></div>
+
+  <ol class="pasos" id="pasos">
+    <li class="paso-e rv"><span class="n">01</span><h3 data-i18n="ep_p1_t">Candidatura</h3><p data-i18n="ep_p1_d">Se contesta a todas, también a las que no siguen adelante. El plazo que nos damos son diez días hábiles.</p></li>
+    <li class="paso-e rv"><span class="n">02</span><h3 data-i18n="ep_p2_t">Conversación</h3><p data-i18n="ep_p2_d">Una hora en vídeo, con quien vas a trabajar, a una hora que te venga bien a ti. Llevamos preparado qué hace el área, qué se espera del puesto y qué paga.</p></li>
+    <li class="paso-e rv"><span class="n">03</span><h3 data-i18n="ep_p3_t">Prueba pagada</h3><p data-i18n="ep_p3_d">Si hay prueba técnica se paga, se acota a un día y no se usa en producción. Tu trabajo no es nuestro hasta que trabajas aquí.</p></li>
+    <li class="paso-e rv"><span class="n">04</span><h3 data-i18n="ep_p4_t">Decisión</h3><p data-i18n="ep_p4_d">En la fecha comprometida en la conversación anterior, y con motivo, sea cual sea la respuesta.</p></li>
+  </ol>
+
+  <div class="emp-aviso rv">
+    <p data-i18n-html="ep_aviso_1"><strong>No trabajamos con intermediarios y no pedimos dinero en ningún momento del proceso.</strong> Si alguien te escribe en nombre de Babyloon pidiéndote un pago, una formación de pago o los datos de tu tarjeta, no somos nosotros.</p>
+    <p data-i18n="ep_aviso_2">Tampoco pedimos fotografía, edad, estado civil ni nacionalidad en una candidatura. Si un formulario que dice ser nuestro te los pide, no lo es.</p>
+  </div>
+</div></section>
+
+<!-- ── 8 · Candidatura ──────────────────────────────────────────────── -->
+<section class="emp-sec" id="presentarme"><div class="wrap">
+  <span class="eyebrow rv" data-i18n="ep_s6_eyebrow">Presentar candidatura</span>
+  <h2 class="rv" data-i18n="ep_s6_h2">Cuéntanos qué sabes hacer</h2>
+  <p class="rv" data-i18n="ep_s6_p">Puedes presentarte a un puesto concreto o de forma espontánea. Se leen igual: si encajas con un área, te escribimos cuando abramos ese puesto.</p>
+
+  <form class="formulario rv" id="fCandidatura" novalidate>
+    <label class="campo ancho">
+      <span data-i18n="ep_f_puesto">Puesto</span>
+      <select id="cPuesto" name="puesto"></select>
+    </label>
+    <label class="campo">
+      <span data-i18n="ep_f_nombre">Nombre</span>
+      <input id="cNombre" name="nombre" type="text" autocomplete="name" maxlength="120" required />
+    </label>
+    <label class="campo">
+      <span data-i18n="ep_f_email">Correo electrónico</span>
+      <input id="cEmail" name="email" type="email" autocomplete="email" maxlength="160" required />
+    </label>
+    <label class="campo">
+      <span data-i18n="ep_f_tel">Teléfono (opcional)</span>
+      <input id="cTel" name="telefono" type="tel" autocomplete="tel" maxlength="40" />
+    </label>
+    <label class="campo">
+      <span data-i18n="ep_f_enlace">Portafolio o perfil (opcional)</span>
+      <input id="cEnlace" name="enlace" type="url" inputmode="url" maxlength="300" placeholder="https://" />
+    </label>
+    <label class="campo ancho">
+      <span data-i18n="ep_f_mensaje">Por qué tú, para este puesto</span>
+      <textarea id="cMensaje" name="mensaje" maxlength="4000"></textarea>
+    </label>
+
+    <div class="fichero">
+      <label for="cCv" data-i18n="ep_f_cv">Adjuntar currículum</label>
+      <input id="cCv" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+      <span class="nota" id="cCvNota" data-i18n="ep_f_cv_nota">PDF, DOC o DOCX. Hasta 5 MB. Opcional, pero ayuda.</span>
+    </div>
+
+    <div class="enviar">
+      <button type="submit" id="cEnviar" data-i18n="ep_f_enviar">Enviar candidatura</button>
+      <span class="estado" id="cEstado" role="status" aria-live="polite"></span>
+    </div>
+  </form>
+
+  <div class="emp-aviso rv">
+    <p data-i18n-html="ep_datos"><strong>Qué hacemos con lo que nos mandas.</strong> Tus datos y tu currículum se guardan doce meses y se borran solos al cumplirse el plazo; el currículum se borra del almacén, no sólo de la lista. Lo abre quien lleva la contratación, y cada vez que se abre queda registrado quién fue y por qué. Puedes pedir que lo borremos antes escribiéndonos.</p>
+  </div>
+</div></section>
+
+<!-- ── Cierre ───────────────────────────────────────────────────────── -->
+<section class="emp-cierre"><div class="wrap">
+  <h2 class="rv" data-i18n="ep_cierre_h2">¿Y si no encajas en ninguna de las cuatro?</h2>
+  <p class="rv" data-i18n="ep_cierre_p">Escríbenos igual. Una empresa que abre en dieciséis idiomas y cuarenta y tres ciudades necesita oficios en los que todavía no hemos pensado.</p>
+  <a class="ir rv" href="#presentarme" data-i18n="ep_cierre_cta">Presentar candidatura</a>
+</div></section>
+
+<div class="wrap hermanas">
+  <a href="seguridad.html" data-i18n="cp_seguridad">Seguridad</a>
+  <a href="sostenibilidad.html" data-i18n="cp_sostenibilidad">Sostenibilidad</a>
+  <a href="informacion-legal.html" data-i18n="cp_legal">Información legal</a>
+  <a href="para-profesionales.html" data-i18n="ep_hermana_pro">Trabajar como profesional</a>
+</div>
+
+<footer><div class="wrap">© 2026 Babyloon · <a href="privacidad.html" data-i18n="foot_priv">Privacidad</a> · <a href="terminos.html" data-i18n="foot_terms">Términos</a> · <a href="index.html" data-i18n="cn_inicio">Inicio</a></div></footer>
+
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="conexion.js?v=1"></script>
+<script src="cookies.js?v=2"></script>
+<script src="presencia.js?v=2"></script>
+<script src="i18n.js?v=10"></script>
+<script src="i18n-paginas.js?v=4"></script>
+<script src="i18n-compania.js?v=4"></script>
+<script src="i18n-ciudad-nombres.js?v=2"></script>
+<!-- ── El diccionario, sólo el idioma que hace falta ──────────────────────
+     `i18n-empleo.js` pesaba 235 KB porque llevaba las 153 claves en los
+     dieciséis idiomas, y cualquiera se los bajaba todos para leer uno.
+     Ahora hay un fichero por idioma y se pide el que toca: 14 KB.
+
+     EL ESPAÑOL VA SIEMPRE, y no es por gusto. `BBL.t()` termina en `|| k`:
+     devuelve la propia clave. Si el fichero del idioma no llegara —una red
+     mala, un despliegue a medias— la página no se quedaría en otro idioma:
+     se llenaría de `ep_np_h2` escrito en pantalla. Con el español detrás,
+     el peor caso es leerlo en español. Son 12 KB de seguro.
+
+     `async = false` es lo que hace que esto funcione: un script insertado
+     así se ejecuta EN ORDEN y retrasa `DOMContentLoaded`, que es cuando
+     `i18n.js` pinta. Sin esa línea llegaría tarde y habría un parpadeo en
+     español antes de cada traducción.
+     ────────────────────────────────────────────────────────────────── -->
+<script>
+(function () {
+  var V = '?v=1';
+  var OK = 'es en pt fr de it nl pl el hu ru ar zh ja ko sv'.split(' ');
+  var l = 'es';
+  try { l = (localStorage.getItem('bbl_lang') || '').slice(0, 2).toLowerCase(); } catch (_) {}
+  if (OK.indexOf(l) < 0) l = 'es';
+
+  var puestos = {};
+  function traer(x) {
+    if (puestos[x]) return;
+    puestos[x] = 1;
+    var s = document.createElement('script');
+    s.src = 'i18n-empleo-' + x + '.js' + V;
+    s.async = false;
+    document.head.appendChild(s);
+  }
+  traer('es');
+  if (l !== 'es') traer(l);
+
+  /* Al cambiar de idioma a mano se pide el suyo si no estaba. `extend`
+     vuelve a pintar sola en cuanto llega, así que no hay nada que esperar. */
+  document.addEventListener('bbl:lang', function (e) {
+    var n = e && e.detail;
+    if (OK.indexOf(n) >= 0) traer(n);
+  });
+})();
+</script>
+<script src="empleo.js?v=4"></script>
+
+</body>
+</html>

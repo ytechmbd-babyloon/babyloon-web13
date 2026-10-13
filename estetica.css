@@ -1,0 +1,423 @@
+/* ═══════════════════════════════════════════════════════════════
+   Babyloon Web · La capa estética
+   ───────────────────────────────────────────────────────────────
+   Andrés señaló simply-jet.ch como referencia y dijo que no veía
+   mejoras. Tenía razón. Puestas las dos webs una al lado de otra,
+   lo que hace que aquella se lea cara NO es el color —ella es clara
+   y azul; esta es negra y dorada, y esa es la identidad de Babyloon,
+   que no se toca—. Son tres cosas de forma:
+
+     1. Esquinas. Aquella redondea mucho: las fotos parecen guijarros.
+        Esta redondeaba 2, 4 y 12 px, que a esos tamaños se lee como
+        «sin redondear». Un botón a 2 px es un rectángulo.
+     2. Botones. Aquella usa píldoras con una flecha delante y la
+        letra muy espaciada: el botón dice hacia dónde va. Esta tenía
+        bloques dorados planos, sin indicación de movimiento.
+     3. Aire. Aquella llena el ancho; esta dejaba mucho negro vacío
+        entre bloques de texto pequeños y centrados.
+
+   Va en fichero aparte, igual que `movil.css` y por el mismo motivo:
+   son más de sesenta páginas y un cambio de forma no puede depender
+   de acordarse de sesenta sitios. Se carga DESPUÉS del <style> de
+   cada página, así que gana sin tener que subir la especificidad de
+   cada regla original.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root{
+  /* Una escala, no un número suelto por regla. Lo que no estaba. */
+  --r-xs:10px;
+  --r-sm:16px;
+  --r-md:24px;
+  --r-lg:30px;
+  --r-pill:999px;
+}
+
+/* ── 1. Esquinas ──────────────────────────────────────────────
+   Las fotos son lo que más se mira y lo que menos redondeaba. */
+.svc-card,
+.bq-banner,
+.edu-banner,
+.prod-card,
+.prod-media,
+.bq-card{
+  border-radius:var(--r-lg);
+}
+
+.world,
+.card,
+.privee-hl,
+.dl-card,
+.gc-card,
+.op-card{
+  border-radius:var(--r-md);
+}
+
+.hs-field,
+.field input,
+.field select,
+.tabs,
+.role,
+.modal{
+  border-radius:var(--r-sm);
+}
+
+.ministore,
+.badge,
+.vbadge,
+.chip,
+.bbl-lang-btn{
+  border-radius:var(--r-pill);
+}
+
+/* El buscador de la portada es lo primero que se toca: que sea
+   una pieza sola y blanda, no una caja con esquinas. */
+.hero-search{
+  border-radius:var(--r-lg);
+}
+
+/* ── 2. Botones ───────────────────────────────────────────────
+   Píldora, más alto, letra más espaciada. El alto sube porque un
+   botón de 14 px de relleno en una web de lujo se lee barato. */
+.btn-gold,
+.btn-ghost,
+.hs-btn,
+.btn-google{
+  border-radius:var(--r-pill);
+  letter-spacing:.18em;
+}
+.btn-gold,
+.hs-btn{
+  padding:17px 38px;
+}
+.btn-ghost{
+  padding:15px 30px;
+}
+
+/* La flecha, sólo en las llamadas de página: los <a>. En los
+   botones de formulario (entrar, pagar) una flecha sobra, y el
+   modal de acceso no es un sitio al que se «vaya». */
+a.btn-gold::before,
+a.btn-ghost::before,
+.hs-btn::before{
+  content:"→";
+  display:inline-block;
+  margin-right:12px;
+  transform:translateX(0);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1);
+}
+a.btn-gold:hover::before,
+a.btn-ghost:hover::before,
+.hs-btn:hover::before{
+  transform:translateX(5px);
+}
+
+/* Un botón con flecha tiene que poder llevarla: si el texto va
+   centrado con `justify-content`, la flecha se pega. */
+.hs-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* ── 3. Aire ──────────────────────────────────────────────────
+   Menos hueco muerto entre secciones, y el mismo hueco arriba y
+   abajo: lo que cansaba no era el espacio, era que cada sección
+   repitiera cenefa + titular + rayita + subtítulo con cien píxeles
+   de negro en medio. */
+@media(min-width:860px){
+  .sec{
+    padding-block:clamp(72px,7vw,104px);
+  }
+  /* El encabezado de sección, más junto: la rayita separaba tanto
+     el titular del subtítulo que parecían dos cosas distintas. */
+  .hr-gold{
+    margin-block:18px;
+  }
+  .sec-head p{
+    max-width:58ch;
+  }
+}
+
+/* ── 4. Las tarjetas de servicio, con jerarquía ───────────────
+   Tres columnas iguales de la misma altura es un catálogo. Que la
+   primera mande convierte la fila en una portada. Sólo en pantalla
+   ancha: en móvil la rejilla ya pasa a carrusel y ahí manda el
+   dedo, no la jerarquía. */
+@media(min-width:1000px){
+  .svc-grid{
+    grid-template-columns:1.4fr 1fr 1fr;
+    align-items:stretch;
+  }
+
+  /* ESTO SE ESCRIBIÓ MAL LA PRIMERA VEZ y sacó las tarjetas de la
+     pantalla. Merece quedar explicado, porque es una trampa del
+     CSS moderno que no se ve venir:
+
+     `.svc-card` tiene `aspect-ratio:4/5`. Al poner `align-items:
+     stretch`, las tres se estiran a la altura de la fila, que la
+     marca la primera (más ancha, 1.4fr). Y cuando una caja tiene
+     `aspect-ratio` y su ALTURA queda impuesta desde fuera, el
+     navegador deja de calcular la altura a partir del ancho y hace
+     lo contrario: calcula el ANCHO a partir de la altura.
+
+     Resultado medido: columna de 323 px, tarjeta de 414 px. Las dos
+     de la derecha se salían 82 px por el lado derecho a 1024 px, y
+     la página entera cogía barra de desplazamiento horizontal.
+
+     La solución no es quitar el stretch —entonces la fila queda
+     desigual— sino repartir los papeles: la primera manda la altura
+     y no se estira; las otras dos se estiran y renuncian a su
+     proporción, que es lo que sobra cuando ya tienen altura. */
+  .svc-grid > .svc-card{
+    aspect-ratio:auto;
+    min-width:0;           /* sin esto, una foto ancha vuelve a empujar */
+  }
+  .svc-grid > .svc-card:first-child{
+    aspect-ratio:4/4.6;
+    align-self:start;      /* ella pone la altura; no la recibe */
+  }
+  .svc-grid > .svc-card:first-child .svc-cap h3{
+    font-size:clamp(30px,3.2vw,40px);
+  }
+}
+
+/* ── 5. Detalles que se notan sin verse ──────────────────────── */
+
+/* El borde dorado de las fotos competía con la foto. Que lo dé la
+   sombra, no la línea. */
+.svc-card,
+.bq-banner,
+.edu-banner{
+  border-color:transparent;
+  box-shadow:0 18px 50px -28px rgba(0,0,0,.9);
+}
+
+/* Al pasar por encima, la tarjeta sube un punto. Aquella lo hace y
+   por eso parece que responde. */
+.svc-card,
+.bq-banner{
+  transition:transform .5s cubic-bezier(.2,.8,.2,1),
+             box-shadow .5s cubic-bezier(.2,.8,.2,1);
+}
+.svc-card:hover,
+.bq-banner:hover{
+  transform:translateY(-6px);
+  box-shadow:0 30px 60px -30px rgba(0,0,0,1);
+}
+
+/* Y quien prefiera que nada se mueva, que no se mueva. */
+@media(prefers-reduced-motion:reduce){
+  .svc-card,
+  .bq-banner,
+  a.btn-gold::before,
+  a.btn-ghost::before,
+  .hs-btn::before{
+    transition:none;
+  }
+  .svc-card:hover,
+  .bq-banner:hover{
+    transform:none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LA CABECERA, QUE SE HABÍA QUEDADO SIN SITIO
+   ───────────────────────────────────────────────────────────────
+   Visto a 1280 px, que es la anchura de un portátil normal:
+
+       BabyloonSERVICIOS   PRESENCIA   CONCEPTO   BOUTIQUE
+       ACADEMIA   CLASES EN      LA    ES   ACCEDER
+                  VIVO          APP
+
+   La marca pegada al primer enlace sin un píxel entre medias, y
+   «Clases en vivo» y «La app» partidos en dos líneas.
+
+   La causa es mía: metí «Clases en vivo» en un menú que ya iba al
+   límite con cinco enlaces. Y la estructura lo permitía porque
+   `.nav` es un flex con `space-between` y TRES hijos —marca,
+   enlaces, zona derecha— sin `gap`: cuando el del medio crece, se
+   come la separación de los otros dos hasta tocarlos.
+
+   Se arregla aquí, en la hoja común, y no página por página,
+   porque las nueve cabeceras del sitio tienen la misma forma.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* 1. Que la marca no pueda tocar nunca al menú, crezca lo que crezca. */
+header .nav{gap:clamp(18px,2.6vw,42px)}
+
+/* 2. Que un enlace no se parta en dos líneas. Antes que romper una
+      palabra, el menú se aprieta; y antes que apretarse demasiado,
+      se pasa al menú de móvil, que ya existe. */
+header .nav-links a,
+header .nav-right a{white-space:nowrap}
+
+/* 3. Entre 900 y 1400 px el menú se estrecha en vez de desbordarse.
+      Son tres escalones cortos: primero el hueco entre enlaces,
+      luego el interletraje, y sólo al final el cuerpo. El cuerpo es
+      lo último porque es lo que más se nota. */
+/* Las cifras salen de medir, no de tantear. A 1280 px la barra
+   tiene 1124 px útiles (máximo 1180 menos 28 de margen a cada
+   lado) y pedía 1149: se salía por 25. A 1024 px pedía 1033 sobre
+   968 útiles: se salía por 65. Con siete enlaces no hay margen
+   para redondear a ojo. */
+/* Sin tope por arriba a propósito: la barra tiene `max-width`, así
+   que a 1440 px NO hay más sitio que a 1280 y la regla hace falta
+   igual. Medido: a 1440 la boutique en neerlandés, griego, húngaro
+   y ruso se salía justamente porque este bloque dejaba de aplicarse. */
+@media(min-width:1000px){
+  header .nav{gap:20px}
+  header .nav-links{gap:clamp(12px,1.3vw,20px)}
+  /* El interletraje es lo primero que se recorta porque es lo que
+     menos se nota: de .14em a .055em sobre los ~95 caracteres del
+     menú son unos 95 px recuperados y nadie lo ve.
+     La medida que obligó a esto: la boutique en HÚNGARO pedía
+     1227 px donde caben 1200, y el carrito se salía 44 px por la
+     derecha. El español pedía 1099 y por eso nunca se vio.
+     Griego (1143) y neerlandés (1142) iban detrás, a un ajuste de
+     tipografía de romperse también. */
+  header .nav-links a{letter-spacing:.055em}
+}
+@media(min-width:1000px) and (max-width:1200px){
+  header .nav{gap:14px}
+  header .nav-links{gap:13px}
+  header .nav-links a{font-size:11.5px;letter-spacing:.05em}
+  header .nav-right{gap:11px}
+}
+
+/* NOTA PARA ANDRÉS: siete enlaces de primer nivel es mucho para
+   esta tipografía. Cabe, pero va justo, y cualquier idioma que
+   alargue una palabra —«Clases en vivo» en alemán es
+   «Live-Kurse», pero en húngaro «Élő órák» y en neerlandés
+   «Live-lessen»— vuelve a apretarlo. Si algún día sobra uno, el
+   candidato natural es «La app»: es un ancla de esta misma página
+   y ya tiene un botón grande abajo. Pero eso lo decides tú, no
+   una hoja de estilos. */
+
+/* ═══════════════════════════════════════════════════════════════
+   EL ÁRABE LEE AL REVÉS, Y EL DESPLEGABLE NO SE HABÍA ENTERADO
+   ───────────────────────────────────────────────────────────────
+   Medido en la academia a 1280 px con el idioma en árabe: el menú
+   de idiomas empezaba en x = -45 px. Es decir, 45 píxeles fuera de
+   la pantalla por la izquierda, y la página entera cogía barra de
+   desplazamiento horizontal (44 px de desborde).
+
+   La causa: `.bbl-lang-menu` se ancla con `right:0`, que es una
+   medida FÍSICA. En español eso lo pega al borde derecho de su
+   botón y se despliega hacia la izquierda, que es hacia dentro. En
+   árabe el botón vive al otro lado de la cabecera, así que
+   desplegar «hacia la izquierda» es desplegar hacia fuera.
+
+   Se corrige aquí y no en `i18n.js` porque cada página tiene su
+   propia copia de estos estilos en su `<style>`, y esa copia gana
+   a la que inyecta `i18n.js` (que va a propósito al principio del
+   <head>, para que la página siempre pueda mandar). `estetica.css`
+   se carga al final, así que es el único sitio desde donde se
+   arregla para las nueve páginas de una vez.
+
+   Vale para los dos árabes de la casa —cabecera y menú de móvil— y
+   para cualquier idioma RTL que se añada después.
+   ═══════════════════════════════════════════════════════════════ */
+[dir="rtl"] .bbl-lang-menu{
+  right:auto;
+  left:0;
+  text-align:right;
+}
+
+/* El selector que `i18n.js` crea cuando la página no trae hueco
+   acaba, en móvil, al principio de la segunda fila de la cabecera
+   —a la izquierda—. Ahí, un desplegable anclado por la derecha se
+   abre hacia fuera de la pantalla. Anclado por la izquierda se abre
+   hacia dentro, que es lo que hace falta. Y con techo de ancho, para
+   que dieciséis idiomas no se salgan en un teléfono estrecho. */
+.bbl-lang-auto .bbl-lang-menu{
+  right:auto;
+  left:0;
+  max-width:min(230px, calc(100vw - 32px));
+}
+[dir="rtl"] .bbl-lang-auto .bbl-lang-menu{
+  left:auto;
+  right:0;
+}
+
+/* ── 17.A4 · «Cómo se ordenan los resultados» ──────────────────
+   El bloque del Reglamento P2B. Va plegado —no es lo que se viene a
+   leer— pero abierto tiene que leerse bien, y en dieciséis idiomas y
+   a 320 px. Por eso: nada de anchos fijos, la barra encoge
+   (`minmax(0,1fr)` — `1fr` a secas no baja de su contenido) y el
+   porcentaje va con cifras de ancho fijo para que la columna cuadre. */
+.or{
+  margin:22px auto 0;
+  max-width:760px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:var(--r-sm);
+  background:rgba(255,255,255,.02);
+}
+.or > summary{
+  cursor:pointer;
+  padding:13px 16px;
+  font-size:.92rem;
+  letter-spacing:.01em;
+  list-style:none;
+}
+.or > summary::-webkit-details-marker{ display:none; }
+.or > summary::after{
+  content:'+';
+  float:right;
+  opacity:.5;
+  font-weight:600;
+}
+.or[open] > summary::after{ content:'–'; }
+[dir="rtl"] .or > summary::after{ float:left; }
+.or-in{ padding:2px 16px 18px; }
+.or-in h4{
+  margin:18px 0 8px;
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.09em;
+  opacity:.65;
+  font-weight:600;
+}
+.or-pago{
+  margin:0 0 14px;
+  padding:11px 13px;
+  border-radius:var(--r-xs);
+  border:1px solid rgba(201,169,106,.32);
+  background:rgba(201,169,106,.07);
+  font-size:.86rem;
+  line-height:1.5;
+}
+.or-int,.or-pie{ font-size:.85rem; line-height:1.55; opacity:.75; margin:0 0 12px; }
+.or-pie{ margin:16px 0 0; opacity:.6; }
+.or-lista,.or-no{ list-style:none; margin:0; padding:0; }
+.or-fila{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(48px,120px) auto;
+  align-items:center;
+  gap:10px;
+  padding:6px 0;
+  font-size:.86rem;
+}
+.or-n{ min-width:0; overflow-wrap:anywhere; }
+.or-b{
+  height:5px;
+  border-radius:var(--r-pill);
+  background:rgba(255,255,255,.08);
+  overflow:hidden;
+}
+.or-b > i{ display:block; height:100%; background:#C9A96A; }
+.or-menos .or-b > i{ background:#D06B6B; }
+.or-p{ font-variant-numeric:tabular-nums; opacity:.8; white-space:nowrap; }
+.or-no li{
+  display:inline-block;
+  margin:0 6px 6px 0;
+  padding:4px 10px;
+  border-radius:var(--r-pill);
+  border:1px solid rgba(255,255,255,.10);
+  font-size:.8rem;
+  opacity:.75;
+}
+/* A 400 px la barra sobra antes que el nombre: se va ella. */
+@media (max-width:420px){
+  .or-fila{ grid-template-columns:minmax(0,1fr) auto; }
+  .or-b{ display:none; }
+}

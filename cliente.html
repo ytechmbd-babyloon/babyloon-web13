@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mi cuenta · Babyloon</title>
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<style>
+  /* ocultar badge 'Powered by Netlify' */
+  #netlify-badge,[class*="netlify-badge"],a[href*="netlify.com/?utm"],div[style*="z-index: 2147483647"]{display:none!important}
+
+  :root{
+    --ink:#0D0B0F;--ink-2:#120C10;--plum:#241820;--plum-2:#1B1219;--gold:#C8A96A;--gold-lite:#F3E0BC;
+    --cream:#F9F5EE;--smoke:#E8E0D5;--mauve:#8C7482;--mauve-dim:#6B5766;
+    --line:rgba(200,169,106,.16);--line-soft:rgba(249,245,238,.07);
+    --online:#3DD68C;--err:#E0857C;
+    --serif:'Cormorant Garamond',serif;--sans:'Jost',system-ui,sans-serif;
+    --gold-grad:linear-gradient(135deg,#8E723F 0%,#F3E0BC 42%,#C9A96E 72%,#9C8050 100%);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:var(--sans);font-weight:300;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+  .display{font-family:var(--serif);font-weight:300;letter-spacing:.01em}
+  .eyebrow{font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);font-weight:500}
+  .gold-text{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .inf path{stroke:url(#gg);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .btn{font-family:var(--sans);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    font-weight:500;cursor:pointer;border:none;background:none;transition:.25s}
+  .btn-ghost{color:var(--cream);border:1px solid var(--line);padding:11px 20px;border-radius:2px}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+  .btn-gold{color:var(--ink);padding:13px 24px;border-radius:2px;background:var(--gold-grad);
+    background-size:180% 180%}.btn-gold:hover{background-position:100% 0}
+
+  header{border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;
+    background:rgba(13,11,15,.85);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:66px;
+    max-width:1240px;margin:0 auto;padding:0 24px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:23px}
+  .nav-right{display:flex;align-items:center;gap:14px}
+  .nav-right a{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--smoke)}
+  .nav-right a:hover{color:var(--gold)}
+
+  .shell{max-width:1240px;margin:0 auto;padding:32px 24px 80px;
+    display:grid;grid-template-columns:264px 1fr;gap:34px;align-items:start}
+
+  /* sidebar */
+  .side{position:sticky;top:98px}
+  .card-user{border:1px solid var(--line);border-radius:8px;background:var(--plum-2);
+    padding:26px 22px;text-align:center;margin-bottom:16px}
+  .avatar{width:76px;height:76px;border-radius:50%;margin:0 auto 14px;object-fit:cover;
+    background:radial-gradient(circle,rgba(200,169,106,.18),var(--ink));
+    border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+    font-family:var(--serif);font-size:30px;color:var(--gold)}
+  .card-user h3{font-family:var(--serif);font-size:22px;font-weight:500;line-height:1.15}
+  .card-user .email{color:var(--mauve);font-size:12px;margin-top:3px;word-break:break-all}
+  .privee{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:10px;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--gold);
+    border:1px solid var(--line);padding:5px 12px;border-radius:20px}
+  .menu{border:1px solid var(--line);border-radius:8px;background:var(--plum-2);overflow:hidden}
+  .menu button{width:100%;display:flex;align-items:center;gap:13px;padding:14px 20px;
+    background:none;border:none;color:var(--smoke);font-family:var(--sans);font-size:13.5px;
+    cursor:pointer;text-align:left;transition:.2s;border-left:2px solid transparent}
+  .menu button:hover{background:rgba(200,169,106,.05);color:var(--cream)}
+  .menu button.on{color:var(--gold);border-left-color:var(--gold);background:rgba(200,169,106,.06)}
+  .menu button svg{width:17px;height:17px;stroke-width:1.5;flex-shrink:0}
+  .menu .logout{color:var(--mauve);border-top:1px solid var(--line-soft)}
+  .menu .logout:hover{color:var(--err)}
+
+  /* content */
+  /* 61.13 · min-width:0: la columna del contenido no crece con lo que
+     lleva dentro. Sin esto, una etiqueta larga («Confirma la
+     finalización», «Abschluss bestätigen») ensanchaba la columna y la
+     página se movía de lado en un móvil de 320. */
+  .content{min-height:60vh;min-width:0}
+  .pane{display:none}.pane.on{display:block;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .pane-head{margin-bottom:26px}
+  .pane-head h1{font-size:clamp(30px,4vw,44px)}
+  .pane-head p{color:var(--mauve);font-size:14px;margin-top:4px}
+
+  .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:34px}
+  .stat{border:1px solid var(--line);border-radius:8px;background:var(--plum-2);padding:22px 20px}
+  .stat .lbl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mauve);
+    overflow-wrap:anywhere;hyphens:auto}
+  .stat .val{font-family:var(--serif);font-size:34px;font-weight:500;margin-top:6px;line-height:1}
+  .stat .val small{font-size:16px;color:var(--mauve)}
+  /* 61.13 · Lo gastado en otra moneda va debajo, en pequeño: euros y
+     dólares no se suman, y la cifra grande es la de su moneda principal. */
+  .stat .mas{font-size:12.5px;color:var(--mauve);margin-top:8px;line-height:1.35;overflow-wrap:anywhere}
+
+  .block{border:1px solid var(--line);border-radius:8px;background:var(--plum-2);
+    padding:26px 24px;margin-bottom:18px}
+  .block h2{font-family:var(--serif);font-size:22px;font-weight:500;margin-bottom:18px}
+
+  .item{display:flex;gap:16px;align-items:center;padding:16px 0;
+    border-bottom:1px solid var(--line-soft)}
+  .item:last-child{border-bottom:none}
+  .item .ic{width:44px;height:44px;border-radius:8px;flex-shrink:0;
+    background:radial-gradient(circle,rgba(200,169,106,.14),var(--ink));
+    display:flex;align-items:center;justify-content:center;color:var(--gold)}
+  .item .ic svg{width:20px;height:20px;stroke-width:1.5}
+  .item img.ic{object-fit:cover}
+  .item .main{flex:1;min-width:0}
+  .item .main h4{font-family:var(--serif);font-size:18px;font-weight:500;line-height:1.2;
+    overflow-wrap:break-word;hyphens:auto}
+  .item .main .sub{color:var(--mauve);font-size:12.5px;margin-top:2px}
+  .item .right{text-align:right;white-space:nowrap}
+  .item .right .amt{font-size:16px;color:var(--cream)}
+  .item .right .amt.pos{color:var(--online)}
+  .tag{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    padding:4px 10px;border-radius:20px;border:1px solid var(--line);color:var(--smoke);margin-top:5px;
+    max-width:100%;overflow-wrap:anywhere;line-height:1.35}
+  .tag.ok{color:var(--online);border-color:rgba(61,214,140,.3)}
+  .tag.warn{color:var(--gold);border-color:rgba(200,169,106,.3)}
+  .tag.bad{color:var(--err);border-color:rgba(224,133,124,.3)}
+  .tag.mut{color:var(--mauve)}
+
+  .empty{text-align:center;padding:56px 20px;color:var(--mauve)}
+  .empty svg{width:46px;height:23px;opacity:.5;margin-bottom:14px}
+  .empty a{color:var(--gold)}
+  .loading{text-align:center;padding:40px;color:var(--mauve-dim);font-size:13px}
+
+  /* wallet */
+  .wallet-hero{border:1px solid var(--line);border-radius:8px;padding:32px 28px;margin-bottom:18px;
+    background:linear-gradient(135deg,var(--plum),var(--ink));position:relative;overflow:hidden}
+  .wallet-hero::after{content:"∞";position:absolute;right:-10px;bottom:-30px;font-family:var(--serif);
+    font-size:150px;color:rgba(200,169,106,.06)}
+  .wallet-hero .lbl{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+  .wallet-hero .bal{font-family:var(--serif);font-size:52px;font-weight:500;margin-top:6px}
+
+  /* perfil form */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .field{margin-bottom:16px}.field.full{grid-column:1/-1}
+  .field label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:7px}
+  .field input,.field select{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line);
+    border-radius:3px;padding:12px 13px;color:var(--cream);font-family:var(--sans);font-size:14px}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--gold)}
+  .field input:disabled{opacity:.55}
+  /* Mensajes: lista de conversaciones + hilo, y campo para escribir con el estilo de los formularios */
+  .chat-grid{display:grid;grid-template-columns:minmax(200px,260px) minmax(0,1fr);gap:20px}
+  @media (max-width:760px){.chat-grid{grid-template-columns:minmax(0,1fr)}}
+  .conv-item{display:block;width:100%;text-align:left;margin-bottom:8px;padding:12px 14px;border:1px solid var(--line);
+    border-radius:8px;background:rgba(255,255,255,.02);color:var(--cream);font:inherit;font-size:13px;cursor:pointer;transition:border-color .2s,background .2s}
+  .conv-item:hover{border-color:rgba(201,169,110,.5)}
+  .conv-item.on{border-color:var(--gold);background:rgba(201,169,110,.1)}
+  .conv-item .tag{margin-left:6px}
+  .chat-in{flex:1;min-width:0;width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line);
+    border-radius:3px;padding:12px 13px;color:var(--cream);font-family:var(--sans);font-size:14px}
+  .chat-in:focus{outline:none;border-color:var(--gold)}
+  .chat-in::placeholder{color:var(--mauve);opacity:1}
+  .prefs{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .pref{font-size:12px;color:var(--smoke);border:1px solid var(--line);border-radius:20px;padding:6px 13px}
+  .pref b{color:var(--gold);font-weight:400}
+  .saveMsg{font-size:12.5px;margin-top:12px;min-height:16px}
+  .saveMsg.ok{color:var(--online)}.saveMsg.err{color:var(--err)}
+
+  @media(max-width:640px){
+    /* 31.4 · El `padding:0 24px` de la barra se perdía aquí: esta regla
+       lo reescribía entero y dejaba el horizontal en cero. El logotipo y
+       los enlaces quedaban pegados a los dos bordes del móvil. Sólo hay
+       que cambiar el vertical, así que se cambia sólo el vertical. */
+    header .nav{flex-wrap:wrap;height:auto;min-height:60px;
+      padding-top:10px;padding-bottom:10px;gap:8px 14px}
+    .nav-right{flex-wrap:wrap;gap:10px 16px;justify-content:flex-end}
+    .nav-right a{font-size:11px;letter-spacing:.08em}
+  }
+  /* ── 31.2 · El menú de la cuenta, en el móvil ─────────────────────
+     Andrés: «en el móvil se ve muy mal cuando entras en la cuenta;
+     tenemos los componentes del menú muy juntos y desorganizados».
+
+     Y tenía razón. Esto era:
+
+         .menu{display:flex;flex-wrap:wrap}
+         .menu button{width:auto;flex:1;justify-content:center}
+
+     `flex:1` sobre once botones significa «repartíos el ancho a partes
+     iguales y apañaos». A 390 px salían filas de tres y de dos según lo
+     largo que fuera cada palabra, los iconos pegados al texto, y ninguna
+     fila cuadraba con la siguiente. No era un menú: era lo que sobró de
+     un menú de escritorio.
+
+     Ahora es una rejilla de dos columnas de verdad: todas las casillas
+     miden lo mismo, el icono va siempre en el mismo sitio, y cada botón
+     tiene 54 px de alto —por encima de los 44 que pide Apple para que un
+     dedo acierte—. El texto se alinea a la izquierda, que es por donde se
+     lee, y no centrado, que era lo que hacía que dos palabras y una
+     palabra parecieran cosas distintas.
+
+     «Cerrar sesión» ocupa las dos columnas y va abajo, separada: es la
+     única que no lleva a ninguna parte. */
+  @media(max-width:900px){
+    .shell{grid-template-columns:minmax(0,1fr);gap:22px}
+    .side{position:static}
+    .menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:1px;background:var(--line);border-radius:12px;overflow:hidden}
+    .menu button{width:auto;min-height:54px;padding:13px 14px;
+      justify-content:flex-start;text-align:left;gap:11px;
+      background:var(--plum-2);border-left:none;font-size:13.5px;line-height:1.25}
+    .menu button span{min-width:0;overflow-wrap:anywhere}
+    .menu button.on{border-left:none;color:var(--gold);
+      background:rgba(200,169,106,.09);box-shadow:inset 0 -2px 0 var(--gold)}
+    .menu .logout{grid-column:1/-1;justify-content:center;text-align:center;
+      border-top:1px solid var(--line-soft)}
+    .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .stat{min-width:0;padding:18px 16px}
+    .stat .val{font-size:26px;overflow-wrap:break-word;hyphens:auto}
+  /* Por debajo de 360 px dos columnas ya aprietan de verdad. */
+  @media(max-width:359px){.menu{grid-template-columns:1fr}
+    .menu .logout{grid-column:auto}}
+.grid2{grid-template-columns:1fr}}
+  /* 61.13 · En un móvil estrecho las cifras de las tarjetas se partían
+     («1.065,00 / €», «Babyloo / n») y, en las listas de servicios, el
+     icono dejaba al nombre y al estado sin sitio: «CONFIR / MADO». Por
+     debajo de 380 px las cifras bajan un poco y el icono de los servicios
+     se quita: es adorno, la misma estrella en todos. */
+  @media(max-width:380px){
+    .stat{padding:16px 12px}
+    .stat .val{font-size:clamp(19px,6.6vw,26px)}
+    #upcoming .item .ic,#servicesBox .item .ic{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  .inv-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0;border-bottom:1px solid rgba(249,245,238,.07)}
+  .inv-row:last-child{border-bottom:none}
+  .inv-num{font-family:var(--serif,serif);font-size:17px;color:var(--cream,#F9F5EE)}
+  .inv-desc{font-size:12.5px;color:var(--mauve,#8C7482);margin-top:3px}
+  .inv-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+  .inv-tot{font-family:var(--serif,serif);color:var(--gold,#C8A96A);font-size:17px}
+  .btn-mini{background:none;border:1px solid var(--line,rgba(200,169,106,.2));color:var(--smoke,#E8E0D5);
+    font-family:var(--sans,sans-serif);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    padding:8px 14px;border-radius:20px;cursor:pointer;transition:.2s;white-space:nowrap}
+  .btn-mini:hover{border-color:var(--gold,#C8A96A);color:var(--gold,#C8A96A)}
+
+  /* ── Puntos y ventajas ────────────────────────────────────────────
+     El saldo manda y las dos bolsas van al lado, no debajo: lo que
+     hay que entender de un vistazo no es cuántos puntos hay, sino
+     cuáles sirven para qué. */
+  .ly-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);
+    gap:22px;align-items:stretch}
+  .ly-saldo{border:1px solid var(--line);border-radius:10px;background:var(--plum-2);
+    padding:26px 24px;display:flex;flex-direction:column;justify-content:center}
+  .ly-saldo .lbl{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mauve)}
+  .ly-num{font-family:var(--serif);font-size:clamp(40px,6vw,58px);line-height:1;
+    color:var(--cream);margin:10px 0 6px;font-variant-numeric:tabular-nums}
+  .ly-val{font-size:13px;color:var(--gold)}
+  .ly-bolsas{display:grid;gap:12px;align-content:stretch}
+  .ly-bolsa{border:1px solid var(--line-soft);border-radius:10px;background:rgba(0,0,0,.18);
+    padding:16px 18px;display:flex;flex-direction:column;justify-content:center}
+  .ly-b-num{font-family:var(--serif);font-size:26px;line-height:1;color:var(--cream);
+    font-variant-numeric:tabular-nums}
+  .ly-b-tit{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:6px 0 3px}
+  .ly-b-sub{font-size:12.5px;line-height:1.45;color:var(--mauve)}
+  .ly-nota{margin:16px 0 0;font-size:12.5px;line-height:1.6;color:var(--mauve);max-width:74ch}
+  .ly-h2{font-size:clamp(20px,2.6vw,26px);margin:38px 0 16px}
+  /* 61.73 · Adónde vuelven sus devoluciones: dos opciones, la elegida en
+     dorado. Se guarda al pulsar; si no se puede, vuelve la de antes. */
+  .ly-dev{border:1px solid var(--line);border-radius:10px;background:var(--plum-2);
+    padding:20px 22px;display:grid;gap:10px}
+  .ly-dev-d{margin:0 0 4px;font-size:13.5px;line-height:1.6;color:var(--smoke);max-width:74ch}
+  .ly-dev-op{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:start;cursor:pointer;
+    background:rgba(0,0,0,.18);border:1px solid var(--line-soft);border-radius:10px;
+    padding:14px 16px;color:inherit;font:inherit;transition:border-color .2s,background .2s}
+  .ly-dev-op:hover{border-color:var(--line)}
+  .ly-dev-op:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .ly-dev-op[aria-checked="true"]{border-color:var(--gold);background:rgba(200,169,106,.08)}
+  .ly-dev-dot{flex:none;width:16px;height:16px;margin-top:2px;border-radius:50%;
+    border:1.5px solid var(--mauve);box-sizing:border-box}
+  .ly-dev-op[aria-checked="true"] .ly-dev-dot{border-color:var(--gold);
+    background:radial-gradient(circle,var(--gold) 0 4px,transparent 4.5px)}
+  .ly-dev-tx{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .ly-dev-tx b{font-weight:500;font-size:14px;color:var(--cream)}
+  .ly-dev-tx span{font-size:12.5px;line-height:1.45;color:var(--mauve);overflow-wrap:anywhere}
+  .ly-dev-est{margin:2px 0 0;min-height:1.2em;font-size:12px;color:var(--gold)}
+  .ly-dev-est.mal{color:var(--error,#e05252)}
+
+  .ly-ref{border:1px solid var(--line);border-radius:10px;background:var(--plum-2);padding:20px 22px}
+  .ly-code{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+  .ly-code>span{font-family:var(--serif);font-size:26px;letter-spacing:.14em;color:var(--gold)}
+  .ly-copy{background:none;border:1px solid var(--line);color:var(--smoke);
+    font-family:var(--sans);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    padding:8px 14px;border-radius:20px;cursor:pointer;transition:.2s}
+  .ly-copy:hover{border-color:var(--gold);color:var(--gold)}
+  /* 61.72 · Cuatro cifras: las personas que esperan su primer servicio, también. */
+  .ly-ref-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px}
+  .ly-ref-stats>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .ly-ref-stats b{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--cream);
+    font-variant-numeric:tabular-nums}
+  .ly-ref-stats span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mauve)}
+  /* 61.64 · Lo de invitar: la regla, y cada descuento —para un servicio— con
+     su fecha. Se gasta al aceptar una oferta en la app. */
+  .ly-regla{margin:0 0 16px;font-size:13.5px;line-height:1.6;color:var(--smoke);max-width:74ch}
+  .ly-dtos{list-style:none;margin:16px 0 0;padding:14px 0 0;border-top:1px solid var(--line-soft);
+    display:grid;gap:8px}
+  .ly-dtos li{font-size:13.5px;line-height:1.5;color:var(--gold);overflow-wrap:anywhere}
+  .ly-sin{margin:16px 0 0;padding:14px 0 0;border-top:1px solid var(--line-soft);
+    font-size:13px;line-height:1.55;color:var(--mauve)}
+  .ly-nota-ref{margin:12px 0 0;font-size:12px;line-height:1.55;color:var(--mauve-dim);max-width:74ch}
+
+  .ly-ventajas{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  .ly-v{border:1px solid var(--line-soft);border-radius:10px;background:var(--plum-2);padding:18px}
+  .ly-v h4{font-family:var(--serif);font-size:17px;font-weight:500;color:var(--cream);margin:0 0 6px}
+  .ly-v p{font-size:13px;line-height:1.55;color:var(--mauve);margin:0}
+  .ly-pie{margin:20px 0 0;font-size:12.5px;color:var(--mauve-dim);line-height:1.6}
+
+  @media(max-width:760px){
+    /* En móvil el saldo va arriba y las bolsas debajo: en una columna
+       estrecha, dos cifras grandes de lado compiten y no se lee ninguna. */
+    .ly-top{grid-template-columns:1fr;gap:14px}
+    .ly-saldo{padding:22px 20px}
+    .ly-ref-stats{grid-template-columns:1fr;gap:12px}
+    .ly-ref-stats>div{flex-direction:row;align-items:baseline;gap:10px}
+    .ly-ref-stats b{font-size:19px}
+    .ly-h2{margin:30px 0 14px}
+  }
+
+  /* 15.7 · Los nombres vienen de los proveedores y son larguisimos
+     —«White UV LED Nail Dryer Professional Gel Nail Curing Lamp…»—: a
+     360 px ocupaban cuatro lineas y la fila se estiraba hasta dejar el
+     precio a media altura. Dos lineas y se corta. Solo en la lista de
+     pedidos: en las demas los titulos son nuestros y caben. */
+  #ordersBox .main h4{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+    overflow:hidden;line-height:1.28;max-height:2.56em}
+</style>
+<link rel="stylesheet" href="movil.css?v=1" />
+<link rel="stylesheet" href="estetica.css?v=2" />
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#8E723F"/><stop offset="42%" stop-color="#F3E0BC"/>
+    <stop offset="72%" stop-color="#C9A96E"/><stop offset="100%" stop-color="#9C8050"/>
+  </linearGradient></defs></svg>
+
+<header><div class="nav">
+  <a href="index.html" class="brand">
+    <svg class="inf" width="36" height="18" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>
+    Babyloon
+  </a>
+  <div class="nav-right">
+    <a href="index.html" data-i18n="p_inicio">Inicio</a>
+    <a href="boutique.html" data-i18n="nav_boutique">Boutique</a>
+    <!-- 28.1 · Esto ponia «Autocuidado» y llevaba a `academia.html`, que
+         es la Academia DE LAS PROFESIONALES. Dos cosas distintas con el
+         mismo boton. Y peor: al entrar ahi, `auth.js` decidia que una
+         cuenta que es las dos cosas era profesional, y lo dejaba escrito.
+         Autocuidado de la clienta vive hoy en la app (bloque 19.6 es
+         traerlo a la web); hasta entonces el boton lleva a la app, que es
+         donde esta de verdad. -->
+    <a href="index.html#app" data-app-open data-i18n="p_autocuidado">Autocuidado</a>
+    <a href="masterclass.html" data-i18n="mc_title">Clases en vivo</a>
+    <a href="index.html#app" data-app-open data-i18n="p_solicitar">Solicitar servicio</a>
+  </div>
+</div></header>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <div class="card-user">
+      <div class="avatar" id="uAvatar">∞</div>
+      <h3 id="uName">…</h3>
+      <div class="email" id="uEmail"></div>
+      <div class="privee" id="uPrivee" style="display:none">✦ Privée</div>
+    </div>
+    <nav class="menu" id="menu">
+      <button data-tab="overview" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> <span data-i18n="p_resumen">Resumen</span></button>
+      <button data-tab="services"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l2.4 5 5.6.6-4 3.8 1 5.6L12 19l-5 2.6 1-5.6-4-3.8 5.6-.6z"/></svg> <span data-i18n="p_misservicios">Mis servicios</span></button>
+      <button data-tab="orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg> <span data-i18n="p_pedidos">Pedidos</span></button>
+      <button data-tab="invoices"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg> <span data-i18n="p_facturas">Facturas</span></button>
+      <button data-goto="index.html#app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l9 5-9 5-9-5z"/><path d="M6 11v4c0 1.5 3 3 6 3s6-1.5 6-3v-4"/></svg> <span data-i18n="p_autocuidado">Autocuidado</span></button>
+      <button data-tab="loyalty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l2.5 5.2 5.7.8-4.1 4 1 5.7L12 16l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/></svg> <span data-i18n="p_puntos">Puntos y ventajas</span></button>
+      <button data-tab="warranties"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg> <span data-i18n="p_garantias">Garantías</span></button>
+      <button data-tab="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12a8 8 0 01-8 8H7l-4 3v-6a8 8 0 018-8h2a8 8 0 018 3z"/></svg> <span data-i18n="cl_chat">Mensajes</span></button>
+      <button data-tab="wallet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg> <span data-i18n="p_cartera">Cartera</span></button>
+      <button data-tab="favorites"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 21s-7-4.5-9.5-9C1 9 2.5 5 6 5c2 0 3 1 4 2.5C11 6 12 5 14 5c3.5 0 5 4 3.5 7-2.5 4.5-9.5 9-9.5 9z"/></svg> <span data-i18n="p_favoritos">Favoritos</span></button>
+      <button data-tab="addresses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 21s-7-6.2-7-11a7 7 0 1114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg> <span data-i18n="cl_dirs">Direcciones</span></button>
+      <button data-tab="selfcare"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 21C7 17.5 4 14.5 4 11a4 4 0 017-2.6A4 4 0 0118 11c0 3.5-3 6.5-6 10z"/></svg> <span data-i18n="cl_auto">Autocuidado</span></button>
+      <button data-tab="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg> <span data-i18n="p_perfil">Perfil</span></button>
+      <button class="logout" id="logoutBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg> <span data-i18n="ct_salir">Cerrar sesión</span></button>
+    </nav>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+    <!-- RESUMEN -->
+    <section class="pane on" id="pane-overview">
+      <div class="pane-head"><h1 class="display"><span data-i18n="ct_hola">Hola,</span> <span class="gold-text" id="greetName">…</span></h1>
+        <p data-i18n="cc_sub">Tu mundo de belleza, en un vistazo.</p></div>
+      <div class="stats" id="stats"></div>
+      <div class="block"><h2 class="display" data-i18n="cc_proximos">Próximos servicios</h2><div id="upcoming"><div class="loading" data-i18n="cargando">Cargando…</div></div></div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section class="pane" id="pane-services">
+      <div class="pane-head"><h1 class="display" data-i18n="cc_serv_h">Mis servicios</h1><p data-i18n="cc_serv_sub">Tu historial de reservas y servicios.</p></div>
+      <div class="block" id="servicesBox"><div class="loading" data-i18n="cargando">Cargando…</div></div>
+    </section>
+
+    <!-- PEDIDOS -->
+    <section class="pane" id="pane-orders">
+      <div class="pane-head"><h1 class="display" data-i18n="cc_ped_h">Mis pedidos</h1><p data-i18n="cc_ped_sub">Compras de la Boutique y su seguimiento.</p></div>
+      <div class="block" id="ordersBox"><div class="loading" data-i18n="cargando">Cargando…</div></div>
+    </section>
+
+    <!-- FACTURAS -->
+    <section class="pane" id="pane-invoices">
+      <div class="pane-head"><h1 class="display" data-i18n="ct_fac_h">Facturas</h1><p data-i18n="cc_fac_sub">Descarga las facturas de tus servicios y compras.</p></div>
+      <div class="block" id="invoicesBox"><div class="loading" data-i18n="cargando">Cargando…</div></div>
+    </section>
+
+    <!-- PUNTOS Y VENTAJAS -->
+    <section class="pane" id="pane-loyalty">
+      <div class="pane-head"><h1 class="display" data-i18n="ly_h1">Puntos y ventajas</h1>
+        <p data-i18n="ly_sub">Lo que has ganado por reservar con Babyloon, y lo que cubre cada servicio.</p></div>
+      <div class="block" id="loyaltyBox"><div class="loading" data-i18n="cargando">Cargando…</div></div>
+    </section>
+
+    <!-- GARANTÍAS -->
+    <section class="pane" id="pane-warranties">
+      <div class="pane-head"><h1 class="display" data-i18n="p_garantias">Garantías</h1><p data-i18n="cc_gar_sub">Cobertura de tus servicios completados.</p></div>
+      <div class="block" id="warrBox"><div class="loading" data-i18n="cargando">Cargando…</div></div>
+    </section>
+
+    <!-- MENSAJES · bloque 19.5 -->
+    <section class="pane" id="pane-chat">
+      <div class="pane-head"><h1 class="display" data-i18n="cl_chat">Mensajes</h1><p data-i18n="cl_chat_sub">Tus conversaciones con cada profesional, por servicio.</p></div>
+      <div class="block" id="chatBox"><div class="loading" data-i18n="cargando">Cargando…</div></div>
+    </section>
+
+    <!-- CARTERA -->
+    <section class="pane" id="pane-wallet">
+      <div class="pane-head"><h1 class="display" data-i18n="cc_car_h">Mi cartera</h1><p data-i18n="cc_car_sub">Saldo y movimientos de tu wallet Babyloon.</p></div>
+      <div class="wallet-hero"><div class="lbl" data-i18n="ct_saldo">Saldo disponible</div><div class="bal" id="walletBal">&nbsp;</div></div>
+      <div class="block"><h2 class="display" data-i18n="ct_movs">Movimientos</h2><div id="walletTx"><div class="loading" data-i18n="cargando">Cargando…</div></div></div>
+    </section>
+
+    <!-- FAVORITOS -->
+    <section class="pane" id="pane-favorites">
+      <div class="pane-head"><h1 class="display" data-i18n="p_favoritos">Favoritos</h1><p data-i18n="cc_fav_sub">Los profesionales que has guardado.</p></div>
+      <div class="block" id="favBox"><div class="loading" data-i18n="cargando">Cargando…</div></div>
+    </section>
+
+    <!-- DIRECCIONES · bloque 19.4 -->
+    <section class="pane" id="pane-addresses">
+      <div class="pane-head"><h1 class="display" data-i18n="cl_dirs">Direcciones</h1><p data-i18n="cl_dirs_sub">Guárdalas una vez y el checkout te las propone. Antes había que escribirlas enteras en cada compra.</p></div>
+      <div class="block" id="addrBox"><div class="loading" data-i18n="cargando">Cargando…</div></div>
+    </section>
+
+    <!-- AUTOCUIDADO · bloque 19.6 -->
+    <section class="pane" id="pane-selfcare">
+      <div class="pane-head"><h1 class="display" data-i18n="cl_auto">Autocuidado</h1><p data-i18n="cl_auto_sub">Lo que puedes hacer en casa entre servicio y servicio. Esto es para ti, no es la Academia profesional.</p></div>
+      <div class="block" id="selfBox"><div class="loading" data-i18n="cargando">Cargando…</div></div>
+    </section>
+
+    <!-- PERFIL -->
+    <section class="pane" id="pane-profile">
+      <div class="pane-head"><h1 class="display" data-i18n="cc_per_h">Mi perfil</h1><p data-i18n="cc_per_sub">Tus datos y preferencias de belleza.</p></div>
+      <div class="block">
+        <h2 class="display" data-i18n="cc_datos">Datos personales</h2>
+        <div class="grid2">
+          <div class="field"><label data-i18n="ct_nombre">Nombre</label><input id="pName"/></div>
+          <div class="field"><label data-i18n="ct_tel">Teléfono</label><input id="pPhone"/></div>
+          <div class="field"><label data-i18n="ct_correo">Correo</label><input id="pEmail" disabled/></div>
+          <div class="field"><label data-i18n="ct_pais">País</label><input id="pCountry" placeholder="—"/></div>
+        </div>
+        <button class="btn btn-gold" id="saveProfile" style="margin-top:6px" data-i18n="ct_guardar">Guardar cambios</button>
+        <div class="saveMsg" id="saveMsg"></div>
+      </div>
+      <div class="block" id="ppBlock"></div>
+    </section>
+  </main>
+</div>
+
+<script src="seguro.js?v=1"></script>
+<script src="i18n.js?v=10"></script>
+<script src="i18n-masterclass.js?v=1"></script>
+<script src="i18n-index.js?v=4"></script>
+<script src="i18n-index-it.js?v=1"></script>
+<script src="i18n-index-nl.js?v=1"></script>
+<script src="i18n-index-pl.js?v=1"></script>
+<script src="i18n-index-el.js?v=1"></script>
+<script src="i18n-index-hu.js?v=1"></script>
+<script src="i18n-index-5.js?v=2"></script>
+<script src="i18n-regalo-completar.js?v=1"></script>
+<script src="app-link.js"></script>
+<script src="money.js?v=1"></script>
+<script src="direccion.js?v=3"></script>
+<script src="i18n-direccion.js?v=1"></script>
+  <script src="i18n-baby.js?v=1"></script>
+  <script src="i18n-5-resto.js?v=1"></script>
+  <script src="i18n-panel.js?v=3"></script>
+  <script src="i18n-cuenta.js?v=2"></script>
+  <script src="i18n-cliente-panel.js?v=2"></script>
+  <script src="i18n-aceptacion.js?v=1"></script>
+<script src="i18n-pasaporte.js?v=3"></script>
+<script src="pasaporte.js?v=3"></script>
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="conexion.js?v=1"></script>
+<script>
+  const SUPABASE_URL="https://qphatjblvojnfyghwmjy.supabase.co";
+  const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  window.__sbClient = sb;
+  let USER=null, PROFILE=null;
+  // El dinero se escribe con la tabla compartida (money.js), la misma
+  // que usan las apps y el backend.
+  const eur=(v,cur)=>Money.format(v, cur||Money.myCode());
+  const esc=s=>(s||'').toString().replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  // La fecha, en el formato de quien mira. Estaba clavada en 'es-ES', y
+  // una fecha en formato ajeno se lee mal: con dia y mes por debajo de 13
+  // se lee AL REVES. 09/10 es el 9 de octubre para una inglesa y el 10 de
+  // septiembre para una espanola.
+  const idioma=()=>(window.BBL&&BBL.lang)||document.documentElement.lang||'es';
+  const fdate=d=>{ if(!d) return '';
+    try{ return new Date(d).toLocaleDateString(idioma(),{day:'numeric',month:'short',year:'numeric'}); }
+    catch(_){ return new Date(d).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}); } };
+
+  // ── guard ──
+  (async()=>{
+    const {data}=await sb.auth.getSession();
+    if(!data.session){ location.href='index.html'; return; }
+    USER=data.session.user;
+    // Su moneda, una sola vez, con la misma funcion que usan las apps.
+    await Money.mine(sb);
+    document.getElementById('uEmail').textContent=USER.email||'';
+    document.getElementById('pEmail').value=USER.email||'';
+    await loadProfile();
+    loadOverview();
+  })();
+
+  // ── tabs ──
+  const loaded={};
+  document.getElementById('menu').addEventListener('click',e=>{
+    const g=e.target.closest('button[data-goto]'); if(g){location.href=g.dataset.goto;return;}
+    const b=e.target.closest('button[data-tab]');if(!b)return;
+    const tab=b.dataset.tab;
+    document.querySelectorAll('.menu button').forEach(x=>x.classList.toggle('on',x===b));
+    document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='pane-'+tab));
+    window.scrollTo({top:0,behavior:'smooth'});
+    if(!loaded[tab]){loaded[tab]=true;({services:loadServices,orders:loadOrders,
+      warranties:loadWarranties,wallet:loadWallet,favorites:loadFavorites,invoices:loadInvoices,
+      addresses:loadDirecciones,chat:loadChat,selfcare:loadSelfcare,
+      loyalty:loadLoyalty,profile:()=>{}})[tab]?.();}
+  });
+  document.getElementById('logoutBtn').addEventListener('click',async()=>{
+    await sb.auth.signOut();location.href='index.html';});
+
+  // ── perfil ──
+  /* ═══ PASAPORTE DE BELLEZA ════════════════════════════════════════════
+     «Tu estilista viaja contigo»: lo que han apuntado todas sus profesionales
+     (alergias, fórmulas de color, productos…). Es suyo: lo ve siempre, lo
+     imprime o guarda en PDF para llevarlo a donde vaya, y decide si las
+     profesionales que la atienden o pujan por sus servicios pueden verlo
+     (incluye datos de salud: consentimiento expreso y revocable). */
+  let PP=null;
+  const PP_CAMPOS=[
+    ['pp_g_salud','Salud',[['alergias','sel'],['contraindicaciones','sel']]],
+    ['pp_g_cabello','Cabello',[['color_cabello','sel'],['textura','sel'],['porosidad','sel'],['corte','sel'],['peinado','sel'],['historial_cabello','sel'],['cuero_sensible','chk'],['cabello_notas','txt']]],
+    ['pp_g_piel','Piel y maquillaje',[['tipo_piel','sel'],['subtono','sel'],['tono_base','sel'],['maquillaje','sel'],['acabado','sel']]],
+    ['pp_g_unas','Uñas',[['forma_unas','sel'],['sistema_unas','sel']]],
+    ['pp_g_mirada','Pestañas y cejas',[['pestanas','sel'],['cejas','sel']]],
+    ['pp_g_masaje','Masaje',[['presion_masaje','sel'],['masaje','txt']]],
+    ['pp_g_otras','Otras notas',[['notas','txt']]]];
+  const PP_ROT={alergias:['pp_d_alergias','Alergias'],contraindicaciones:['pp_d_contraindicaciones','Contraindicaciones']};
+  function campoPerfil(k,tipo,v){
+    const lab=PP_ROT[k]?T(PP_ROT[k][0],PP_ROT[k][1]):T('pp_d_'+k,k);
+    if(tipo==='chk') return `<label class="pp-chk"><input type="checkbox" data-pf="${k}"${v===true||v==='true'?' checked':''}> ${esc(lab)}</label>`;
+    // Todo lo elegible sale del catálogo único de belleza; sólo las notas son texto libre
+    if(tipo==='sel') return `<div style="grid-column:1/-1"><label>${esc(lab)}</label>${BBLPasaporte.sel(BBLPasaporte.CAMPO_DOM[k],v,{})}</div>`
+      .replace('class="pp-sel"','class="pp-sel" data-pf="'+k+'"');
+    return `<div style="grid-column:1/-1"><label>${esc(lab)}</label><input type="text" data-pf="${k}" maxlength="500" value="${esc(v||'')}"></div>`;
+  }
+  async function cargarPasaporte(){
+    const box=document.getElementById('ppBlock'); if(!box||!window.BBLPasaporte) return;
+    const [r,esq]=await Promise.all([sb.rpc('mi_pasaporte_belleza'), BBLPasaporte.esquema(sb)]);
+    const d=r.data; if(!d||d.ok!==true){ box.style.display='none'; return; }
+    PP={d,esq}; BBLPasaporte.estilo();
+    const pas=d.pasaporte||{}, dec=Object.assign({},pas.declarado||{}), pros=d.profesionales||[];
+    // lo que dijo de sí misma (con las alergias en bruto, para poder editarlas)
+    const pend=pros.filter(p=>p.pendiente), conf=pros.filter(p=>!p.pendiente);
+    box.innerHTML=`<h2 class="display">${esc(T('pp_titulo','Pasaporte de belleza'))}</h2>
+      <p style="color:var(--mauve);font-size:13px;margin:6px 0 4px">${esc(T('pp_sub','Tu historial de belleza, de todas tus profesionales: alergias, fórmulas de color, productos… Es tuyo y viaja contigo.'))}</p>
+      ${pend.map(p=>`<div class="pp-aviso oro"><span>${esc(conDatos(T('pp_pendiente','{p} ({c}) creó tu pasaporte de belleza desde su agenda. ¿Es tu profesional?'),{p:p.profesional,c:p.ciudad||'—'}))}</span>
+        <span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gold" data-ppc="${esc(p.id)}">${esc(T('pp_es_mia','Sí, es mi profesional'))}</button>
+        <button class="btn-mini" data-ppq="${esc(p.id)}">${esc(T('pp_no_conozco','No la conozco'))}</button></span></div>`).join('')}
+      ${(d.por_vincular||[]).map(x=>`<div class="pp-aviso oro"><span>${esc(conDatos(Number(x.apuntes)===1?T('pp_proponer1','{p} ({c}) tiene una ficha tuya con un servicio apuntado. ¿La añades a tu pasaporte?'):T('pp_proponer','{p} ({c}) tiene una ficha tuya con {n} servicios apuntados. ¿La añades a tu pasaporte?'),{p:x.profesional,c:x.ciudad||'—',n:x.apuntes}))}</span>
+        <button class="btn btn-gold" data-ppv="${esc(x.id)}">${esc(T('pp_anadir','Añadir a mi pasaporte'))}</button></div>`).join('')}
+      ${BBLPasaporte.html(pas,{esquema:esq,solo:['alertas']})}
+      <h3 class="pp-t" style="font-family:var(--serif);font-weight:500;font-size:19px;margin:22px 0 10px">${esc(T('pp_tu_perfil','Tu perfil de belleza'))}</h3>
+      <p style="color:var(--mauve);font-size:12.5px;margin:0 0 12px">${esc(T('pp_tu_perfil_n','Lo que nos cuentas de ti para que cada profesional acierte desde el primer día.'))}</p>
+      <div class="pp-form">${PP_CAMPOS.map(g=>`<div class="pp-grupo">${esc(T(g[0],g[1]))}</div>`+g[2].map(([k,t])=>campoPerfil(k,t,dec[k])).join('')).join('')}</div>
+      <div style="margin-top:14px"><button class="btn btn-gold" id="ppGuardarPerfil">${esc(T('pp_guardar_perfil','Guardar mi perfil'))}</button></div>
+      <div class="saveMsg" id="ppPerfMsg"></div>
+      ${BBLPasaporte.html(pas,{esquema:esq,solo:['historial','fichas']})}
+      ${conf.length?`<h3 class="pp-t" style="font-family:var(--serif);font-weight:500;font-size:19px;margin:22px 0 6px">${esc(T('pp_tus_pros','Tus profesionales'))}</h3>
+        ${conf.map(p=>`<div class="pp-pro"><span>${esc(p.profesional)}${p.ciudad?' · '+esc(p.ciudad):''}</span>${p.quitable?`<button class="btn-mini" data-ppq="${esc(p.id)}">${esc(T('pp_quitar','Quitar'))}</button>`:''}</div>`).join('')}`:''}
+      <label class="pp-consent"><input type="checkbox" id="ppComp"${d.compartido?' checked':''}>
+        <span>${esc(T('pp_consent','Compartir mi pasaporte con las profesionales que me atienden y con las que pujan por mis solicitudes.'))}
+        <small>${esc(T('pp_consent_n','Incluye datos de salud, como alergias o embarazo. Sólo lo verán ellas, para cuidarte mejor, y puedes retirar el permiso cuando quieras. Sin él, cada profesional ve sólo lo que ella misma apuntó.'))}</small></span></label>
+      <div class="saveMsg" id="ppMsg"></div>
+      <div style="margin-top:12px"><button class="btn btn-ghost" id="ppImprimir">${esc(T('pp_imprimir','Imprimir o guardar en PDF'))}</button></div>`;
+    BBLPasaporte.montar(box, sb);
+    document.getElementById('ppComp').onchange=async e=>{
+      const m=document.getElementById('ppMsg'), si=e.target.checked; e.target.disabled=true;
+      const w=await sb.rpc('compartir_mi_pasaporte',{p_si:si}); e.target.disabled=false;
+      if(!w.data||!w.data.ok){ e.target.checked=!si; m.className='saveMsg err'; m.textContent=T('pp_e_guardar','No se pudo guardar.'); return; }
+      m.className='saveMsg ok'; m.textContent=si?T('pp_comp_si','Hecho: tus profesionales verán tu pasaporte.'):T('pp_comp_no','Hecho: ya no compartes tu pasaporte.');
+    };
+    document.getElementById('ppGuardarPerfil').onclick=async ev=>{
+      const b=ev.currentTarget, m=document.getElementById('ppPerfMsg'), datos={};
+      box.querySelectorAll('[data-pf]').forEach(el=>{ datos[el.dataset.pf]=el.classList.contains('pp-sel')?BBLPasaporte.valor(el):el.type==='checkbox'?String(el.checked):el.value.trim(); });
+      b.disabled=true; const w=await sb.rpc('guardar_mi_perfil_belleza',{p_datos:datos}); b.disabled=false;
+      if(!w.data||!w.data.ok){ m.className='saveMsg err'; m.textContent=T('pp_e_guardar','No se pudo guardar.'); return; }
+      await cargarPasaporte(); const m2=document.getElementById('ppPerfMsg'); m2.className='saveMsg ok'; m2.textContent=T('pp_perfil_ok','Tu perfil de belleza está guardado.');
+    };
+    box.querySelectorAll('[data-ppv]').forEach(b=>b.onclick=async()=>{ b.disabled=true; await sb.rpc('vincular_mi_ficha',{p_id:b.dataset.ppv}); cargarPasaporte(); });
+    box.querySelectorAll('[data-ppc]').forEach(b=>b.onclick=async()=>{ b.disabled=true; await sb.rpc('confirmar_mi_ficha',{p_id:b.dataset.ppc}); cargarPasaporte(); });
+    box.querySelectorAll('[data-ppq]').forEach(b=>b.onclick=async()=>{ b.disabled=true; await sb.rpc('desvincular_mi_ficha',{p_id:b.dataset.ppq}); cargarPasaporte(); });
+    document.getElementById('ppImprimir').onclick=()=>BBLPasaporte.imprimir(PP.d.pasaporte,{esquema:PP.esq,
+      titulo:T('pp_titulo','Pasaporte de belleza'),nombre:(PROFILE&&(PROFILE.display_name||PROFILE.nombre))||''});
+  }
+
+  async function loadProfile(){
+    const {data:p}=await sb.from('profiles').select('*').eq('id',USER.id).maybeSingle();
+    PROFILE=p||{};
+    const name=PROFILE.display_name||PROFILE.nombre||'Cliente';
+    document.getElementById('uName').textContent=name;
+    document.getElementById('greetName').textContent=(name.split(' ')[0])||'Cliente';
+    document.getElementById('uAvatar').textContent=(name[0]||'∞').toUpperCase();
+    if(PROFILE.avatar_url)document.getElementById('uAvatar').innerHTML=`<img src="${safeUrl(PROFILE.avatar_url)}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
+    if(PROFILE.is_privee)document.getElementById('uPrivee').style.display='inline-flex';
+    document.getElementById('pName').value=name;
+    document.getElementById('pPhone').value=PROFILE.telefono||'';
+    document.getElementById('pCountry').value=PROFILE.country||'';
+    renderBeauty();
+    cargarPasaporte();
+  }
+  function renderBeauty(){
+    if(!document.getElementById('beautyPrefs')) return;   // sustituido por el pasaporte de belleza
+    const map=[[T('bp_piel','Tipo de piel'),PROFILE.skin_type],[T('bp_cabello','Color de cabello'),PROFILE.hair_color],
+      [T('bp_textura','Textura'),PROFILE.hair_texture],[T('bp_tono','Tono'),PROFILE.skin_undertone],
+      [T('bp_base','Base'),PROFILE.foundation_shade],[T('bp_unas','Uñas'),PROFILE.nail_shape],
+      [T('bp_masaje','Presión masaje'),PROFILE.massage_pressure],[T('bp_alergias','Alergias'),PROFILE.beauty_allergies]];
+    const html=map.filter(([,v])=>v).map(([k,v])=>`<span class="pref"><b>${k}:</b> ${esc(v)}</span>`).join('');
+    document.getElementById('beautyPrefs').innerHTML=html||'<span style="color:var(--mauve);font-size:13px">'+esc(T('cc_bp_vacio','Aún no has añadido preferencias de belleza. Complétalas en la app.'))+'</span>';
+  }
+  document.getElementById('saveProfile').addEventListener('click',async()=>{
+    const msg=document.getElementById('saveMsg');msg.className='saveMsg';
+    /* 42.1 · Esto escribía `profiles` a pelo, y `authenticated` no
+       tiene UPDATE sobre esa tabla: pulsar Guardar no guardaba nada. Es
+       el mismo fallo del bloque 15.2, en el otro panel. Ahora pasa por
+       `guardar_mi_cuenta`, que además comprueba que el nombre no quede
+       en blanco: es lo que ve la profesional que va a su casa. */
+    const upd={nombre:document.getElementById('pName').value.trim(),
+      telefono:document.getElementById('pPhone').value.trim(),
+      pais:document.getElementById('pCountry').value.trim()||null};
+    const r=await sb.rpc('guardar_mi_cuenta',{p_datos:upd});
+    if(r.error||!r.data||r.data.ok!==true){
+      const E={falta_el_nombre:['cc_falta_nombre','Hace falta tu nombre.'],
+               pais_no_valido:['cc_pais_mal','Ese país no vale.']};
+      const k=E[(r.data&&r.data.error)||''];
+      msg.textContent=k?T(k[0],k[1]):(T('ct_nosave','No se pudo guardar: ')+((r.error&&r.error.message)||''));
+      msg.classList.add('err');
+    } else {
+      msg.textContent=T('ct_guardado','Guardado.');msg.classList.add('ok');
+      document.getElementById('uName').textContent=upd.nombre;
+      PROFILE={...PROFILE, display_name:upd.nombre, telefono:upd.telefono, country:upd.pais};
+    }
+  });
+
+  // ── overview ──
+  async function loadOverview(){
+    /* Bloque 15.4 · Aquí se pintaba `PROFILE.wallet_balance` bajo la
+       etiqueta «Saldo» y con el símbolo del euro. Esa columna NO es el
+       saldo: el disparador que la rellena suma sólo los apuntes en PTS,
+       o sea PUNTOS.
+       Medido el 23 de septiembre sobre una cuenta de prueba real:
+           profiles.wallet_balance ...... 420,86   (puntos)
+           client_wallet_balance() ......   0,00 EUR (dinero)
+           sus 12 apuntes, TODOS en PTS
+       El Resumen decía «Saldo 420,86 €» y la pestaña Monedero —que sí
+       llama a la función— decía «0,00 €». Dos cifras distintas en la
+       misma pantalla.
+       Ojo con el matiz, que importa: un punto vale 1 EUR, así que la
+       cifra no mentía sobre lo que ella puede gastar. Mentía sobre QUÉ
+       ES: los puntos comprados sólo sirven para producto de Babyloon y
+       los regalados valen para todo, y eso no se ve en un número
+       único. Es la regla 2 de la casa: se parecen y no son lo mismo.
+       Ahora el saldo sale de `client_wallet_balance` (dinero, con su
+       moneda) y los puntos de `puntos_de`, cada uno con su nombre. La
+       pestaña Fidelidad sigue explicando qué paga cada bolsa. */
+    let saldo=null, curMon=null, P=null;
+    try{ const r=await sb.rpc('client_wallet_balance',{p_client_id:USER.id});
+         if(r.data&&r.data.balance!=null){ saldo=Number(r.data.balance); curMon=r.data.currency; }
+    }catch(_){}
+    try{ const r=await sb.rpc('puntos_de',{p_client_id:USER.id});
+         if(r.data&&r.data.ok!==false) P=r.data;
+    }catch(_){}
+    // 61.73 · Y los de sus devoluciones: tres bolsas.
+    const puntos = P ? (Number(P.regalados||0)+Number(P.comprados||0)+Number(P.devueltos||0)) : null;
+    const nPuntos = v=>Number(v||0).toLocaleString((window.BBL&&BBL.lang)||'es',{maximumFractionDigits:0});
+
+    /* 61.13 · Sus servicios y lo que ha pagado salen de `mis_servicios`,
+       que los cuenta desde sus reservas. Antes se leían
+       profiles.total_bookings y profiles.gasto_total, que no escribe
+       nadie: «0 servicios» y «0,00 €» a todas, siempre.
+       El gasto viene por moneda —euros y dólares no se suman—: la cifra
+       grande es la de su moneda principal y las demás van debajo. Si no
+       se pudo leer, una raya: un cero sería mentira. */
+    let MS=null;
+    try{ MS=await misServicios(4); }catch(_){}
+    const R=MS&&MS.resumen;
+    const gasto=(R&&Array.isArray(R.gasto))?R.gasto:[];
+    const gastoVal=!R?'—':(gasto.length?eur(gasto[0].importe,gasto[0].moneda):eur(0));
+    const gastoMas=gasto.slice(1).map(g=>'+ '+eur(g.importe,g.moneda)).join('<br>');
+
+    const tarjetas=[
+      stat(esc(T('p_servicios','Servicios')),R?Number(R.completados||0):'—'),
+      stat(esc(T('ct_gasto','Gasto total')),gastoVal,true,gastoMas),
+      stat(esc(T('cp_saldo','Saldo')),saldo!=null?eur(saldo,curMon):'—',true)
+    ];
+    if(puntos!=null) tarjetas.push(stat(esc(T('ct_puntos','Puntos')),nPuntos(puntos)));
+    tarjetas.push(stat(esc(T('ct_nivel','Nivel')),PROFILE.is_privee?'Privée':'Babyloon'));
+    document.getElementById('stats').innerHTML=tarjetas.join('');
+    /* Próximos: lo que está en marcha o espera algo de ella —buscando
+       profesional, confirmado, en camino, en curso, por confirmar—, lo más
+       cercano primero. Antes se buscaba con los estados en minúsculas
+       ('confirmed', 'pro_arrived'…) y la base los guarda de otra forma:
+       esta lista salía SIEMPRE vacía. */
+    const box=document.getElementById('upcoming');
+    if(!MS){box.innerHTML=errBox();return;}
+    const prox=Array.isArray(MS.proximos)?MS.proximos:[];
+    if(!prox.length){box.innerHTML=emptyBox(T('cc_prox_vacio','No tienes servicios próximos.'),T('ct_solicitar','Solicitar un servicio'),'index.html#app');return;}
+    box.innerHTML=prox.map(svcItem).join('');
+  }
+  function stat(lbl,val,serif,mas){return `<div class="stat"><div class="lbl">${lbl}</div>
+    <div class="val">${serif?val:`<span>${val}</span>`}</div>${mas?`<div class="mas">${mas}</div>`:''}</div>`;}
+  /* 61.13 · Sus servicios, como los ve ella: el estado ya decidido en el
+     servidor (estado_para_la_clienta), los nombres en su idioma y cada
+     importe en la moneda del servicio. */
+  async function misServicios(lim){
+    const {data,error}=await sb.rpc('mis_servicios',{p_limite:lim,p_idioma:idioma()});
+    if(error||!data||data.ok===false) throw (error||new Error('mis_servicios'));
+    return data;
+  }
+
+  // ── servicios ──
+  /* El estado se guarda con su CLAVE, no con su texto: este objeto se
+     construye una sola vez, al cargar, y si guardara el texto ya
+     traducido se quedaría clavado en el idioma de ese instante. Se
+     traduce al pintar.
+     61.13 · Las claves son las de `estado_para_la_clienta`, en el
+     servidor. Antes eran 'confirmed', 'pro_arrived', 'completed'… en
+     minúsculas, y la base guarda 'ACCEPTED', 'ARRIVED', 'COMPLETED':
+     ningún servicio decía en qué estado estaba. Los textos, los mismos
+     que la app donde la app los tiene («Confirma la finalización»). */
+  const SVC_STATUS={
+    buscando:     ['sv_buscando',     'Buscando profesional',     'warn'],
+    confirmado:   ['sv_confirmado',   'Confirmado',               'ok'],
+    en_camino:    ['sv_en_camino',    'En camino',                'ok'],
+    ha_llegado:   ['sv_llego',        'Profesional llegó',        'ok'],
+    en_curso:     ['sv_curso',        'En curso',                 'ok'],
+    por_confirmar:['sv_por_confirmar','Confirma la finalización', 'warn'],
+    completado:   ['sv_completado',   'Completado',               'mut'],
+    cancelado:    ['sv_cancelado',    'Cancelado',                'bad'],
+    sin_reservar: ['sv_sin_reservar', 'Sin reservar',             'mut'],
+    incidencia:   ['sv_incidencia',   'Incidencia',               'bad']};
+  function svcName(s){const n=Array.isArray(s.servicios)?s.servicios.filter(Boolean):[];
+    return n.length?n.join(', '):T('ct_serviciobbl','Servicio Babyloon');}
+  function svcItem(s){
+    const st=SVC_STATUS[s.estado]||['','—','mut'];
+    // La cita; si no tiene —una búsqueda, un «Ahora»—, el día que lo pidió.
+    const date=s.fecha||s.creado;
+    // Cada importe en la moneda del SERVICIO, no en la de quien mira: uno
+    // hecho en Miami se pagó en dólares. En uno terminado es lo que pagó;
+    // en uno cancelado, lo que se le cobró por cancelar, y lo dice debajo
+    // del nombre (al lado del importe no cabe en un móvil de 320).
+    const amt=s.importe!=null?`<div class="amt">${eur(s.importe,s.moneda)}</div>`:'';
+    const cargo=s.cargo?' · '+esc(T('sv_cargo','Cargo por cancelación')):'';
+    return `<div class="item">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l2.4 5 5.6.6-4 3.8 1 5.6L12 19l-5 2.6 1-5.6-4-3.8 5.6-.6z"/></svg></div>
+      <div class="main"><h4>${esc(svcName(s))}</h4>
+        <div class="sub">${date?fdate(date):esc(T('ct_sinfecha','Sin fecha'))}${cargo}</div>
+        <span class="tag ${st[2]}">${esc(T(st[0],st[1]))}</span></div>
+      <div class="right">${amt}</div></div>`;
+  }
+  async function loadServices(){
+    const box=document.getElementById('servicesBox');
+    let MS=null;
+    try{ MS=await misServicios(50); }catch(_){ box.innerHTML=errBox(); return; }
+    const lista=Array.isArray(MS.servicios)?MS.servicios:[];
+    if(!lista.length){box.innerHTML=emptyBox(T('cc_serv_vacio','Todavía no has solicitado ningún servicio.'),T('ct_solicitar','Solicitar un servicio'),'index.html#app');return;}
+    box.innerHTML=lista.map(svcItem).join('');
+  }
+
+  // ── pedidos ──
+  /* El estado del pedido, con su clave de traduccion y su color. Antes eran
+     literales en espanol dentro de este fichero; ahora salen del diccionario
+     de `i18n-panel.js` y se repintan al cambiar de idioma. */
+  const T=(k,alt)=>{ try{ const s=BBL.t(k); return (s&&s!==k)?s:alt; }catch(_){ return alt; } };
+  const ORD_STATUS={
+    paid:      ['pd_pagado',     'Pagado',      'ok'],
+    processing:['pd_preparando', 'Preparando',  'warn'],
+    pending:   ['pd_preparando', 'Preparando',  'warn'],
+    shipped:   ['pd_enviado',    'Enviado',     'ok'],
+    delivered: ['pd_entregado',  'Entregado',   'mut'],
+    cancelled: ['pd_cancelado',  'Cancelado',   'bad'],
+    refunded:  ['pd_reembolsado','Reembolsado', 'mut']};
+  let INVOICES=[];
+  const escH=s=>(s||'').toString().replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
+  async function loadInvoices(){
+    const box=document.getElementById('invoicesBox');
+    const {data,error}=await sb.from('invoices').select('*').eq('client_id',USER.id).or('invoice_type.eq.service,invoice_type.is.null').order('issued_at',{ascending:false});
+    if(error){box.innerHTML='<div class="empty">'+esc(T('ct_fac_error','No pudimos cargar las facturas.'))+'</div>';return;}
+    INVOICES=data||[];
+    if(!INVOICES.length){box.innerHTML='<div class="empty">'+esc(T('ct_fac_vacio','Aún no tienes facturas.'))+'</div>';return;}
+    box.innerHTML=INVOICES.map(inv=>{
+
+      const d=inv.issued_at?new Date(inv.issued_at).toLocaleDateString('es-ES'):'';
+      return `<div class="inv-row">
+        <div><div class="inv-num">${escH(inv.invoice_number||'—')}</div>
+          <div class="inv-desc">${escH(inv.description||inv.professional_name||'')}${d?' · '+d:''}</div></div>
+        <div class="inv-right"><span class="inv-tot">${eur(inv.amount_total,inv.currency)}</span>
+          <button class="btn-mini" data-inv="${inv.id}">Descargar</button></div>
+      </div>`;
+    }).join('');
+    box.querySelectorAll('[data-inv]').forEach(b=>b.addEventListener('click',()=>downloadInvoice(b.dataset.inv)));
+  }
+  function downloadInvoice(id){
+    const inv=INVOICES.find(x=>x.id===id); if(!inv)return;
+    if(inv.pdf_url){window.open(inv.pdf_url,'_blank');return;}
+    const money=n=>Money.format(n, inv.currency);
+    const d=inv.issued_at?new Date(inv.issued_at).toLocaleDateString('es-ES'):'';
+    const svc=(inv.service_names&&inv.service_names.length?inv.service_names.join(', '):inv.description)||'Servicio';
+    const taxL=inv.tax_label||'IVA';
+    const issuer=escH(inv.issuer_name||inv.professional_name||'—');
+    const issuerId=inv.issuer_tax_id?('<div class="muted">'+escH(inv.issuer_tax_id)+'</div>'):'';
+    const recip=escH(inv.recipient_name||'Cliente');
+    const w=window.open('','_blank'); if(!w)return;
+    w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${escH(inv.invoice_number||'Factura')}</title>
+    <style>body{font-family:Georgia,serif;color:#1a1a1a;max-width:720px;margin:40px auto;padding:0 30px}
+    .top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #C8A96A;padding-bottom:20px}
+    .brand{font-size:30px;letter-spacing:1px}.muted{color:#777;font-size:13px}
+    .parts{display:flex;justify-content:space-between;margin:22px 0 6px;font-size:13px}
+    .parts .lbl{color:#999;font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+    h1{font-size:19px;margin:22px 0 4px}table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+    td,th{text-align:left;padding:10px 8px;border-bottom:1px solid #eee}th{color:#777;font-weight:normal;font-size:12px;text-transform:uppercase}
+    .tot{text-align:right;font-size:15px;margin-top:20px;line-height:1.7}.tot b{font-size:19px}
+    .foot{margin-top:40px;color:#999;font-size:11px;text-align:center;border-top:1px solid #eee;padding-top:16px}
+    @media print{body{margin:0}}</style>
+</head><body>
+    <div class="top"><div><div class="brand">&#8734; Babyloon</div><div class="muted">Factura de servicio</div></div>
+    <div style="text-align:right"><div><b>${escH(inv.invoice_number||'')}</b></div><div class="muted">${d}</div></div></div>
+    <div class="parts">
+      <div><div class="lbl">Emisor</div>${issuer}${issuerId}</div>
+      <div style="text-align:right"><div class="lbl">Cliente</div>${recip}</div>
+    </div>
+    <h1>Detalle</h1>
+    <table><tr><th>Concepto</th><th style="text-align:right">Base</th></tr>
+    <tr><td>${escH(svc)}</td><td style="text-align:right">${money(inv.amount_subtotal)}</td></tr></table>
+    <div class="tot">Base imponible: ${money(inv.amount_subtotal)}<br>${escH(taxL)}${inv.tax_rate?(' ('+Math.round(inv.tax_rate*100)+'%)'):''}: ${money(inv.amount_tax)}<br><b>Total: ${money(inv.amount_total)}</b></div>
+    <div class="foot">Emitida a través de Babyloon &middot; babyloon.app</div>
+    <script>window.onload=function(){setTimeout(function(){window.print();},250);}<\/script>
+</body></html>`);
+    w.document.close();
+  }
+  /* ── LOS PEDIDOS · bloque 15.7 ───────────────────────────────────────
+     Esto leia `boutique_orders` con un select directo. Y esa tabla NO es
+     donde viven los pedidos: `create_boutique_order` escribe una fila
+     resumen ahi y UNA FILA POR PRODUCTO en `boutique_orders_pro`, que es
+     la que mueve el envio, la que actualizan `fulfill_tracking` y
+     `boutique_mark_delivered`, y la que lee la app.
+
+     Consecuencia medida el 23 de septiembre contra produccion, con la
+     clienta `196483c2`:
+
+         la app  ...... 14 pedidos, 527 EUR, con ventana de entrega
+         la web  ...... «Aun no tienes pedidos.»
+
+     Y aunque hubiera enseniado algo: `boutique_orders.status` se queda en
+     'paid' para siempre, porque NINGUNA funcion de envio la toca. El mapa
+     de estados tenia la entrada `shipped` y no habia forma de llegar a
+     ella. El enlace de seguimiento tampoco aparecia nunca, por lo mismo.
+
+     Ahora se llama a `boutique_my_orders`, LA MISMA funcion que la app.
+     Es `SECURITY DEFINER` y comprueba `soy_yo(p_user_id)` dentro, asi que
+     nadie puede pedir los pedidos de otra. Devuelve ademas transportista,
+     numero de seguimiento, foto del producto y la ventana de entrega que
+     calcula el servidor.
+
+     Una fila por producto, no por cesta. Es lo correcto y no una
+     simplificacion: con varios proveedores cada producto sale de un
+     almacen distinto y llega su dia. Enseniar «un pedido» cuando en
+     realidad son tres envios es mentir sobre la entrega. */
+  async function loadOrders(){
+    const box=document.getElementById('ordersBox');
+    const {data,error}=await sb.rpc('boutique_my_orders',{p_user_id:USER.id,p_limit:50});
+    if(error){box.innerHTML='<div class="empty"><p>'+esc(T('pd_error','No pudimos cargar tus pedidos.'))+'</p></div>';return;}
+    if(!data||!data.length){box.innerHTML=emptyBox(esc(T('pd_vacio','Aún no tienes pedidos.')),esc(T('pd_ir','Ir a la Boutique')),'boutique.html');return;}
+
+    const hoy=new Date(); hoy.setHours(0,0,0,0);
+    box.innerHTML=data.map(o=>{
+      /* El estado que manda es el del pedido. Pero mientras siga en
+         'paid', quien sabe por donde va es el envio: si el proveedor ya
+         lo ha despachado, `fulfillment_status` dice 'shipped' antes de
+         que nadie toque el pedido. Se toma el que mas ha avanzado. */
+      const avance={paid:0,pending:0,processing:1,sent:1,shipped:2,delivered:3};
+      let clave=o.status||'paid';
+      if((avance[o.fulfillment_status]||0)>(avance[clave]||0)) clave=o.fulfillment_status;
+      const st=ORD_STATUS[clave]||ORD_STATUS[o.status]||['pd_preparando','Preparando','warn'];
+
+      const n=Number(o.qty||1);
+      const cant=n>1?(' · '+n+' '+esc(T('pd_uds','uds.'))):'';
+
+      /* Seguimiento: enlace si el transportista da url, y si no el numero
+         a secas, que sigue sirviendo para pegarlo en su web. */
+      const track=o.tracking_url
+        /* La flecha va pegada a la ultima palabra con un espacio duro, NO con
+           `nowrap` en toda la frase: «Sendung verfolgen ↗» y «Küldemény
+           követése ↗» no caben en una linea a 360 px y con `nowrap` se
+           salian 81 y 55 px. Asi la frase parte donde quiera y la flecha
+           nunca se queda sola. */
+        ? `<a href="${safeUrl(o.tracking_url)}" target="_blank" rel="noopener" style="color:var(--gold);font-size:11px">${esc(T('pd_seguir','Seguir envío'))}&nbsp;↗</a>`
+        : (o.tracking_number
+            ? `<span style="font-size:11px;color:var(--gold)">${esc(T('pd_track','Seguimiento'))}: <span style="white-space:nowrap">${esc(o.tracking_number)}</span></span>`
+            : '');
+
+      /* La ventana de entrega SOLO mientras siga por delante. Una fecha
+         de entrega ya pasada no es informacion, es una promesa rota
+         escrita en la pantalla. */
+      let llega='';
+      if(clave!=='delivered'&&clave!=='cancelled'&&clave!=='refunded'&&o.est_delivery_to){
+        const fin=new Date(o.est_delivery_to);
+        if(fin>=hoy){
+          llega='<div class="sub" style="margin-top:3px">'+
+            esc(T('pd_llega','Llega entre el {a} y el {b}')
+                  .split('{a}').join(fdate(o.est_delivery_from))
+                  .split('{b}').join(fdate(o.est_delivery_to)))+'</div>';
+        }
+      }
+
+      const foto=o.image_url
+        ? `<div class="ic" style="overflow:hidden"><img src="${safeUrl(o.image_url)}" alt="" style="width:100%;height:100%;object-fit:cover"></div>`
+        : `<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg></div>`;
+
+      return `<div class="item">
+        ${foto}
+        <div class="main"><h4>${esc(o.product_name||'Boutique')}</h4>
+          <div class="sub">${fdate(o.created_at)}${cant}</div>
+          <span class="tag ${st[2]}">${esc(T(st[0],st[1]))}</span>
+          ${track?`<div style="margin-top:5px">${track}</div>`:''}
+          ${llega}</div>
+        <div class="right"><div class="amt">${eur(o.total,o.currency)}</div></div></div>`;
+    }).join('');
+  }
+  /* Al cambiar de idioma hay que repintar. `data-i18n` sólo alcanza a lo
+     que está escrito en el HTML; los estados, los vacíos y las ventanas
+     de entrega los escribe el JavaScript dentro de cada lista.
+
+     Antes esto repintaba SÓLO los pedidos. El resto de las pestañas
+     —servicios, facturas, garantías, cartera, favoritos, el perfil de
+     belleza— se quedaban en el idioma con el que se cargaron. Ahora se
+     repinta lo que ya esté pintado, y nada más: volver a pedir una lista
+     que nadie ha abierto es gasto sin motivo. */
+  document.addEventListener('bbl:lang',()=>{
+    /* Si el idioma llega antes que el perfil, no se repinta: la primera
+       carga (loadProfile → loadOverview) ya pinta en el idioma nuevo. */
+    if(!USER||!PROFILE) return;
+    const pintado = id => { const e=document.getElementById(id); return e && e.children.length; };
+    if(pintado('ordersBox'))   loadOrders();
+    if(pintado('upcoming'))    loadOverview();
+    if(pintado('servicesBox')) loadServices();
+    if(pintado('invoicesBox')) loadInvoices();
+    if(pintado('warrBox'))     loadWarranties();
+    if(pintado('addrBox'))     loadDirecciones();
+    if(pintado('chatBox'))     loadChat();
+    if(pintado('selfBox'))     loadSelfcare();
+    if(pintado('walletTx'))    loadWallet();
+    if(pintado('favBox'))      loadFavorites();
+    if(pintado('beautyPrefs')) renderBeauty();
+  });
+
+  // ── garantías ──
+  function conDatos(t,v){return String(t).replace(/\{(\w+)\}/g,(_,k)=>v[k]!=null?v[k]:'');}
+
+  /* ═══ 19.4 · DIRECCIONES ═══════════════════════════════════════
+     El checkout LEÍA `client_addresses` para proponer «Direcciones
+     guardadas» y no las escribía nadie: la tabla estaba vacía y lo
+     habría estado siempre. Aquí se guardan. */
+  /* ═══ 52.1 · La dirección se escribe una vez ═══════════════════
+     El bloque 24.1 sacó a Google y puso Photon (OpenStreetMap), sin
+     clave y sin tarjeta, detrás de `places-autocomplete`. Lo enchufó
+     en el checkout… y esta pestaña nació DOS DÍAS DESPUÉS, escribiendo
+     la dirección a mano. El patrón de siempre: construido, correcto,
+     y sin el escalón de en medio.
+
+     Y debajo había algo peor: `client_addresses` no tenía país, y el
+     envío, el IVA y los días de entrega salen todos del país. Quien
+     guardara una dirección de Lisboa con España seleccionada se
+     llevaba el envío español a Portugal. No reventaba: cobraba mal. */
+  let PAISES_DIR = [];
+  let COORD = { lat:null, lng:null };
+
+  async function pintaPaisesDir(){
+    const sel=document.getElementById('dPais');
+    if(!sel) return;
+    if(!PAISES_DIR.length){
+      const r=await sb.rpc('paises_de_envio');
+      PAISES_DIR = (r && r.data) || [];
+    }
+    // El mismo origen que el checkout: si un país no está en
+    // `shipping_zones`, no se puede ofrecer aquí tampoco.
+    const nombre = iso => { try { return new Intl.DisplayNames([BBL.lang],{type:'region'}).of(iso)||iso; }
+                            catch(_){ return iso; } };
+    sel.innerHTML = '<option value="">'+esc(T('cl_d_elige_pais','Elige un país'))+'</option>' +
+      PAISES_DIR.map(p=>({iso:p.iso, n:nombre(p.iso)}))
+        .sort((a,b)=>a.n.localeCompare(b.n, BBL.lang))
+        .map(p=>`<option value="${esc(p.iso)}">${esc(p.n)}</option>`).join('');
+  }
+
+  function montaAutocompletar(){
+    /* 52.5 · aquí ponía sólo `return`, sin decir nada. En `checkout.html`
+       la misma guarda se estaba disparando de verdad —`i18n.js` borraba
+       `BBL.direccion`— y no había manera de saberlo salvo usando la
+       página. Sin el fichero el campo sigue siendo un campo, que está
+       bien; lo que no está bien es que nadie se entere. */
+    if(!window.BBL || !BBL.direccion){
+      try{ console.warn('[Babyloon] cliente: falta BBL.direccion — el campo '+
+        'de la calle no va a sugerir nada.'); }catch(_){}
+      return;
+    }
+    BBL.direccion({
+      sb: sb,
+      input:     document.getElementById('dCalle'),
+      ciudad:    document.getElementById('dCiudad'),
+      provincia: document.getElementById('dProv'),
+      cp:        document.getElementById('dCp'),
+      pais:      document.getElementById('dPais'),
+      paisActual: function(){ const s=document.getElementById('dPais'); return s && s.value ? s.value : null; },
+      alElegir: function(d){ COORD = { lat: d.lat ?? null, lng: d.lng ?? null }; }
+    });
+    // Si se reescribe la calle a mano, las coordenadas de la sugerencia
+    // anterior dejan de valer: apuntarían al portal de antes.
+    const c=document.getElementById('dCalle');
+    if(c) c.addEventListener('input',()=>{ COORD={lat:null,lng:null}; });
+  }
+
+  async function loadDirecciones(){
+    const box=document.getElementById('addrBox');
+    const {data,error}=await sb.rpc('mis_direcciones');
+    if(error||!data||data.ok!==true){box.innerHTML=errBox();return;}
+    const ds=data.direcciones||[];
+    const form=`<div class="grid2" style="margin-bottom:14px">
+        <div class="field"><label>${esc(T('cl_d_nombre','Nombre (Casa, Hotel…)'))}</label><input id="dNombre"/></div>
+        <div class="field"><label>${esc(T('cl_d_calle','Calle y número'))}</label><input id="dCalle" autocomplete="address-line1"/></div>
+        <div class="field"><label>${esc(T('ct_ciudad','Ciudad'))}</label><input id="dCiudad"/></div>
+        <div class="field"><label>${esc(T('cl_d_provincia','Provincia'))}</label><input id="dProv"/></div>
+        <div class="field"><label>${esc(T('cl_d_cp','Código postal'))}</label><input id="dCp"/></div>
+        <div class="field"><label>${esc(T('cl_d_pais','País'))}</label><select id="dPais"></select></div>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mauve);margin-bottom:12px">
+        <input type="checkbox" id="dDef"/> ${esc(T('cl_d_def','Usar esta por defecto'))}</label>
+      <button class="btn btn-gold" id="dGuardar">${esc(T('cl_d_guardar','Guardar dirección'))}</button>
+      <div id="dMsg" class="saveMsg"></div>`;
+    const lista = ds.length ? ds.map(d=>`<div class="item">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 21s-7-6.2-7-11a7 7 0 1114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+        <div class="main"><h4>${esc(d.nombre||T('cl_d_sin','Dirección'))} ${d.por_defecto?'<span class="tag ok">'+esc(T('cl_d_pordefecto','por defecto'))+'</span>':''}</h4>
+          <div class="sub">${esc(d.calle||'')}${d.ciudad?' · '+esc(d.ciudad):''}${d.cp?' · '+esc(d.cp):''}${d.pais?' · '+esc(d.pais):''}</div>
+          ${d.sin_pais?'<div class="sub" style="color:var(--surge)">'+esc(T('cl_d_sinpais','Sin país: el checkout no puede calcularte el envío ni el IVA. Ábrela y elígelo.'))+'</div>':''}</div>
+        <div class="right">${d.por_defecto?'':'<button class="btn-mini" data-def="'+d.id+'">'+esc(T('cl_d_hacerdef','Por defecto'))+'</button> '}
+          <button class="btn-mini" data-del="${d.id}">${esc(T('cl_d_borrar','Borrar'))}</button></div></div>`).join('')
+      : '<div class="empty"><p>'+esc(T('cl_d_vacio','Todavía no has guardado ninguna dirección.'))+'</p></div>';
+    box.innerHTML = form + lista;
+    COORD = { lat:null, lng:null };
+    await pintaPaisesDir();
+    montaAutocompletar();
+
+    document.getElementById('dGuardar').addEventListener('click',async()=>{
+      const msg=document.getElementById('dMsg'); msg.className='saveMsg'; msg.textContent='';
+      const r=await sb.rpc('guardar_direccion',{p_id:null,
+        p_nombre:document.getElementById('dNombre').value.trim(),
+        p_calle:document.getElementById('dCalle').value.trim(),
+        p_ciudad:document.getElementById('dCiudad').value.trim(),
+        p_cp:document.getElementById('dCp').value.trim(),
+        p_provincia:document.getElementById('dProv').value.trim()||null,
+        p_pais:(document.getElementById('dPais')||{}).value||null,
+        /* Photon devuelve las coordenadas en la MISMA respuesta del
+           autocompletado, así que guardarlas no cuesta una llamada más.
+           Y son una de las dos entradas que le faltan a la huella (47). */
+        p_lat:COORD.lat, p_lng:COORD.lng,
+        p_por_defecto:document.getElementById('dDef').checked});
+      if(r.error||!r.data||r.data.ok!==true){
+        msg.textContent=(r.data&&r.data.detalle)||T('cl_d_error','No se pudo guardar.'); msg.classList.add('err'); return; }
+      loadDirecciones();
+    });
+    box.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',async()=>{
+      await sb.rpc('borrar_direccion',{p_id:b.dataset.del}); loadDirecciones(); }));
+    box.querySelectorAll('[data-def]').forEach(b=>b.addEventListener('click',async()=>{
+      const d=ds.find(x=>x.id===b.dataset.def);
+      await sb.rpc('guardar_direccion',{p_id:d.id,p_nombre:d.nombre,p_calle:d.calle,
+        p_ciudad:d.ciudad,p_cp:d.cp,p_por_defecto:true}); loadDirecciones(); }));
+  }
+
+  /* ═══ 19.5 · MENSAJES ══════════════════════════════════════════
+     59.D4 · El chat con la profesional está abierto desde el 30-sep: el
+     mensaje sale entero. La primera vez que aparece un dato de contacto,
+     el servidor escribe en la conversación el aviso de lo que se pierde
+     fuera de Babyloon (quien:'system', aviso:true).
+     61.48 · Ese aviso no es de nadie: va en el centro y en el idioma de
+     quien mira —la base lo guarda en español—. Y si el servicio se
+     canceló, se dice eso, no «no se pudo enviar». */
+  let CONV=null;
+  async function loadChat(){
+    const box=document.getElementById('chatBox');
+    const {data,error}=await sb.rpc('mis_conversaciones');
+    if(error||!data||data.ok!==true){box.innerHTML=errBox();return;}
+    const cs=data.conversaciones||[];
+    if(!cs.length){box.innerHTML=emptyBox(T('cl_ch_vacio','No tienes ninguna conversación todavía.'),T('cc_gar_ver','Ver mis servicios'),null,'services');return;}
+    if(!CONV) CONV=cs[0].auction_id;
+    const activa=cs.find(c=>c.auction_id===CONV)||cs[0];
+    const lista=cs.map(c=>`<button class="conv-item ${c.auction_id===activa.auction_id?'on':''}" data-conv="${c.auction_id}">
+        ${esc((c.que||T('cl_ch_serv','Servicio')).slice(0,38))}
+        ${c.sin_leer>0?'<span class="tag warn">'+c.sin_leer+'</span>':''}
+        <span style="display:block;font-size:11px;color:var(--mauve)">${esc(c.profesional||'')}${c.ultimo?' · '+fdate(c.ultimo):''}</span>
+      </button>`).join('');
+    const r=await sb.rpc('mi_conversacion',{p_auction_id:activa.auction_id});
+    const ms=(r.data&&r.data.mensajes)||[];
+    const hilo=ms.length?ms.map(m=>m.aviso
+      ? `<div style="margin:6px auto 14px;max-width:520px;padding:10px 14px;border-radius:12px;
+             border:1px solid rgba(200,169,106,.25);background:rgba(200,169,106,.06);text-align:center">
+          <div style="font-size:13px;line-height:1.5;color:var(--smoke)">${esc(T('cl_ch_aviso','Fuera de Babyloon no hay dinero retenido, ni botón de pánico, ni garantía, ni soporte, para ninguna de las dos partes.'))}</div>
+          <div style="font-size:10px;color:var(--mauve);margin-top:4px">${esc(fdate(m.cuando))}</div>
+        </div>`
+      : `<div style="margin:0 0 10px;text-align:${m.mio?'right':'left'}">
+        <div style="display:inline-block;max-width:80%;padding:9px 13px;border-radius:12px;
+             background:${m.mio?'rgba(200,169,106,.14)':'rgba(255,255,255,.05)'};text-align:left">
+          <div style="font-size:14px;color:var(--cream)">${esc(m.texto||'')}</div>
+          <div style="font-size:10px;color:var(--mauve);margin-top:4px">${esc(fdate(m.cuando))}</div>
+        </div></div>`).join('')
+      : '<div class="empty"><p>'+esc(T('cl_ch_sin','Sin mensajes en este servicio.'))+'</p></div>';
+    const cerrado = String(activa.estado||'').toUpperCase()==='CANCELLED';
+    box.innerHTML=`<div class="chat-grid">
+        <div>${lista}</div>
+        <div style="min-width:0">${hilo}
+          ${cerrado
+            ? '<p class="sub">'+esc(T('cl_ch_cerrado','Este servicio se canceló: la conversación queda como está.'))+'</p>'
+            : `<div style="display:flex;gap:8px;margin-top:10px">
+                 <input id="chTxt" class="chat-in" placeholder=""${esc(T('cl_ch_escribe','Escribe un mensaje'))}"/>
+                 <button class="btn btn-gold" id="chEnviar">${esc(T('cl_ch_enviar','Enviar'))}</button></div>
+               <div id="chMsg" class="saveMsg"></div>`}
+        </div></div>`;
+    box.querySelectorAll('[data-conv]').forEach(b=>b.addEventListener('click',()=>{CONV=b.dataset.conv;loadChat();}));
+    const env=document.getElementById('chEnviar');
+    if(env) env.addEventListener('click',async()=>{
+      const t=document.getElementById('chTxt'); const msg=document.getElementById('chMsg');
+      if(!t.value.trim())return;
+      const w=await sb.rpc('mandar_mensaje',{p_auction_id:activa.auction_id,p_texto:t.value});
+      if(w.error||!w.data||w.data.ok!==true){
+        msg.className='saveMsg err';
+        msg.textContent = (w.data && w.data.error==='servicio_cancelado')
+          ? T('cl_ch_cerrado','Este servicio se canceló: la conversación queda como está.')
+          : T('cl_ch_error','No se pudo enviar.');
+        return; }
+      t.value=''; loadChat();
+    });
+  }
+
+  /* ═══ 19.6 · AUTOCUIDADO ═══════════════════════════════════════
+     El botón «Autocuidado» llevaba a `academia.html`, que es la
+     Academia DE LAS PROFESIONALES (bloque 28.1). Desde el 28.1 llevaba
+     a la app. Esto es lo que faltaba: traerlo aquí. */
+  async function loadSelfcare(){
+    const box=document.getElementById('selfBox');
+    const {data,error}=await sb.rpc('selfcare_feed',{p_client_id:USER.id,p_limit:40});
+    if(error){box.innerHTML=errBox();return;}
+    const vs=data||[];
+    if(!vs.length){box.innerHTML=emptyBox(T('cl_a_vacio','Pronto habrá más contenido por aquí.'));return;}
+    box.innerHTML='<div class="grid2" style="gap:14px">'+vs.map(v=>{
+      const precio = v.owned ? T('cl_a_tuyo','Ya es tuyo')
+                   : (Number(v.price)>0 ? eur(v.price) : T('cl_a_gratis','Gratis'));
+      const dur = v.duration_seconds>0 ? Math.round(v.duration_seconds/60)+' '+T('cl_a_min','min') : '';
+      return `<div class="item" style="align-items:flex-start">
+        ${v.thumbnail_url?`<img src="${esc(v.thumbnail_url)}" alt="" loading="lazy"
+             style="width:74px;height:92px;object-fit:cover;border-radius:10px;flex:none">`:''}
+        <div class="main" style="min-width:0"><h4>${esc(v.title||'')}</h4>
+          <div class="sub">${esc([v.category,v.pro_name,dur].filter(Boolean).join(' · '))}</div>
+          ${v.description?`<div class="sub">${esc(String(v.description).slice(0,90))}</div>`:''}</div>
+        <div class="right"><div class="amt">${esc(precio)}</div>
+          <a href="index.html#app" data-app-open class="mini" style="margin-top:6px;display:inline-block">${esc(T('cl_a_ver','Ver en la app'))}</a></div>
+      </div>`;
+    }).join('')+'</div>';
+  }
+
+  async function loadWarranties(){
+    const {data,error}=await sb.from('service_warranties')
+      .select('id,service_names,warranty_days,starts_at,expires_at,status,claimed_at')
+      .eq('client_id',USER.id).order('created_at',{ascending:false}).limit(50);
+    const box=document.getElementById('warrBox');
+    if(error){box.innerHTML=errBox();return;}
+    if(!data||!data.length){box.innerHTML=emptyBox(T('cc_gar_vacio','No tienes garantías activas.'),T('cc_gar_ver','Ver mis servicios'),null,'services');return;}
+    const now=Date.now();
+    box.innerHTML=data.map(w=>{
+      const exp=w.expires_at?new Date(w.expires_at).getTime():0;
+      const active=w.status==='active'&&exp>now;
+      const st=w.status==='claimed'?['Reclamada','warn']:active?['Activa','ok']:['Expirada','mut'];
+      const days=active?Math.max(0,Math.ceil((exp-now)/86400000)):0;
+      return `<div class="item">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg></div>
+        <div class="main"><h4>${esc(Array.isArray(w.service_names)?w.service_names.join(', '):w.service_names||'Servicio')}</h4>
+          <div class="sub">${active?`Vence en ${days} día${days!==1?'s':''} · ${fdate(w.expires_at)}`:`${fdate(w.expires_at)}`}</div>
+          <span class="tag ${st[1]}">${st[0]}</span></div>
+        <div class="right">${active?'<span style="color:var(--mauve);font-size:11px">'+esc(T('cc_gar_reclama','Reclamar en la app'))+'</span>':''}</div></div>`;
+    }).join('');
+  }
+
+  // ── wallet ──
+  // Mismo criterio que los estados: clave primero, texto de respaldo
+  // después, y se traduce al pintar.
+  const TX={topup:['tx_recarga','Recarga','pos'],boutique_purchase:['tx_compra','Compra Boutique',''],
+    refund:['tx_reembolso','Reembolso','pos'],cashback:['tx_cashback','Cashback Privée','pos'],
+    service_payment:['tx_pago','Pago de servicio',''],referral:['tx_referido','Referido','pos']};
+  async function loadWallet(){
+    // El saldo, de client_wallet_balance: trae su moneda y deja fuera
+    // los movimientos en otra divisa, igual que en las apps.
+    let bal=null;
+    try{ const r=await sb.rpc('client_wallet_balance',{p_client_id:USER.id}); bal=r.data; }catch(_){}
+    const curMon=(bal&&bal.currency)||Money.myCode();
+    /* Si la función no contesta, NO se cae a `PROFILE.wallet_balance`:
+       esa columna son puntos. Antes que enseñar una cifra falsa, se
+       enseña una raya. */
+    const saldo=bal&&bal.balance!=null?bal.balance:null;
+    document.getElementById('walletBal').textContent=saldo!=null?eur(saldo,curMon):'—';
+    const {data,error}=await sb.from('client_wallet_transactions')
+      .select('id,type,amount,currency,bolsa,description,created_at').eq('client_id',USER.id)
+      .order('created_at',{ascending:false}).limit(60);
+    const box=document.getElementById('walletTx');
+    if(error){box.innerHTML=errBox();return;}
+    if(!data||!data.length){box.innerHTML=emptyBox(T('ct_sinmovs','Sin movimientos todavía.'));return;}
+    /* 61.18 · Aquí casi todo son PUNTOS (PTS) y se pintaban como dinero,
+       en la moneda de quien mira: un ajuste de 10 puntos desde el panel
+       salía «+10,00 €» debajo de un «Saldo disponible 0,00 €». Ahora un
+       movimiento en puntos dice que son puntos y de qué bolsa —la de los
+       regalados vale para todo; la de los comprados, para la boutique—, y
+       uno en dinero va en SU moneda, no en la de quien mira. */
+    const nPts=v=>Number(v||0).toLocaleString((window.BBL&&BBL.lang)||'es',{maximumFractionDigits:2});
+    box.innerHTML=data.map(t=>{
+      const meta=TX[t.type]||['',t.type,''];const pos=Number(t.amount)>=0;
+      const esPts=String(t.currency||'').trim().toUpperCase()==='PTS';
+      const que=esPts?[T('ct_puntos','Puntos'),
+        t.bolsa==='comprados'?T('ly_bolsa_compra','Comprados')
+        :t.bolsa==='devueltos'?T('ly_bolsa_devuelto','De tus devoluciones')   // 61.73
+        :T('ly_bolsa_regalo','De regalo')].join(' · '):'';
+      const importe=esPts?nPts(t.amount):eur(t.amount,String(t.currency||'').trim()||undefined);
+      return `<div class="item">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg></div>
+        <div class="main"><h4>${esc(t.description||T(meta[0],meta[1]))}</h4>
+          <div class="sub">${fdate(t.created_at)}${que?' · '+esc(que):''}</div></div>
+        <div class="right"><div class="amt ${pos?'pos':''}">${pos?'+':''}${importe}</div></div></div>`;
+    }).join('');
+  }
+
+  // ── favoritos ──
+  /* ── FAVORITOS · bloques 15.14 y 16.5b ─────────────────────────────
+     Esto hacía DOS consultas: la lista de favoritos y luego la tabla
+     `professionals` para los nombres. Y la segunda pedía `profession` y
+     `rating`, dos columnas que NO EXISTEN —se llaman `specialty` y
+     `rating_global`—, así que PostgREST devolvía error, un `catch` se lo
+     tragaba y todos los favoritos salían como «Profesional Babyloon»,
+     sin foto, sin ciudad y sin nota.
+
+     Ahora es una sola llamada a `get_my_favorites`, la MISMA que usa la
+     app cliente. Una consulta menos, los nombres correctos, y una
+     lectura menos de la tabla — que es lo que permite estrechar su
+     política de filas en 16.5b. */
+  async function loadFavorites(){
+    const box=document.getElementById('favBox');
+    const {data,error}=await sb.rpc('get_my_favorites',{p_client_id:USER.id});
+    if(error){box.innerHTML=errBox();return;}
+    const favs=data||[];
+    if(!favs.length){box.innerHTML=emptyBox(esc(T('fav_vacio','Aún no tienes profesionales favoritos.')));return;}
+    box.innerHTML=favs.map(p=>{
+      const nm=p.full_name||'Babyloon Pro';
+      const av=p.avatar_url?`<img class="ic" src="${safeUrl(p.avatar_url)}" alt="">`:
+        `<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>`;
+      const enLinea=p.is_online?`<span class="tag ok" style="margin-left:8px">${esc(T('fav_en_linea','En línea'))}</span>`:'';
+      return `<div class="item">${av}
+        <div class="main"><h4>${esc(nm)}${enLinea}</h4>
+          <div class="sub">${esc([p.specialty,p.city].filter(Boolean).join(' · ')||'Babyloon Pro')}</div></div>
+        <div class="right">${p.rating_global?`<div class="amt" style="font-size:14px">★ ${Number(p.rating_global).toFixed(1)}</div>`:''}</div></div>`;
+    }).join('');
+  }
+
+  /* ── Puntos y ventajas ────────────────────────────────────────────
+     Esto existía entero en el servidor y no se veía por ningún sitio
+     en la web. `puntos_de()` devuelve 420,86 puntos en la cuenta de
+     prueba, repartidos en DOS BOLSAS que no valen para lo mismo:
+
+       · los REGALADOS (los que da Babyloon) valen para todo
+       · los COMPRADOS sólo valen para producto de Babyloon
+
+     Esa distinción es lo importante y es lo que nadie estaba
+     contando. Un saldo único de «420 puntos» habría sido más bonito
+     y falso: la clienta se enteraría al ir a pagar.
+
+     Las tres cifras y la regla salen del servidor, no de aquí. Si
+     mañana cambia la política de puntos, esta pantalla la cuenta
+     bien sin tocarla.
+
+     Y la reserva se sigue haciendo en la app: aquí se mira y se
+     entiende, que es lo que pediste para la web. */
+  async function loadLoyalty(){
+    const box=document.getElementById('loyaltyBox');
+    let P=null, R=null;
+    try{
+      const [p,r]=await Promise.all([
+        sb.rpc('puntos_de',{p_client_id:USER.id}),
+        // 61.64 · Lo de invitar: la regla, a cuántas personas y cada descuento
+        // con su caducidad. Antes get_referral_stats: un % para siempre.
+        sb.rpc('mis_invitaciones')
+      ]);
+      P=p.data; R=(r&&!r.error&&r.data)?r.data:null;
+    }catch(_){ box.innerHTML=errBox(); return; }
+    if(!P||P.ok===false){ box.innerHTML=errBox(); return; }
+
+    const cur=P.moneda||Money.myCode();
+    const val=v=>Money.format(Number(v||0),cur);
+    const pt=v=>Number(v||0).toLocaleString(BBL.lang||'es',{maximumFractionDigits:2});
+    // 61.64 · Sus descuentos por invitar, cada uno con su fecha en el idioma
+    // de la página. Si el servidor no contesta, no se inventa nada.
+    const activos=(R&&Array.isArray(R.activos))?R.activos:[];
+    const fecha=c=>{const d=new Date(c);
+      return isNaN(d)?'—':d.toLocaleDateString(BBL.lang||'es',{day:'numeric',month:'short',year:'numeric'});};
+
+    // Las bolsas, cada una con lo que puede pagar de verdad. 61.73 · La de
+    // sus devoluciones, la primera: es la que se gasta antes.
+    const bolsas=[
+      ['devueltos', P.devueltos, P.valor_devueltos, BBL.t('ly_bolsa_devuelto'), BBL.t('ly_bolsa_devuelto_d')],
+      ['regalados', P.regalados, P.valor_regalados, BBL.t('ly_bolsa_regalo'), BBL.t('ly_bolsa_regalo_d')],
+      ['comprados', P.comprados, P.valor_comprados, BBL.t('ly_bolsa_compra'), BBL.t('ly_bolsa_compra_d')]
+    ].filter(b=>Number(b[1]||0)>0);
+    // 61.73 · Adónde quiere sus devoluciones si no dice otra cosa.
+    const pref=P.devolucion_preferida==='monedero'?'monedero':'original';
+    const opDev=[['monedero','ly_dev_monedero','ly_dev_monedero_d'],['original','ly_dev_tarjeta','ly_dev_tarjeta_d']];
+
+    const ventajas=[
+      ['ly_v_seguro','ly_v_seguro_d'],
+      ['ly_v_escrow','ly_v_escrow_d'],
+      ['ly_v_panico','ly_v_panico_d'],
+      ['ly_v_garantia','ly_v_garantia_d'],
+      ['ly_v_verificados','ly_v_verificados_d']
+    ];
+
+    box.innerHTML=`
+      <div class="ly-top">
+        <div class="ly-saldo">
+          <div class="lbl" data-i18n="ly_saldo">Tus puntos</div>
+          <div class="ly-num">${pt(P.total)}</div>
+          <div class="ly-val">${BBL.t('ly_equivalen')} ${val(P.valor)}</div>
+        </div>
+        ${bolsas.length?`<div class="ly-bolsas">${bolsas.map(b=>`
+          <div class="ly-bolsa">
+            <div class="ly-b-num">${pt(b[1])}</div>
+            <div class="ly-b-tit">${esc(b[3])}</div>
+            <div class="ly-b-sub">${esc(b[4])}</div>
+          </div>`).join('')}</div>`:''}
+      </div>
+      ${P.nota?`<p class="ly-nota">${esc(P.nota)}</p>`:''}
+
+      <h2 class="display ly-h2" id="lyDevTit">${esc(BBL.t('ly_dev_tit'))}</h2>
+      <div class="ly-dev" role="radiogroup" aria-labelledby="lyDevTit">
+        <p class="ly-dev-d">${esc(BBL.t('ly_dev_d'))}</p>
+        ${opDev.map(([v,tt,dd])=>`<button type="button" class="ly-dev-op" role="radio"
+            aria-checked="${pref===v}" data-dev="${v}"><span class="ly-dev-dot" aria-hidden="true"></span>
+            <span class="ly-dev-tx"><b>${esc(BBL.t(tt))}</b><span>${esc(BBL.t(dd))}</span></span></button>`).join('')}
+        <p class="ly-dev-est" id="lyDevEst" role="status" aria-live="polite"></p>
+      </div>
+
+      <h2 class="display ly-h2">${esc(BBL.t('ly_invita'))}</h2>
+      <div class="ly-ref">
+        ${PROFILE.referral_code?`
+          <div class="ly-code"><span>${esc(PROFILE.referral_code)}</span>
+            <button type="button" id="lyCopy" class="ly-copy">${esc(BBL.t('ly_copiar'))}</button></div>`:''}
+        ${R?`<p class="ly-regla">${esc(BBL.t('ly_regla').replace('{pct}',pt(R.pct))
+            .replace('{dias}',pt(Math.round(Number(R.dias||0)))))}</p>`:''}
+        <div class="ly-ref-stats">
+          <div><b>${R&&R.invitaciones!=null?pt(R.invitaciones):'—'}</b><span>${esc(BBL.t('ly_referidas'))}</span></div>
+          <!-- 61.72 · El descuento se gana con el primer servicio de la persona invitada:
+               las que aún no lo han completado. -->
+          <div><b>${R&&R.pendientes!=null?pt(R.pendientes):'—'}</b><span>${esc(BBL.t('ly_esperan'))}</span></div>
+          <div><b>${R?pt(activos.length):'—'}</b><span>${esc(BBL.t('ly_para_usar'))}</span></div>
+          <div><b>${R&&R.usados!=null?pt(R.usados):'—'}</b><span>${esc(BBL.t('ly_usados'))}</span></div>
+        </div>
+        ${!R?'':activos.length?`<ul class="ly-dtos">${activos.map(d=>`<li>${esc(BBL.t('ly_dto_hasta')
+            .replace('{pct}',pt(d.pct)).replace('{fecha}',fecha(d.caduca)))}</li>`).join('')}</ul>`
+          :`<p class="ly-sin">${esc(BBL.t('ly_sin_dtos'))}</p>`}
+        ${R?`<p class="ly-nota-ref">${esc(BBL.t('ly_se_gasta'))}</p>`:''}
+      </div>
+
+      <h2 class="display ly-h2">${esc(BBL.t('ly_cubre'))}</h2>
+      <div class="ly-ventajas">
+        ${ventajas.map(([t,d])=>`<div class="ly-v">
+          <h4>${esc(BBL.t(t))}</h4><p>${esc(BBL.t(d))}</p></div>`).join('')}
+      </div>
+      <p class="ly-pie">${esc(BBL.t('ly_pie'))}</p>`;
+
+    const cp=document.getElementById('lyCopy');
+    if(cp) cp.addEventListener('click',async()=>{
+      try{ await navigator.clipboard.writeText(PROFILE.referral_code);
+        cp.textContent=BBL.t('ly_copiado');
+        setTimeout(()=>{cp.textContent=BBL.t('ly_copiar');},1800);
+      }catch(_){ /* sin portapapeles: el código está a la vista igual */ }
+    });
+
+    // 61.73 · Se guarda en el servidor al pulsar; si no se puede, vuelve la
+    // de antes y se dice. La que ya está no se vuelve a guardar.
+    const ops=[...box.querySelectorAll('.ly-dev-op')];
+    const est=document.getElementById('lyDevEst');
+    let actual=pref, guardando=false;
+    const marca=v=>ops.forEach(b=>b.setAttribute('aria-checked',String(b.dataset.dev===v)));
+    ops.forEach(b=>b.addEventListener('click',async()=>{
+      const v=b.dataset.dev;
+      if(guardando||v===actual) return;
+      const antes=actual; guardando=true; marca(v);
+      est.textContent=''; est.classList.remove('mal');
+      let bien=false;
+      try{ const r=await sb.rpc('guardar_preferencia_de_devolucion',{p_destino:v});
+           bien=!r.error&&!!r.data&&r.data.ok===true; }catch(_){}
+      guardando=false;
+      if(bien){ actual=v; est.textContent=BBL.t('ly_dev_guardada'); }
+      else { marca(antes); est.textContent=BBL.t('ly_dev_error'); est.classList.add('mal'); }
+    }));
+  }
+
+  // helpers UI
+  function emptyBox(txt,cta,href,tab){
+    const link=cta?(tab?`<a href="#" onclick="document.querySelector('[data-tab=${tab}]').click();return false" style="color:var(--gold)">${cta}</a>`
+      :`<a href="${safeUrl(href)}">${cta}</a>`):'';
+    return `<div class="empty"><svg class="inf" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>
+      <p>${txt}</p>${link?`<p style="margin-top:10px">${link}</p>`:''}</div>`;
+  }
+  function errBox(){return '<div class="empty"><p>'+esc(T('ct_errdatos','No se pudieron cargar los datos. Inténtalo de nuevo.'))+'</p></div>';}
+</script>
+<script src="baby.js?v=2"></script>
+<script src="lujo.js?v=1"></script>
+<script src="cookies.js?v=2"></script>
+<script src="presencia.js?v=2"></script>
+<script src="aceptacion.js?v=1"></script>
+</body>
+</html>

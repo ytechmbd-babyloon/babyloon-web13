@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Clases en vivo · Babyloon</title>
+<meta name="description" content="Masterclasses en directo de Babyloon: aprende de profesionales que trabajan, en vivo y desde donde estés." />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0D0B0F" />
+<link rel="canonical" href="https://babyloon.app/masterclass.html" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Babyloon" />
+<meta property="og:title" content="Clases en vivo · Babyloon" />
+<meta property="og:description" content="Masterclasses en directo de Babyloon: aprende de profesionales que trabajan, en vivo y desde donde estés." />
+<meta property="og:url" content="https://babyloon.app/masterclass.html" />
+<meta property="og:image" content="https://babyloon.app/og-image.png" />
+<meta property="og:locale" content="es_ES" />
+<meta name="twitter:card" content="summary_large_image" />
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<style>
+  :root{--ink:#0D0B0F;--plum:#241820;--plum-2:#1B1219;--gold:#C8A96A;--gold-lite:#F3E0BC;
+    --cream:#F9F5EE;--smoke:#E8E0D5;--mauve:#8C7482;--mauve-dim:#6B5766;
+    --line:rgba(200,169,106,.16);--line-soft:rgba(249,245,238,.07);
+    --live:#FF4D4D;--good:#3DD68C;
+    --serif:'Cormorant Garamond',serif;--sans:'Jost',system-ui,sans-serif;
+    --gold-grad:linear-gradient(135deg,#8E723F 0%,#F3E0BC 42%,#C9A96E 72%,#9C8050 100%);--max:1240px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--cream);font-family:var(--sans);font-weight:300;
+    line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
+  .eyebrow{font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);font-weight:500}
+  .gold-text{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .inf path{stroke:url(#gg);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+  header{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .4s,backdrop-filter .4s;
+    border-bottom:1px solid transparent}
+  header.scrolled{background:rgba(13,11,15,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:74px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:25px;letter-spacing:.03em}
+  .nav-links{display:flex;align-items:center;gap:34px}
+  .nav-links a{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--smoke);transition:color .25s}
+  .nav-links a.on,.nav-links a:hover{color:var(--cream)}
+  .nav-right{display:flex;align-items:center;gap:18px}
+  .nav-cta{font-family:var(--sans);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;
+    font-weight:500;cursor:pointer;color:var(--cream);border:1px solid var(--line);
+    background:none;padding:12px 24px;border-radius:2px;transition:.28s}
+  .nav-cta:hover{border-color:var(--gold);color:var(--gold)}
+  .menu-toggle{display:none;background:none;border:none;color:var(--cream);cursor:pointer}
+  .nav-lang-m{display:none}
+
+  .hero{padding:150px 0 40px;text-align:center}
+  .hero h1{font-family:var(--serif);font-weight:300;line-height:1.04;
+    font-size:clamp(42px,6.4vw,78px);margin:18px 0 14px}
+  .hero p{color:var(--mauve);max-width:56ch;margin:0 auto;font-size:15.5px}
+
+  .sec{padding-block:clamp(44px,5vw,70px)}
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:26px}
+  .sec-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3.2vw,38px)}
+  .sec-head .cuenta{color:var(--mauve-dim);font-size:13px}
+
+  .rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+
+  .clase{position:relative;border:1px solid var(--line);border-radius:26px;overflow:hidden;
+    background:linear-gradient(160deg,var(--plum-2),var(--ink));display:flex;flex-direction:column;
+    transition:transform .45s cubic-bezier(.2,.8,.2,1),border-color .45s}
+  .clase:hover{transform:translateY(-5px);border-color:rgba(200,169,106,.4)}
+  .clase .foto{position:relative;aspect-ratio:16/9;background:var(--plum-2);overflow:hidden}
+  .clase .foto img{width:100%;height:100%;object-fit:cover;filter:brightness(.72)}
+  .clase .sinfoto{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+    font-family:var(--serif);font-size:44px;color:rgba(200,169,106,.25)}
+  .clase .cuerpo{padding:22px 24px 24px;display:flex;flex-direction:column;gap:10px;flex:1}
+  .clase h3{font-family:var(--serif);font-size:25px;font-weight:400;line-height:1.14}
+  .clase .quien{display:flex;align-items:center;gap:9px;color:var(--smoke);font-size:13.5px}
+  .clase .quien img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+  .clase .desc{color:var(--mauve);font-size:13.5px;line-height:1.6;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .clase .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+  .clase .pie{margin-top:auto;padding-top:14px}
+
+  .tag{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);color:var(--smoke);white-space:nowrap}
+  .tag.gratis{border-color:rgba(61,214,140,.4);color:var(--good)}
+  .tag.lleno{border-color:rgba(255,77,77,.4);color:var(--live)}
+  .envivo{position:absolute;top:14px;left:14px;z-index:2;display:inline-flex;align-items:center;gap:7px;
+    background:rgba(13,11,15,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(255,77,77,.5);
+    color:var(--live);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+    padding:7px 13px;border-radius:999px}
+  .envivo .punto{width:7px;height:7px;border-radius:50%;background:var(--live);
+    animation:latir 1.6s ease-in-out infinite}
+  @keyframes latir{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+
+  .b{font-family:var(--sans);font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;
+    font-weight:500;cursor:pointer;border:none;transition:.28s;width:100%;
+    padding:15px 22px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:10px}
+  .b-oro{color:var(--ink);background:var(--gold-grad);background-size:180% 180%;
+    box-shadow:0 8px 30px -12px rgba(200,169,106,.5)}
+  .b-oro:hover{background-position:100% 0}
+  .b-fan{color:var(--cream);background:none;border:1px solid var(--line)}
+  .b-fan:hover{border-color:var(--gold);color:var(--gold)}
+  .b[disabled]{opacity:.45;cursor:default}
+  .b-vivo{color:#fff;background:var(--live);box-shadow:0 8px 30px -12px rgba(255,77,77,.6)}
+
+  .vacio{text-align:center;padding:70px 20px;border:1px dashed var(--line);border-radius:26px}
+  .vacio h3{font-family:var(--serif);font-size:27px;font-weight:400;margin-bottom:8px}
+  .vacio p{color:var(--mauve);font-size:14px}
+
+  .aviso{border:1px solid var(--line);border-radius:18px;padding:16px 20px;color:var(--smoke);
+    font-size:13.5px;background:linear-gradient(160deg,rgba(200,169,106,.07),transparent);margin-top:12px}
+
+  /* ── la sala ── */
+  .sala{position:fixed;inset:0;z-index:120;background:#07060A;display:none;flex-direction:column}
+  .sala.abierta{display:flex}
+  .sala-top{display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:14px 20px;border-bottom:1px solid var(--line-soft)}
+  .sala-top h2{font-family:var(--serif);font-size:20px;font-weight:400;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sala-cuerpo{flex:1;display:grid;grid-template-columns:1fr 340px;min-height:0}
+  .escenario{position:relative;background:#000;display:flex;align-items:center;justify-content:center;min-height:0}
+  .escenario video{width:100%;height:100%;object-fit:contain;background:#000}
+  .escenario .estado{position:absolute;color:var(--mauve);font-size:14px;text-align:center;padding:0 24px}
+  .chat{display:flex;flex-direction:column;border-left:1px solid var(--line-soft);min-height:0}
+  .chat-tit{padding:14px 18px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--gold);border-bottom:1px solid var(--line-soft)}
+  .chat-lista{flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:12px}
+  .msg .de{font-size:11.5px;letter-spacing:.06em;color:var(--mauve)}
+  .msg.prof .de{color:var(--gold)}
+  .msg .tx{font-size:14px;color:var(--cream);line-height:1.5;word-break:break-word}
+  .chat-pie{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line-soft)}
+  .chat-pie input{flex:1;background:rgba(249,245,238,.05);border:1px solid var(--line);
+    border-radius:999px;padding:12px 16px;color:var(--cream);font-family:var(--sans);font-size:14px}
+  .chat-pie input:focus{outline:none;border-color:var(--gold)}
+  .chat-pie button{border:none;background:var(--gold-grad);color:var(--ink);border-radius:999px;
+    padding:0 20px;font-family:var(--sans);font-size:11.5px;letter-spacing:.16em;
+    text-transform:uppercase;font-weight:600;cursor:pointer}
+  .x{background:none;border:1px solid var(--line);color:var(--cream);border-radius:999px;
+    width:40px;height:40px;cursor:pointer;font-size:20px;line-height:1;flex-shrink:0}
+  .x:hover{border-color:var(--gold);color:var(--gold)}
+
+  @media(max-width:900px){
+    .sala-cuerpo{grid-template-columns:1fr;grid-template-rows:minmax(0,46vh) 1fr}
+    .chat{border-left:none;border-top:1px solid var(--line-soft)}
+  }
+
+  /* ── El acceso, dentro del menú de móvil ──────────────────────────
+     Por debajo del punto de plegado la cabecera esconde el botón de
+     Acceder, y el menú desplegable no lo tenía: para entrar había que
+     bajar hasta el pie. Ahora es lo primero del menú, que es donde
+     se busca.
+     `width:100%` con `box-sizing:border-box` y el padding lateral del
+     propio panel: no se sale ni a 320 px. */
+  .nav-acceso{display:none}
+  @media(max-width:920px){
+    /* Aquí el padding lateral lo llevan los enlaces, no el panel:
+       el botón usa margen en vez de ancho completo. */
+    .nav-acceso{display:block;margin:10px 28px 14px;width:calc(100% - 56px);text-align:center}
+    .nav-right #navCta{display:none}
+    .nav-links{position:fixed;inset:74px 0 auto;background:rgba(13,11,15,.97);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+      flex-direction:column;gap:0;padding:14px 0 22px;transform:translateY(-120%);
+      transition:transform .4s;border-bottom:1px solid var(--line)}
+    .nav-links.abierto{transform:none}
+    /* 31.1 · Ver la nota en index.html. El panel se limita a la pantalla
+       y se desliza, y la lista de idiomas deja de flotar: con dieciseis,
+       los ultimos caian fuera y no habia forma de llegar a ellos. */
+    .nav-links{max-height:calc(100vh - 74px);max-height:calc(100dvh - 74px);
+      overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+    .nav-lang-m .bbl-lang{width:100%}
+    .nav-lang-m .bbl-lang-btn{width:100%;justify-content:space-between}
+    .nav-lang-m .bbl-lang-menu{position:static;inset:auto;transform:none;
+      opacity:1;visibility:visible;max-height:0;overflow:hidden;
+      background:none;border:none;box-shadow:none;padding:0;min-width:0;
+      margin-top:0;transition:max-height .28s ease;
+      display:grid;grid-template-columns:1fr 1fr;gap:2px}
+    .nav-lang-m .bbl-lang.open .bbl-lang-menu{max-height:none;margin-top:10px}
+    .nav-lang-m .bbl-lang-menu button{padding:12px 10px;font-size:13.5px;
+      border:1px solid rgba(249,245,238,.06);border-radius:8px}
+    .nav-links a{padding:15px 28px;width:100%}
+    .menu-toggle{display:block}
+    .nav-lang-m{display:block;padding:14px 28px}
+    #langSwitch{display:none}
+    .hero{padding:120px 0 20px}
+  }
+</style>
+<link rel="stylesheet" href="movil.css?v=1" />
+<link rel="stylesheet" href="estetica.css?v=2" />
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8E723F"/><stop offset="42%" stop-color="#F3E0BC"/><stop offset="72%" stop-color="#C9A96E"/><stop offset="100%" stop-color="#9C8050"/></linearGradient></defs></svg>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <svg class="inf" width="38" height="19" viewBox="0 0 120 60" aria-hidden="true"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>
+      Babyloon
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <button class="nav-cta nav-acceso" id="navCtaM" type="button">Acceder</button>
+      <a href="index.html" data-i18n="nav_inicio">Inicio</a>
+      <a href="boutique.html" data-i18n="nav_boutique">Boutique</a>
+      <a href="academia.html" data-i18n="nav_academia">Academia</a>
+      <a href="masterclass.html" class="on" data-i18n="mc_title">Clases en vivo</a>
+      <a href="index.html#app" data-i18n="nav_laapp">La app</a>
+      <div class="nav-lang-m"><div id="langSwitchM"></div></div>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-cta" id="navCta" type="button">Acceder</button>
+      <div id="langSwitch"></div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menú" aria-expanded="false">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Babyloon</div>
+    <h1 id="mcH1">Clases <span class="gold-text">en vivo</span></h1>
+    <p data-i18n="mc_sub">Aprende de las mejores, en directo y desde donde estés.</p>
+  </div>
+</section>
+
+<section class="sec" id="secVivo" hidden>
+  <div class="wrap">
+    <div class="sec-head"><h2 data-i18n="mc_live_now">En directo ahora</h2></div>
+    <div class="rejilla" id="gridVivo"></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head"><h2 data-i18n="mc_upcoming">Próximas clases</h2><span class="cuenta" id="cuenta"></span></div>
+    <div class="rejilla" id="grid"></div>
+    <div class="vacio" id="vacio" hidden>
+      <h3 data-i18n="mc_none">No hay ninguna clase programada</h3>
+      <p data-i18n="mc_none_sub">Vuelve pronto: se anuncian con días de antelación.</p>
+    </div>
+    <div class="aviso" id="avisoPago" hidden data-i18n="mc_wallet_only"></div>
+  </div>
+</section>
+
+<div class="sala" id="sala" role="dialog" aria-modal="true" aria-labelledby="salaTit">
+  <div class="sala-top">
+    <h2 id="salaTit"></h2>
+    <button class="x" id="salaX" aria-label="Salir">×</button>
+  </div>
+  <div class="sala-cuerpo">
+    <div class="escenario">
+      <video id="video" autoplay playsinline></video>
+      <div class="estado" id="estado"></div>
+    </div>
+    <div class="chat">
+      <div class="chat-tit" data-i18n="mc_chat">Chat de la sala</div>
+      <div class="chat-lista" id="chatLista"></div>
+      <form class="chat-pie" id="chatForm">
+        <input id="chatTxt" maxlength="500" autocomplete="off" data-i18n-ph="mc_chat_ph" placeholder="Escribe algo…" />
+        <button type="submit" data-i18n="mc_send">Enviar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="app-link.js"></script>
+<script src="money.js?v=2"></script>
+<script src="i18n.js?v=10"></script>
+<script src="i18n-masterclass.js?v=1"></script>
+<script src="i18n-auth.js?v=1"></script>
+  <script src="i18n-baby.js?v=1"></script>
+  <script src="i18n-5-resto.js?v=1"></script>
+  <script src="i18n-auth-extra.js?v=2"></script>
+  <script src="i18n-aceptacion.js?v=1"></script>
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="conexion.js?v=1"></script>
+<script src="https://cdn.jsdelivr.net/npm/livekit-client@2/dist/livekit-client.umd.min.js"></script>
+<script src="auth.js?v=5"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Clases en vivo
+   ───────────────────────────────────────────────────────────────
+   Esta página no decide nada sobre quién entra. Pide dos cosas:
+
+     · `masterclass_web()` para el cartel. A quien no tiene cuenta
+       le devuelve título, profesora, hora y aforo — y NUNCA el
+       `room_name`, que es el identificador de la sala de LiveKit.
+     · `livekit-token` (edge function) para entrar. Esa mira el JWT,
+       comprueba si eres la profesora o si tienes entrada, y firma
+       un token que sólo deja publicar a la profesora. Si no te
+       corresponde, no firma.
+
+   Es decir: aunque alguien se invente el `puedo_entrar` desde la
+   consola del navegador, no consigue nada. El botón es una pista
+   visual; la puerta está en el servidor.
+
+   El chat se manda por `masterclass_send_chat`, que exige entrada y
+   pone el nombre y el sello de profesora él mismo — no se cree lo
+   que le manden. Escribir directamente en la tabla ya no se puede.
+   ═══════════════════════════════════════════════════════════════ */
+  const SUPABASE_URL="https://qphatjblvojnfyghwmjy.supabase.co";
+  const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  window.__sbClient = sb;
+
+  const $  = id => document.getElementById(id);
+  const esc = s => (s==null?'':String(s)).replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  const T  = (k,d) => { const v = BBL.t(k); return (v && v!==k) ? v : (d||''); };
+
+  let YO = null, DATOS = null, SALA = null, CLASE = null, CHAT_T = null, CHAT_CANAL = null;
+
+  /* ── el cartel ─────────────────────────────────────────────── */
+
+  function cuando(iso){
+    if(!iso) return '';
+    try{
+      return new Date(iso).toLocaleString(BBL.lang==='ar'?'ar-EG':BBL.lang,
+        {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+    }catch(_){ return iso; }
+  }
+
+  function dinero(v, cur){
+    try{ return Money.format(Number(v)||0, cur||'EUR'); }
+    catch(_){ return (Number(v)||0).toFixed(2)+' '+(cur||'EUR'); }
+  }
+
+  function tarjeta(c){
+    const vivo = c.estado === 'live';
+    const foto = c.portada
+      ? `<img src="${esc(c.portada)}" alt="${esc(c.titulo)}" loading="lazy" />`
+      : `<div class="sinfoto">∞</div>`;
+
+    const etiquetas = [];
+    if(c.de_pago) etiquetas.push(`<span class="tag">${esc(dinero(c.precio, c.moneda))}</span>`);
+    else          etiquetas.push(`<span class="tag gratis">${esc(T('mc_free','Gratuita'))}</span>`);
+    if(c.minutos) etiquetas.push(`<span class="tag">${esc(T('mc_duration','{n} min').replace('{n}', c.minutos))}</span>`);
+    if(c.completo) etiquetas.push(`<span class="tag lleno">${esc(T('mc_sold_out','Completo'))}</span>`);
+    else if(c.aforo) etiquetas.push(`<span class="tag">${esc(T('mc_seats','{n} plazas libres').replace('{n}', c.quedan))}</span>`);
+
+    return `<article class="clase" data-id="${esc(c.id)}">
+      <div class="foto">
+        ${vivo ? `<span class="envivo"><span class="punto"></span>${esc(T('mc_live_now','En directo ahora'))}</span>` : ''}
+        ${foto}
+      </div>
+      <div class="cuerpo">
+        <h3>${esc(c.titulo)}</h3>
+        <div class="quien">
+          ${c.avatar ? `<img src="${esc(c.avatar)}" alt="" loading="lazy" />` : ''}
+          <span>${esc(T('mc_by','con'))} ${esc(c.profesora||'')}</span>
+        </div>
+        ${c.descripcion ? `<p class="desc">${esc(c.descripcion)}</p>` : ''}
+        <div class="quien" style="color:var(--mauve-dim);font-size:12.5px">${esc(cuando(c.empieza))}</div>
+        <div class="meta">${etiquetas.join('')}</div>
+        <div class="pie">${boton(c)}</div>
+      </div>
+    </article>`;
+  }
+
+  function boton(c){
+    // Sin sesión: lo único que se ofrece es entrar. No se enseña un
+    // botón de reservar que va a fallar.
+    if(!DATOS.sesion)
+      return `<button class="b b-fan" data-acc="entrar">${esc(T('mc_login','Entra para reservar'))}</button>`;
+
+    if(c.puedo_entrar)
+      return `<button class="b b-vivo" data-acc="sala">${esc(T('mc_enter','Entrar en la sala'))}</button>`;
+
+    if(c.soy_la_profesora)
+      return `<button class="b b-fan" disabled>${esc(T('mc_scheduled','Programada'))}</button>`;
+
+    if(c.tengo_entrada)
+      return `<button class="b b-fan" disabled>${esc(T('mc_reserved','Tienes tu sitio'))}</button>`;
+
+    if(c.completo)
+      return `<button class="b b-fan" disabled>${esc(T('mc_sold_out','Completo'))}</button>`;
+
+    // De pago: hoy sólo se cobra del monedero de profesional. En vez de
+    // un botón que devuelve `insufficient_balance`, se dice por qué.
+    if(c.de_pago)
+      return `<button class="b b-fan" disabled>${esc(T('mc_paid','De pago'))}</button>`;
+
+    return `<button class="b b-oro" data-acc="reservar">${esc(T('mc_reserve','Reservar mi sitio'))}</button>`;
+  }
+
+  function pintar(){
+    const todas = DATOS.clases || [];
+    const vivas = todas.filter(c => c.estado === 'live');
+    const luego = todas.filter(c => c.estado !== 'live');
+
+    $('secVivo').hidden = vivas.length === 0;
+    $('gridVivo').innerHTML = vivas.map(tarjeta).join('');
+
+    $('grid').innerHTML = luego.map(tarjeta).join('');
+    $('vacio').hidden = luego.length > 0;
+    $('cuenta').textContent = luego.length ? luego.length : '';
+
+    // El aviso del monedero, sólo si de verdad hay alguna de pago que
+    // esta persona no puede comprar.
+    $('avisoPago').hidden = !(DATOS.sesion && todas.some(c => c.de_pago && !c.tengo_entrada && !c.soy_la_profesora));
+  }
+
+  async function cargar(){
+    try{
+      // 61.68 · Con el pais desde el que mira: sin cuenta, los precios van en
+      // su moneda (antes, euros); con cuenta, en la suya, y Money.mine le anota
+      // antes ese pais si no ha dado su direccion. Si la base todavia no tiene
+      // masterclass_de_la_web, la de antes.
+      try{ await Money.mine(sb); }catch(_){}
+      let pais=null; try{ pais=await Money.pais(); }catch(_){}
+      let r=await sb.rpc('masterclass_de_la_web', { p_id: null, p_pais: pais });
+      if(r.error) r=await sb.rpc('masterclass_web', { p_id: null });
+      const { data, error } = r;
+      if(error) throw error;
+      DATOS = data || { clases: [], sesion: false };
+      pintar();
+    }catch(e){
+      console.warn('masterclass_web', e);
+      DATOS = { clases: [], sesion: false };
+      pintar();
+    }
+  }
+
+  /* ── reservar ──────────────────────────────────────────────── */
+
+  async function reservar(id, btn){
+    if(!YO) return BBLAuth.abrir({ alEntrar: () => location.reload() });
+    btn.disabled = true;
+    btn.textContent = T('mc_reserving','Reservando…');
+    try{
+      const { data, error } = await sb.rpc('masterclass_reserve',
+        { p_user_id: YO.id, p_masterclass_id: id });
+      if(error) throw error;
+      if(data && data.success === false && data.error === 'not_free'){
+        btn.textContent = T('mc_paid','De pago');
+        $('avisoPago').hidden = false;
+        return;
+      }
+      await cargar();
+    }catch(e){
+      console.warn('reserve', e);
+      btn.disabled = false;
+      btn.textContent = T('mc_reserve','Reservar mi sitio');
+    }
+  }
+
+  /* ── la sala ───────────────────────────────────────────────── */
+
+  async function abrirSala(id){
+    CLASE = (DATOS.clases || []).find(c => String(c.id) === String(id));
+    if(!CLASE) return;
+
+    $('salaTit').textContent = CLASE.titulo || '';
+    $('estado').textContent  = T('mc_connecting','Conectando con la sala…');
+    $('video').style.display = 'none';
+    $('chatLista').innerHTML = '';
+    $('sala').classList.add('abierta');
+    document.body.style.overflow = 'hidden';
+
+    /* 15.5 · Si el SDK de vídeo no ha cargado (CDN caído, proxy, bloqueador),
+       no se gasta una llamada al servidor para acabar fallando: se dice ya. */
+    if(typeof LivekitClient === 'undefined'){
+      $('estado').textContent = T('mc_conn_err','No hemos podido conectar con la sala. Inténtalo de nuevo.');
+      return;
+    }
+
+    let tok;
+    try{
+      const { data, error } = await sb.functions.invoke('livekit-token', {
+        body: { masterclass_id: id }
+      });
+      if(error || !data || !data.token) throw (error || new Error(data && data.error));
+      tok = data;
+    }catch(e){
+      console.warn('livekit-token', e);
+      $('estado').textContent = T('mc_conn_err','No hemos podido conectar con la sala. Inténtalo de nuevo.');
+      return;
+    }
+
+    try{
+      SALA = new LivekitClient.Room({ adaptiveStream: true, dynacast: true });
+
+      SALA.on(LivekitClient.RoomEvent.TrackSubscribed, (track) => {
+        if(track.kind === 'video'){
+          track.attach($('video'));
+          $('video').style.display = '';
+          $('estado').textContent = '';
+        } else if(track.kind === 'audio'){
+          track.attach();
+        }
+      });
+      SALA.on(LivekitClient.RoomEvent.TrackUnsubscribed, (track) => track.detach());
+      SALA.on(LivekitClient.RoomEvent.Disconnected, () => {
+        $('estado').textContent = T('mc_ended','Esta clase ya ha terminado');
+        $('video').style.display = 'none';
+      });
+
+      await SALA.connect(tok.url, tok.token);
+
+      if(tok.is_teacher){
+        // La profesora publica. Si el navegador no da permiso, se dice
+        // en su idioma en vez de dejar una pantalla negra.
+        try{
+          await SALA.localParticipant.enableCameraAndMicrophone();
+          const cam = SALA.localParticipant.getTrackPublication(LivekitClient.Track.Source.Camera);
+          if(cam && cam.track){
+            cam.track.attach($('video'));
+            $('video').muted = true;      // no oírse a una misma
+            $('video').style.display = '';
+            $('estado').textContent = '';
+          }
+        }catch(e){
+          console.warn('cámara', e);
+          $('estado').textContent = T('mc_cam_err','No hemos podido encender tu cámara. Revisa los permisos del navegador.');
+        }
+      } else if(SALA.remoteParticipants.size === 0){
+        $('estado').textContent = T('mc_waiting','Esperando a que empiece…');
+      }
+    }catch(e){
+      console.warn('connect', e);
+      $('estado').textContent = T('mc_conn_err','No hemos podido conectar con la sala. Inténtalo de nuevo.');
+      return;
+    }
+
+    arrancarChat(id);
+  }
+
+  async function cerrarSala(){
+    if(SALA){ try{ await SALA.disconnect(); }catch(_){} SALA = null; }
+    if(CHAT_T){ clearInterval(CHAT_T); CHAT_T = null; }
+    if(CHAT_CANAL){ try{ sb.removeChannel(CHAT_CANAL); }catch(_){} CHAT_CANAL = null; }
+    $('sala').classList.remove('abierta');
+    document.body.style.overflow = '';
+    CLASE = null;
+    cargar();
+  }
+
+  /* ── chat ──────────────────────────────────────────────────── */
+
+  function pintarChat(filas){
+    const l = $('chatLista');
+    const abajo = l.scrollHeight - l.scrollTop - l.clientHeight < 60;
+    l.innerHTML = (filas||[]).map(m => `
+      <div class="msg${m.is_teacher ? ' prof' : ''}">
+        <div class="de">${esc(m.sender_name || '')}</div>
+        <div class="tx">${esc(m.message || '')}</div>
+      </div>`).join('');
+    if(abajo) l.scrollTop = l.scrollHeight;
+  }
+
+  async function leerChat(id){
+    const { data, error } = await sb.from('masterclass_chat')
+      .select('id,sender_name,message,is_teacher,created_at')
+      .eq('masterclass_id', id).order('created_at', { ascending: true }).limit(200);
+    if(!error) pintarChat(data);
+  }
+
+  function arrancarChat(id){
+    leerChat(id);
+    // Tiempo real si el canal entra; si no, se pregunta cada seis
+    // segundos. Una clase de una hora con mil personas mirando no
+    // puede depender de que el canal exista siempre.
+    try{
+      CHAT_CANAL = sb.channel('mc-' + id)
+        .on('postgres_changes',
+            { event:'INSERT', schema:'public', table:'masterclass_chat', filter:'masterclass_id=eq.'+id },
+            () => leerChat(id))
+        .subscribe((estado) => {
+          if(estado !== 'SUBSCRIBED' && !CHAT_T) CHAT_T = setInterval(() => leerChat(id), 6000);
+        });
+    }catch(_){
+      CHAT_T = setInterval(() => leerChat(id), 6000);
+    }
+  }
+
+  $('chatForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const txt = $('chatTxt').value.trim();
+    if(!txt || !CLASE || !YO) return;
+    $('chatTxt').value = '';
+    try{
+      await sb.rpc('masterclass_send_chat',
+        { p_user_id: YO.id, p_masterclass_id: CLASE.id, p_message: txt });
+      leerChat(CLASE.id);
+    }catch(e){ console.warn('chat', e); }
+  });
+
+  /* ── enganches ─────────────────────────────────────────────── */
+
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-acc]');
+    if(!b) return;
+    const card = b.closest('[data-id]');
+    const id = card && card.dataset.id;
+    if(b.dataset.acc === 'entrar')   return BBLAuth.abrir({ alEntrar: () => location.reload() });
+    if(b.dataset.acc === 'reservar') return reservar(id, b);
+    if(b.dataset.acc === 'sala')     return abrirSala(id);
+  });
+
+  $('salaX').addEventListener('click', cerrarSala);
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && $('sala').classList.contains('abierta')) cerrarSala();
+  });
+
+  $('menuToggle').addEventListener('click', () => {
+    const n = $('navLinks'), a = n.classList.toggle('abierto');
+    $('menuToggle').setAttribute('aria-expanded', a ? 'true' : 'false');
+  });
+  addEventListener('scroll', () => {
+    document.querySelector('header').classList.toggle('scrolled', scrollY > 30);
+  }, { passive:true });
+
+  function pintarH1(){
+    const el = $('mcH1'); if(!el) return;
+    const t = T('mc_title','Clases en vivo');
+    // Se dora la última palabra, sea cual sea el idioma, en vez de
+    // buscar una palabra concreta que en japonés no existe.
+    const p = t.trim().split(' ');
+    el.innerHTML = p.length > 1
+      ? esc(p.slice(0,-1).join(' ')) + ' <span class="gold-text">' + esc(p[p.length-1]) + '</span>'
+      : '<span class="gold-text">' + esc(t) + '</span>';
+  }
+
+  (async function arrancar(){
+    if(window.BBL && BBL.aplicar) BBL.aplicar();
+    pintarH1();
+    document.addEventListener('bbl:idioma', () => { pintarH1(); pintar(); });
+
+    try{
+      const { data } = await sb.auth.getUser();
+      YO = (data && data.user) || null;
+    }catch(_){ YO = null; }
+
+    if(window.BBLAuth && BBLAuth.montarBoton) BBLAuth.montarBoton($('navCta')); BBLAuth.montarBoton($('navCtaM'));
+    await cargar();
+
+    // Si alguien llega con ?clase=… (el enlace que se comparte en un
+    // lanzamiento), se abre esa directamente.
+    const q = new URLSearchParams(location.search).get('clase');
+    if(q){
+      const c = (DATOS.clases||[]).find(x => String(x.id) === q);
+      if(c && c.puedo_entrar) abrirSala(q);
+    }
+  })();
+</script>
+
+<!-- 17.A8 · Era la única página que medía SIN aviso de cookies. -->
+<script src="cookies.js?v=2"></script>
+<script src="presencia.js?v=2"></script>
+<script src="baby.js?v=2"></script>
+<script src="lujo.js?v=1"></script>
+<script src="aceptacion.js?v=1"></script>
+</body>
+</html>

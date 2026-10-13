@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="referrer" content="no-referrer" />
+<title>Babyloon · Informe contable</title>
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<script src="i18n.js?v=10"></script>
+<script src="i18n-informe.js?v=3"></script>
+<script src="i18n-modelos.js?v=2"></script>
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="zip-ligero.js?v=1"></script>
+<style>
+  :root{--tinta:#1B1219;--suave:#6B5E66;--linea:#E4DCD3;--fondo:#FBF8F4;--oro:#9C7A3C;--bien:#2E7D57;--aviso:#B0721F;--mal:#B23B3B}
+  *{box-sizing:border-box} html,body{margin:0;background:var(--fondo);color:var(--tinta);font:14px/1.5 'Jost',system-ui,-apple-system,Segoe UI,sans-serif}
+  .hoja{max-width:1040px;margin:0 auto;padding:28px 28px 60px}
+  h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;margin:0}
+  h1{font-size:34px} h2{font-size:24px;margin:34px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--linea)} h3{font-size:19px;margin:18px 0 8px}
+  .marca{font-family:'Cormorant Garamond',Georgia,serif;color:var(--oro);letter-spacing:.08em;font-size:15px}
+  .cab{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-start}
+  .ident{color:var(--suave);font-size:13px;margin-top:6px} .ident b{color:var(--tinta);font-weight:500}
+  .barra{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0 6px}
+  select,button{font:inherit;font-size:13px;padding:8px 12px;border:1px solid var(--linea);background:#fff;color:var(--tinta);border-radius:6px}
+  button{cursor:pointer} button.pri{background:var(--tinta);color:#fff;border-color:var(--tinta)} button:disabled{opacity:.5}
+  .modo{font-size:12px;color:var(--suave);border:1px solid var(--linea);border-radius:20px;padding:4px 12px;display:inline-block}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin:6px 0 4px}
+  th,td{padding:6px 8px;border-bottom:1px solid var(--linea);text-align:left;vertical-align:top}
+  th{font-weight:500;color:var(--suave);font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+  td.n,th.n{text-align:right;white-space:nowrap} tfoot td{font-weight:600;border-top:2px solid var(--tinta)}
+  .tarjetas{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+  .t{background:#fff;border:1px solid var(--linea);border-radius:8px;padding:14px}
+  .t .l{font-size:11.5px;color:var(--suave);text-transform:uppercase;letter-spacing:.05em} .t .v{font-size:22px;font-family:'Cormorant Garamond',Georgia,serif}
+  .chk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--linea);font-size:13px}
+  .chk .i{width:20px;flex:none;text-align:center;font-weight:700} .ok{color:var(--bien)} .av{color:var(--aviso)} .ma{color:var(--mal)}
+  .modelo{background:#fff;border:1px solid var(--tinta);border-radius:4px;padding:16px;margin:14px 0;break-inside:avoid}
+  .modelo .mcab{display:flex;justify-content:space-between;gap:10px;border-bottom:2px solid var(--tinta);padding-bottom:8px;margin-bottom:8px}
+  .modelo .ver-aeat{display:inline-block;margin-top:8px;font-size:13px;color:var(--tinta);text-decoration:underline}
+  @media print{.modelo .ver-aeat{display:none}}
+  .modelo .mcab b{font-size:18px;font-family:'Cormorant Garamond',Georgia,serif}
+  .cas{display:grid;grid-template-columns:52px 1fr 130px;gap:0;border-bottom:1px dotted var(--linea);padding:4px 0;font-size:12.5px}
+  .cas .c{font-weight:600;color:var(--oro)} .cas .x{text-align:right;font-variant-numeric:tabular-nums}
+  .cas.res{border-top:2px solid var(--tinta);border-bottom:none;font-weight:600;font-size:14px;margin-top:4px}
+  .nota{font-size:12px;color:var(--suave);margin:8px 0}
+  .borrador{position:relative} .borrador::after{content:attr(data-marca);position:absolute;top:-11px;right:14px;background:#fff;font-size:11px;letter-spacing:.2em;color:var(--mal);border:1px solid var(--mal);padding:2px 8px}
+  .cargando,.vacio{color:var(--suave);padding:20px 0} .error{color:var(--mal);padding:20px 0}
+  a{color:var(--oro)} .pie{margin-top:40px;font-size:11.5px;color:var(--suave);border-top:1px solid var(--linea);padding-top:12px}
+  .scroll{overflow-x:auto}
+  @media print{
+    body{background:#fff} .hoja{padding:0;max-width:none} .barra,.no-print{display:none!important}
+    h2{break-after:avoid} .modelo{break-inside:avoid} .salto{break-before:page}
+    a{color:var(--tinta);text-decoration:none}
+  }
+</style>
+</head>
+<body>
+<div class="hoja">
+  <div class="cab">
+    <div><div class="marca">BABYLOON</div><h1 id="titulo">Informe contable</h1><div class="ident" id="ident"></div></div>
+    <div id="modoBox"></div>
+  </div>
+  <div class="barra">
+    <select id="selAnio" aria-label="Año"></select>
+    <select id="selTrim" aria-label="Periodo"></select>
+    <button class="pri" id="bImprimir">Imprimir o guardar en PDF</button>
+    <button id="bZip">Descargar todo (.zip)</button>
+    <span id="zipMsg" style="font-size:12.5px;color:var(--suave)"></span>
+  </div>
+  <div id="cuerpo"><div class="cargando" id="cargando">Cargando…</div></div>
+  <div class="pie" id="pie"></div>
+</div>
+<script>
+(function(){
+  'use strict';
+  var SUPABASE_URL="https://qphatjblvojnfyghwmjy.supabase.co", SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  var T=function(k,alt){ try{ var s=BBL.t(k); return (s&&s!==k)?s:alt; }catch(_){ return alt; } };
+  var conDatos=function(t,v){ return String(t).replace(/\{(\w+)\}/g,function(_,k){ return v[k]!=null?v[k]:''; }); };
+  var esc=function(s){ return (s==null?'':String(s)).replace(/[<>&"]/g,function(c){ return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]; }); };
+  var el=function(id){ return document.getElementById(id); };
+  var lang=function(){ return (window.BBL&&BBL.lang)||'es'; };
+  var eur=function(v){ var n=Number(v); if(v==null||!isFinite(n)) return '—';
+    try{ return new Intl.NumberFormat(lang(),{style:'currency',currency:'EUR'}).format(n); }catch(_){ return n.toFixed(2)+' €'; } };
+  var num2=function(v){ var n=Number(v); return isFinite(n)?n.toFixed(2).replace('.',','):''; };   // CSV: coma decimal (Excel en España)
+  var fecha=function(f){ var p=String(f||'').slice(0,10).split('-'); return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:''; };
+
+  var qs=new URLSearchParams(location.search), TOKEN=qs.get('t')||null;
+  if(TOKEN && !/^[a-f0-9]{64}$/.test(TOKEN)) TOKEN='x';
+  var hoy=new Date(), ANIO=Number(qs.get('anio'))||hoy.getFullYear(), TRIM=qs.get('trim')?Number(qs.get('trim')):null;
+  var D=null, RECIBOS=[];
+
+  // ── Cabecera y selectores ──
+  document.title='Babyloon · '+T('if_titulo','Informe contable');
+  el('titulo').textContent=T('if_titulo','Informe contable');
+  el('bImprimir').textContent=T('if_imprimir','Imprimir o guardar en PDF');
+  el('bZip').textContent=T('if_zip','Descargar todo (.zip)');
+  el('cargando').textContent=T('if_cargando','Cargando…');
+  for(var a=hoy.getFullYear(); a>=hoy.getFullYear()-3; a--) el('selAnio').insertAdjacentHTML('beforeend','<option value="'+a+'"'+(a===ANIO?' selected':'')+'>'+a+'</option>');
+  el('selTrim').innerHTML='<option value="">'+esc(T('if_anio_completo','Año completo'))+'</option>'+
+    [1,2,3,4].map(function(q){ return '<option value="'+q+'"'+(q===TRIM?' selected':'')+'>'+esc(conDatos(T('gs_trim_nombre','{n}T {y}'),{n:q,y:ANIO}))+'</option>'; }).join('');
+  function irA(){ var p=new URLSearchParams(); if(TOKEN) p.set('t',TOKEN); p.set('anio',el('selAnio').value); if(el('selTrim').value) p.set('trim',el('selTrim').value);
+    location.search=p.toString(); }
+  el('selAnio').onchange=irA; el('selTrim').onchange=irA;
+  el('bImprimir').onclick=function(){ window.print(); };
+  el('pie').textContent=T('if_aviso','Borradores e informes orientativos calculados con los datos registrados por la profesional. No sustituyen la revisión de un asesor fiscal ni la presentación oficial ante la AEAT.');
+
+  function etiquetaPeriodo(){ return TRIM?conDatos(T('gs_trim_nombre','{n}T {y}'),{n:TRIM,y:ANIO}):String(ANIO); }
+  function tabla(cols, filas, pie){
+    if(!filas.length) return '<p class="vacio">'+esc(T('if_nada','Sin movimientos en este periodo.'))+'</p>';
+    return '<div class="scroll"><table><thead><tr>'+cols.map(function(c){ return '<th'+(c.n?' class="n"':'')+'>'+esc(c.t)+'</th>'; }).join('')+'</tr></thead><tbody>'+
+      filas.map(function(f){ return '<tr>'+cols.map(function(c){ var v=c.f(f); return '<td'+(c.n?' class="n"':'')+'>'+(c.html?v:esc(v))+'</td>'; }).join('')+'</tr>'; }).join('')+
+      '</tbody>'+(pie?'<tfoot><tr>'+pie.map(function(p,i){ return '<td'+(cols[i]&&cols[i].n?' class="n"':'')+'>'+esc(p)+'</td>'; }).join('')+'</tr></tfoot>':'')+'</table></div>';
+  }
+  var suma=function(arr,k){ return arr.reduce(function(s,x){ return s+(Number(x[k])||0); },0); };
+  function vence(anio,q){ return q===4?(anio+1)+'-01-30':anio+'-'+String(q*3+1).padStart(2,'0')+'-20'; }
+
+  // ── Borradores de los modelos, maquetados por casillas ──
+  function casilla(c,txt,v,res){ return '<div class="cas'+(res?' res':'')+'"><span class="c">['+c+']</span><span>'+esc(txt)+'</span><span class="x">'+(typeof v==='number'||(v!==''&&v!=null&&isFinite(Number(v)))?eur(v):esc(v))+'</span></div>'; }
+  function verAeat(mod,m,q){ var p=new URLSearchParams(); if(TOKEN) p.set('t',TOKEN); p.set('m',mod); p.set('anio',m.anio||ANIO); p.set('trim',q);
+    return '<a class="ver-aeat" target="_blank" rel="noopener" href="modelo.html?'+p.toString()+'">'+esc(conDatos(T('md_ver_otro','Ver el modelo {m}'),{m:mod}))+' →</a>'; }
+  function modelo303(m,q){
+    var x=m.m303; if(!x) return '';
+    var res=Number(x['71']);
+    return '<div class="modelo borrador" data-marca="'+esc(T('if_borrador','BORRADOR'))+'"><div class="mcab"><b>'+esc(T('if_m303','Modelo 303 · IVA · Autoliquidación'))+'</b>'+
+      '<span>'+esc(conDatos(T('gs_trim_nombre','{n}T {y}'),{n:q,y:m.anio}))+' · '+esc(T('if_vence','vence'))+' '+fecha(vence(m.anio,q))+'</span></div>'+
+      '<h3>'+esc(T('if_devengado','IVA devengado · régimen general'))+'</h3>'+
+      casilla('01',T('if_base','Base imponible')+' 4 %',x['01'])+casilla('03',T('if_cuota','Cuota')+' 4 %',x['03'])+
+      casilla('04',T('if_base','Base imponible')+' 10 %',x['04'])+casilla('06',T('if_cuota','Cuota')+' 10 %',x['06'])+
+      casilla('07',T('if_base','Base imponible')+' 21 %',x['07'])+casilla('09',T('if_cuota','Cuota')+' 21 %',x['09'])+
+      casilla('27',T('if_total_devengado','Total cuota devengada'),x['27'],true)+
+      '<h3>'+esc(T('if_deducible','IVA deducible'))+'</h3>'+
+      casilla('28',T('if_ded_base','Bienes y servicios corrientes · base'),x['28'])+casilla('29',T('if_ded_cuota','Bienes y servicios corrientes · cuota'),x['29'])+
+      casilla('45',T('if_total_deducir','Total a deducir'),x['45'],true)+
+      '<h3>'+esc(T('if_resultado','Resultado'))+'</h3>'+
+      casilla('46',T('if_res_general','Resultado régimen general'),x['46'])+casilla('66',T('if_atribuible','Atribuible a la Administración del Estado (100 %)'),x['66'])+
+      casilla(x['78']!=null?'78':'67',T('if_compensar','Cuotas a compensar de periodos anteriores'),x['78']!=null?x['78']:x['67'])+
+      casilla('71',T('if_res_liq','Resultado de la liquidación'),x['71'],true)+
+      '<p class="nota">'+esc(res>0?T('if_303_pagar','A ingresar.'):res<0?(q===4?T('if_303_dev4','Negativo en el 4T: se puede pedir la devolución o compensar en el ejercicio siguiente.'):T('if_303_comp','Negativo: queda a compensar en los próximos trimestres.')):T('if_303_cero','Sin actividad: se presenta igualmente, con resultado cero.'))+
+      (Number(x.otros_tipos_cuota)?' '+esc(conDatos(T('if_otros_tipos','Hay {i} de IVA a otros tipos que hay que revisar.'),{i:eur(x.otros_tipos_cuota)})):'')+'</p>'+verAeat('303',m,q)+'</div>';
+  }
+  function modelo130(m,q){
+    var x=m.m130; if(!x) return '';
+    return '<div class="modelo borrador" data-marca="'+esc(T('if_borrador','BORRADOR'))+'"><div class="mcab"><b>'+esc(T('if_m130','Modelo 130 · IRPF · Pago fraccionado'))+'</b>'+
+      '<span>'+esc(conDatos(T('gs_trim_nombre','{n}T {y}'),{n:q,y:m.anio}))+' · '+esc(T('if_vence','vence'))+' '+fecha(vence(m.anio,q))+'</span></div>'+
+      '<p class="nota">'+esc(T('if_130_acum','Importes acumulados desde el 1 de enero hasta el final del trimestre.'))+'</p>'+
+      casilla('01',T('if_130_01','Ingresos computables'),x['01'])+casilla('02',T('if_130_02','Gastos fiscalmente deducibles'),x['02'])+
+      casilla('03',T('if_130_03','Rendimiento neto'),x['03'])+casilla('04',conDatos(T('if_130_04','{p} % del rendimiento neto (si es positivo)'),{p:Math.round(Number(x.tipo)*100)}),x['04'])+
+      casilla('05',T('if_130_05','Pagos fraccionados de trimestres anteriores'),x['05'])+casilla('06',T('if_130_06','Retenciones e ingresos a cuenta'),x['06'])+
+      casilla('07',T('if_130_07','Pago fraccionado previo'),x['07'])+
+      casilla('13',T('if_130_13','Minoración por rendimientos bajos (art. 110.3.c RIRPF)'),x['13'])+
+      casilla('15',T('if_130_15','Resultados negativos de trimestres anteriores'),x['15'])+
+      casilla('19',T('if_130_19','Resultado de la autoliquidación'),x['19'],true)+
+      '<p class="nota">'+esc(conDatos(T('if_130_nota','La minoración depende del rendimiento neto del año anterior ({r}): compruébala con tu asesor.'),{r:eur(x.rendimiento_anio_anterior)}))+'</p>'+verAeat('130',m,q)+'</div>';
+  }
+
+  function render(){
+    var d=D, id=d.identificacion||{};
+    el('ident').innerHTML='<b>'+esc(id.nombre_fiscal||id.nombre||'')+'</b>'+(id.nif?' · '+esc(T('df_nif','NIF / NIE / CIF'))+': <b>'+esc(id.nif)+'</b>':'')+
+      (id.domicilio_fiscal?'<br>'+esc(id.domicilio_fiscal):'')+'<br>'+esc(id.regimen_nombre||id.regimen||'')+' · '+esc(T('if_periodo','Periodo'))+': <b>'+esc(etiquetaPeriodo())+'</b>';
+    el('modoBox').innerHTML='<span class="modo">'+esc(d.modo==='gestor'?T('if_modo_gestor','Acceso de consulta compartido · sólo lectura'):T('if_modo_pro','Tu informe'))+'</span>';
+    var pyg=d.perdidas_y_ganancias||{}, bal=d.balance||{}, conc=(d.conciliacion||{}).movimientos||[];
+    var emit=d.facturas_emitidas||[], ing=d.ingresos||[], gas=d.gastos||[], bab=d.facturas_de_babyloon||[];
+
+    // Comprobaciones: lo primero que mira una gestoría
+    var chk=[];
+    var bEmit=suma(emit,'base'), bIng=suma(ing,'base'), dif=Math.round((bEmit-bIng)*100)/100;
+    chk.push(Math.abs(dif)<0.01?['ok','✓',conDatos(T('if_c_cuadra','Las facturas emitidas ({a}) cuadran con el libro de ingresos ({b}).'),{a:eur(bEmit),b:eur(bIng)})]
+      :['ma','!',conDatos(T('if_c_descuadre','Las facturas emitidas ({a}) NO cuadran con el libro de ingresos ({b}): diferencia de {d}.'),{a:eur(bEmit),b:eur(bIng),d:eur(dif)})]);
+    if(!id.nif||!id.domicilio_fiscal) chk.push(['ma','!',T('if_c_fiscal','Faltan datos fiscales de la profesional (NIF o domicilio).')]);
+    var sinDecl=conc.filter(function(m){ return m.estado==='sin_declarar'; }), sinRec=conc.filter(function(m){ return m.estado==='sin_recibo'; });
+    if(!conc.length) chk.push(['av','·',T('if_c_sin_banco','No hay extractos bancarios de este periodo: la conciliación no se ha podido comprobar.')]);
+    else {
+      chk.push(sinDecl.length?['ma','!',conDatos(T('if_c_sin_decl','{n} cobros en el banco sin declarar ({i}).'),{n:sinDecl.length,i:eur(suma(sinDecl,'importe'))})]
+        :['ok','✓',T('if_c_decl_ok','Todos los cobros del banco están declarados o justificados.')]);
+      if(sinRec.length) chk.push(['av','!',conDatos(T('if_c_sin_rec','{n} cargos del banco sin justificante ({i}).'),{n:sinRec.length,i:eur(-suma(sinRec,'importe'))})]);
+    }
+    var dep=suma(conc.filter(function(m){ return m.tipo==='efectivo_depositado'; }),'importe'), efe=Number((d.conciliacion||{}).efectivo||0);
+    if(dep>efe+0.01) chk.push(['av','!',conDatos(T('if_c_deposito','Se han ingresado {a} en efectivo en el banco, pero sólo constan {b} facturados cobrados en efectivo.'),{a:eur(dep),b:eur(efe)})]);
+    var sinDoc=gas.filter(function(g){ return !g.recibo && g.origen==='manual'; });
+    if(sinDoc.length) chk.push(['av','·',conDatos(T('if_c_sin_doc','{n} gastos registrados a mano sin recibo adjunto: conviene tener el justificante.'),{n:sinDoc.length})]);
+    if(Number(pyg.gastos_no_deducibles)>0) chk.push(['av','·',conDatos(T('if_c_no_ded','{i} de gastos no son deducibles en su totalidad (uso mixto o tickets sin factura completa).'),{i:eur(pyg.gastos_no_deducibles)})]);
+
+    var h='';
+    h+='<h2>'+esc(T('if_comprobaciones','Comprobaciones'))+'</h2>'+chk.map(function(c){ return '<div class="chk"><span class="i '+c[0]+'">'+c[1]+'</span><span>'+esc(c[2])+'</span></div>'; }).join('');
+    h+='<h2>'+esc(T('if_pyg','Cuenta de pérdidas y ganancias'))+'</h2><div class="tarjetas">'+
+      '<div class="t"><div class="l">'+esc(T('if_ingresos','Ingresos'))+'</div><div class="v">'+eur(pyg.ingresos)+'</div></div>'+
+      '<div class="t"><div class="l">'+esc(T('if_gastos_ded','Gastos deducibles'))+'</div><div class="v">'+eur(pyg.gastos_deducibles)+'</div></div>'+
+      '<div class="t"><div class="l">'+esc(T('if_resultado_ej','Resultado'))+'</div><div class="v">'+eur(pyg.resultado)+'</div></div></div>'+
+      tabla([{t:T('if_categoria','Categoría'),f:function(x){ return T('gx_cat_'+(x.codigo||''),x.categoria); }},{t:T('if_importe','Importe'),n:1,f:function(x){ return eur(x.importe); }}],
+            pyg.por_categoria||[],[T('if_total','Total'),eur(pyg.gastos_deducibles)]);
+    var activo=(Number(bal.tesoreria)||0)+(Number(bal.saldo_babyloon)||0)+(Number(bal.hacienda_deudora_iva)||0);
+    var pasivo=(Number(bal.hacienda_acreedora_iva)||0)+(Number(bal.hacienda_acreedora_irpf)||0);
+    h+='<h2>'+esc(T('if_balance','Balance de situación simplificado'))+'</h2><p class="nota">'+esc(conDatos(T('if_balance_nota','A {f}. Sólo con los datos que conoce Babyloon: no incluye inmovilizado, préstamos ni otras deudas.'),{f:fecha(bal.a_fecha)}))+'</p>'+
+      tabla([{t:T('if_partida','Partida'),f:function(x){ return x[0]; }},{t:T('if_importe','Importe'),n:1,f:function(x){ return x[1]==='H'?'':(x[1]==null?'—':eur(x[1])); }}],[
+        [T('if_activo','ACTIVO'),'H'],
+        ['  '+T('if_tesoreria','Tesorería (último saldo del banco)')+(bal.tesoreria_fecha?' · '+fecha(bal.tesoreria_fecha):''),bal.tesoreria],
+        ['  '+T('if_saldo_bab','Saldo pendiente de cobrar en Babyloon'),bal.saldo_babyloon],
+        ['  '+T('if_hac_deu','Hacienda deudora por IVA (a compensar)'),bal.hacienda_deudora_iva],
+        [T('if_total_activo','Total activo'),activo],[T('if_pasivo','PASIVO'),'H'],
+        ['  '+T('if_hac_iva','Hacienda acreedora por IVA'),bal.hacienda_acreedora_iva],['  '+T('if_hac_irpf','Hacienda acreedora por IRPF (pago fraccionado)'),bal.hacienda_acreedora_irpf],
+        [T('if_total_pasivo','Total pasivo'),pasivo],[T('if_neto','Patrimonio neto (activo − pasivo)'),activo-pasivo]]);
+    var mods=d.modelos||[];
+    h+='<h2 class="salto">'+esc(T('if_modelos','Borradores de los modelos'))+'</h2><p class="nota">'+esc(T('if_modelos_nota','Casillas del modelo oficial calculadas con tus movimientos. Revísalas y preséntalas en la sede electrónica de la AEAT.'))+'</p>'+
+      (mods.length?mods.map(function(m){ if(m.antes_del_alta) return '<p class="nota"><b>'+esc(conDatos(T('gs_trim_nombre','{n}T {y}'),{n:m.trimestre,y:m.anio||ANIO}))+'</b> · '+esc(T('md_antes_alta','Este trimestre es anterior a tu alta: no tienes que presentarlo.'))+'</p>';
+        return modelo303(m,m.trimestre)+modelo130(m,m.trimestre)+
+        (Number(m.reta_trimestre)?'<p class="nota">'+esc(conDatos(T('if_reta','Cuota de autónomos pagada en el trimestre: {i} (deducible en el 130).'),{i:eur(m.reta_trimestre)}))+'</p>':''); }).join('')
+        :'<p class="vacio">'+esc(T('if_nada','Sin movimientos en este periodo.'))+'</p>')+
+      (!TRIM||TRIM===4?'<p class="nota">'+esc(T('if_anual','Anuales: modelo 390 (resumen anual del IVA, en enero) y modelo 100 (Renta, de abril a junio). Los datos de este informe sirven de base para ambos.'))+'</p>':'');
+    h+='<h2 class="salto">'+esc(T('if_emitidas','Facturas emitidas'))+'</h2>'+tabla([
+        {t:T('if_numero','Número'),f:function(x){ return x.numero+(x.simplificada?' · '+T('if_simplificada','simplificada'):'')+(x.rectifica?' ('+T('if_rectifica','rectifica')+' '+x.rectifica+')':''); }},
+        {t:T('if_fecha','Fecha'),f:function(x){ return fecha(x.fecha); }},{t:T('if_operacion','Operación'),f:function(x){ return fecha(x.fecha_operacion); }},
+        {t:T('if_cliente','Cliente'),f:function(x){ return (x.destinatario||'')+(x.nif?' · '+x.nif:''); }},
+        {t:T('if_base','Base imponible'),n:1,f:function(x){ return eur(x.base); }},{t:T('gx_iva','IVA'),n:1,f:function(x){ return eur(x.iva); }},
+        {t:T('if_total','Total'),n:1,f:function(x){ return eur(x.total); }}],emit,[T('if_total','Total'),'','','',eur(bEmit),eur(suma(emit,'iva')),eur(suma(emit,'total'))]);
+    h+='<h2>'+esc(T('if_babyloon','Facturas recibidas de Babyloon (comisiones)'))+'</h2>'+tabla([
+        {t:T('if_numero','Número'),f:function(x){ return x.numero+(x.rectifica?' ('+T('if_rectifica','rectifica')+' '+x.rectifica+')':''); }},
+        {t:T('if_fecha','Fecha'),f:function(x){ return fecha(x.fecha); }},{t:T('if_emisor','Emisor'),f:function(x){ return (x.emisor||'')+(x.nif_emisor?' · '+x.nif_emisor:''); }},
+        {t:T('if_base','Base imponible'),n:1,f:function(x){ return eur(x.base); }},{t:T('gx_iva','IVA'),n:1,f:function(x){ return eur(x.iva); }},
+        {t:T('if_total','Total'),n:1,f:function(x){ return eur(x.total); }}],bab,[T('if_total','Total'),'','',eur(suma(bab,'base')),eur(suma(bab,'iva')),eur(suma(bab,'total'))]);
+    h+='<h2 class="salto">'+esc(T('if_libro_ing','Libro de ingresos'))+'</h2>'+tabla([
+        {t:T('if_fecha','Fecha'),f:function(x){ return fecha(x.fecha); }},{t:T('if_cliente','Cliente'),f:function(x){ return (x.contraparte||'')+(x.nif?' · '+x.nif:''); }},
+        {t:T('if_factura','Factura'),f:function(x){ return x.factura||(x.origen==='platform'?'Babyloon':''); }},
+        {t:T('if_base','Base imponible'),n:1,f:function(x){ return eur(x.base); }},{t:T('gx_iva','IVA'),n:1,f:function(x){ return eur(x.iva); }},
+        {t:T('if_total','Total'),n:1,f:function(x){ return eur(x.total); }}],ing,[T('if_total','Total'),'','',eur(bIng),eur(suma(ing,'iva')),eur(suma(ing,'total'))]);
+    h+='<h2>'+esc(T('if_libro_gas','Libro de gastos'))+'</h2>'+tabla([
+        {t:T('if_fecha','Fecha'),f:function(x){ return fecha(x.fecha); }},{t:T('gx_proveedor','Proveedor'),f:function(x){ return (x.proveedor||'')+(x.nif?' · '+x.nif:''); }},
+        {t:T('gx_categoria','Categoría'),f:function(x){ return T('gx_cat_'+(x.categoria||''),x.categoria_nombre); }},
+        {t:T('if_base','Base imponible'),n:1,f:function(x){ return eur(x.base); }},{t:T('gx_iva','IVA'),n:1,f:function(x){ return eur(x.iva); }},
+        {t:T('if_deducible','Deducible'),n:1,f:function(x){ return eur(x.gasto_deducible)+(Number(x.pct_deducible)<1?' ('+Math.round(x.pct_deducible*100)+' %)':''); }},
+        {t:T('if_iva_ded','IVA deducible'),n:1,f:function(x){ return eur(x.iva_deducible); }},
+        {t:T('if_recibo','Recibo'),html:1,f:function(x){ var r=RECIBOS.find(function(z){ return z.id===x.recibo; });
+            return r&&r.url?'<a href="'+esc(r.url)+'" target="_blank" rel="noopener">'+esc(T('if_ver','ver'))+'</a>':(x.recibo?'✓':'—'); }}],
+        gas,[T('if_total','Total'),'','',eur(suma(gas,'base')),eur(suma(gas,'iva')),eur(suma(gas,'gasto_deducible')),eur(suma(gas,'iva_deducible')),'']);
+    h+='<h2 class="salto">'+esc(T('cb_titulo','Conciliación bancaria'))+'</h2>'+
+      ((d.conciliacion||{}).efectivo?'<p class="nota">'+esc(conDatos(T('if_efectivo','Cobros en efectivo del periodo (no pasan por el banco): {i}.'),{i:eur(d.conciliacion.efectivo)}))+'</p>':'')+
+      tabla([{t:T('if_fecha','Fecha'),f:function(x){ return fecha(x.fecha); }},{t:T('cb_c_concepto','Concepto'),f:function(x){ return x.concepto; }},
+        {t:T('if_estado','Estado'),f:function(x){ return T('if_e_'+x.estado,x.estado)+(x.nota?' · '+x.nota:''); }},
+        {t:T('if_importe','Importe'),n:1,f:function(x){ return eur(x.importe); }},{t:T('cb_c_saldo','Saldo'),n:1,f:function(x){ return x.saldo==null?'':eur(x.saldo); }}],conc);
+    var pf=d.perfil_fiscal||[];
+    h+='<h2>'+esc(T('if_perfil','Información fiscal declarada por la profesional'))+'</h2>'+tabla([
+        {t:T('if_pregunta','Pregunta'),f:function(x){ return x.pregunta||x.clave; }},
+        {t:T('if_respuesta','Respuesta'),f:function(x){ var r=x.respuesta; return r==='true'?T('ct_si','Sí'):r==='false'?T('ct_no','No'):r; }}],pf);
+    el('cuerpo').innerHTML=h;
+  }
+
+  async function cargarRecibos(){
+    try{
+      var r=await sb.functions.invoke('informe-archivos',{body:{token:TOKEN||undefined,anio:ANIO,trimestre:TRIM}});
+      RECIBOS=(r.data&&r.data.ok&&r.data.recibos)||[];
+    }catch(_){ RECIBOS=[]; }
+  }
+  async function cargar(){
+    var r=await sb.rpc('informe_contable',{p_token:TOKEN,p_anio:ANIO,p_trim:TRIM});
+    if(!r.data||!r.data.ok){
+      var e=(r.data&&r.data.error)||'';
+      el('cuerpo').innerHTML='<p class="error">'+esc(e==='enlace_no_valido'?T('if_e_enlace','Este enlace no es válido, ha caducado o la profesional lo ha retirado. Pídele uno nuevo.')
+        :e==='gestor_no_incluido'?T('if_e_sesion','Para ver tu informe inicia sesión en Babyloon con tu cuenta profesional.')
+        :T('if_e_general','No se pudo cargar el informe. Inténtalo de nuevo.'))+'</p>';
+      el('bZip').disabled=true; el('bImprimir').disabled=true; return;
+    }
+    D=r.data; await cargarRecibos(); render();
+    if(qs.get('descargar')==='1') descargarTodo();
+  }
+
+  // ── Descargar todo: libros en CSV (separador ; y coma decimal, como lo abre Excel en España), informe y recibos ──
+  function csv(cab, filas){
+    var q=function(v){ v=v==null?'':String(v); return /[;"\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; };
+    return '\uFEFF'+[cab].concat(filas).map(function(f){ return f.map(q).join(';'); }).join('\r\n')+'\r\n';
+  }
+  async function descargarTodo(){
+    if(!D) return; var b=el('bZip'); b.disabled=true; el('zipMsg').textContent=T('if_preparando','Preparando…');
+    try{
+      var p=etiquetaPeriodo().replace(/\s+/g,'_'), z=ZipLigero.crear(), d=D;
+      var pyg=d.perdidas_y_ganancias||{};
+      z.agregar('01_Perdidas_y_ganancias_'+p+'.csv',csv(['Concepto','Importe'],[['Ingresos',num2(pyg.ingresos)],['Gastos deducibles',num2(pyg.gastos_deducibles)],
+        ['Gastos no deducibles',num2(pyg.gastos_no_deducibles)],['Resultado',num2(pyg.resultado)]].concat((pyg.por_categoria||[]).map(function(c){ return ['  '+c.categoria,num2(c.importe)]; }))));
+      var bal=d.balance||{};
+      z.agregar('02_Balance_simplificado_'+p+'.csv',csv(['Partida','Importe'],[['Tesorería',num2(bal.tesoreria)],['Saldo en Babyloon',num2(bal.saldo_babyloon)],
+        ['Hacienda deudora IVA',num2(bal.hacienda_deudora_iva)],['Hacienda acreedora IVA',num2(bal.hacienda_acreedora_iva)],['Hacienda acreedora IRPF',num2(bal.hacienda_acreedora_irpf)]]));
+      var f303=[], f130=[];
+      (d.modelos||[]).forEach(function(m){ var t=m.trimestre+'T';
+        Object.keys(m.m303||{}).filter(function(k){ return /^\d+$/.test(k); }).sort().forEach(function(k){ f303.push([t,k,num2(m.m303[k])]); });
+        Object.keys(m.m130||{}).filter(function(k){ return /^\d+$/.test(k); }).sort().forEach(function(k){ f130.push([t,k,num2(m.m130[k])]); }); });
+      z.agregar('03_Modelo_303_'+p+'.csv',csv(['Trimestre','Casilla','Importe'],f303));
+      z.agregar('04_Modelo_130_'+p+'.csv',csv(['Trimestre','Casilla','Importe'],f130));
+      z.agregar('05_Facturas_emitidas_'+p+'.csv',csv(['Número','Tipo','Fecha expedición','Fecha operación','Destinatario','NIF','Base imponible','Tipo IVA','Cuota IVA','Total','Estado','Rectifica a'],
+        (d.facturas_emitidas||[]).map(function(x){ return [x.numero,x.rectifica?'Rectificativa':(x.simplificada?'Simplificada':'Completa'),fecha(x.fecha),fecha(x.fecha_operacion),x.destinatario,x.nif,num2(x.base),num2(Number(x.tipo_iva)*100),num2(x.iva),num2(x.total),x.estado,x.rectifica]; })));
+      z.agregar('06_Facturas_recibidas_Babyloon_'+p+'.csv',csv(['Número','Fecha','Emisor','NIF emisor','Base imponible','Cuota IVA','Total','Estado','Rectifica a'],
+        (d.facturas_de_babyloon||[]).map(function(x){ return [x.numero,fecha(x.fecha),x.emisor,x.nif_emisor,num2(x.base),num2(x.iva),num2(x.total),x.estado,x.rectifica]; })));
+      z.agregar('07_Libro_de_ingresos_'+p+'.csv',csv(['Fecha','Cliente','NIF','Factura','Base imponible','Cuota IVA','Total','Origen'],
+        (d.ingresos||[]).map(function(x){ return [fecha(x.fecha),x.contraparte,x.nif,x.factura,num2(x.base),num2(x.iva),num2(x.total),x.origen]; })));
+      z.agregar('08_Libro_de_gastos_'+p+'.csv',csv(['Fecha','Proveedor','NIF','Categoría','Base imponible','Cuota IVA','Total','% deducible','Gasto deducible','% IVA recuperable','IVA deducible','Recibo'],
+        (d.gastos||[]).map(function(x){ var r=RECIBOS.find(function(z){ return z.id===x.recibo; });
+          return [fecha(x.fecha),x.proveedor,x.nif,x.categoria_nombre,num2(x.base),num2(x.iva),num2(x.total),num2(Number(x.pct_deducible)*100),num2(x.gasto_deducible),
+            num2(Number(x.pct_iva_recuperable)*100),num2(x.iva_deducible),r?('recibos/'+nombreRecibo(r)):'']; })));
+      z.agregar('09_Conciliacion_bancaria_'+p+'.csv',csv(['Fecha','Concepto','Importe','Saldo','Estado','Nota'],
+        ((d.conciliacion||{}).movimientos||[]).map(function(x){ return [fecha(x.fecha),x.concepto,num2(x.importe),x.saldo==null?'':num2(x.saldo),x.estado,x.nota]; })));
+      z.agregar('10_Informacion_fiscal.csv',csv(['Pregunta','Respuesta'],(d.perfil_fiscal||[]).map(function(x){ return [x.pregunta||x.clave,x.respuesta]; })));
+      // El informe tal cual se ve, para abrirlo sin conexión
+      var copia=document.documentElement.cloneNode(true);
+      copia.querySelectorAll('script,.barra').forEach(function(n){ n.remove(); });
+      z.agregar('Informe_'+p+'.html','<!DOCTYPE html>\n'+copia.outerHTML);
+      // Los recibos
+      var hechos=0;
+      for(var i=0;i<RECIBOS.length;i++){
+        var r=RECIBOS[i]; if(!r.url) continue;
+        el('zipMsg').textContent=conDatos(T('if_bajando','Añadiendo recibos {i} de {t}…'),{i:i+1,t:RECIBOS.length});
+        try{ var res=await fetch(r.url); if(res.ok){ z.agregar('recibos/'+nombreRecibo(r), new Uint8Array(await res.arrayBuffer())); hechos++; } }catch(_){}
+      }
+      var blob=z.generar(), a=document.createElement('a');
+      a.href=URL.createObjectURL(blob); a.download='Babyloon_contabilidad_'+(((d.identificacion||{}).nif)||'')+'_'+p+'.zip';
+      document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },2000);
+      el('zipMsg').textContent=conDatos(T('if_zip_ok','Descargado ({n} recibos incluidos).'),{n:hechos});
+    }catch(e){ el('zipMsg').textContent=T('if_zip_error','No se pudo preparar la descarga.'); }
+    b.disabled=false;
+  }
+  function nombreRecibo(r){ return (String(r.fecha||'').slice(0,10)+'_'+String(r.proveedor||'recibo').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9]+/g,'_').slice(0,40)+'_'+String(r.id).slice(0,8)+'.'+(r.extension||'jpg')); }
+  el('bZip').onclick=descargarTodo;
+  cargar();
+})();
+</script>
+</body>
+</html>

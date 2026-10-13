@@ -1,0 +1,532 @@
+/* ═══════════════════════════════════════════════════════════════════
+   compania.css · bloque 45
+
+   Las cuatro páginas de compañía —seguridad, información legal,
+   sostenibilidad y empleo— son hermanas: mismo esqueleto, mismo ritmo,
+   mismo tipo de contenido. Copiar el <style> de `para-profesionales`
+   cuatro veces habría sido garantizar que dentro de un mes divergen,
+   que es lo que pasó con `checkout_policies.dart` (bloque 35.6).
+
+   Los tokens son EXACTAMENTE los de la casa. Si algún día cambian, se
+   cambian en `estetica.css` y aquí se heredan: por eso no se redefinen
+   colores propios.
+
+   Anchos medidos: 320 / 360 / 390 / 768 / 1280. Nada tiene min-width
+   por encima de 264 px, que es lo que queda a 320 con el margen de 28.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root{
+  --ink:#0D0B0F; --plum:#241820; --plum-2:#1B1219; --gold:#C8A96A;
+  --cream:#F9F5EE; --smoke:#E8E0D5; --mauve:#8C7482;
+  --line:rgba(200,169,106,.16);
+  --serif:'Cormorant Garamond',serif;
+  --sans:'Jost',system-ui,sans-serif;
+  --gold-grad:linear-gradient(135deg,#8E723F,#F3E0BC 42%,#C9A96E 72%,#9C8050);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--cream);font-family:var(--sans);
+  font-weight:300;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;height:auto}
+
+.wrap{max-width:1100px;margin:0 auto;padding-left:28px;padding-right:28px}
+.inf path{stroke:url(#gg);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.eyebrow{font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);font-weight:500}
+.gold-text{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ── Cabecera ──────────────────────────────────────────────────── */
+header{position:sticky;top:0;z-index:50;background:rgba(13,11,15,.82);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;
+  min-height:72px;gap:14px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:24px;flex:none}
+.nav a.back{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--smoke);text-align:right}
+.nav a.back:hover{color:var(--gold)}
+
+/* ── Portada de la página ──────────────────────────────────────── */
+.hero{padding:74px 0 54px;border-bottom:1px solid var(--line)}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(34px,7vw,60px);
+  line-height:1.08;margin:16px 0 20px;text-wrap:balance}
+.hero p.lead{font-size:clamp(15px,2.4vw,18px);color:var(--smoke);max-width:62ch}
+
+/* ── Secciones ─────────────────────────────────────────────────── */
+.sec{padding:56px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:none}
+.sec h2{font-family:var(--serif);font-weight:300;font-size:clamp(24px,4.4vw,36px);
+  line-height:1.16;margin:12px 0 14px;text-wrap:balance}
+.sec h3{font-family:var(--serif);font-weight:400;font-size:19px;margin:0 0 8px;color:var(--cream)}
+.sec p{color:var(--smoke);max-width:66ch;margin-bottom:14px}
+.sec p:last-child{margin-bottom:0}
+.sec strong{color:var(--cream);font-weight:500}
+
+/* ── Rejilla de tarjetas ───────────────────────────────────────── */
+.rej{display:grid;gap:16px;margin-top:26px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{background:var(--plum-2);border:1px solid var(--line);border-radius:3px;
+  padding:22px 20px;min-width:0}
+.card p{font-size:14.5px;margin:0;color:var(--smoke)}
+.card .num{font-family:var(--serif);font-size:15px;color:var(--gold);
+  display:block;margin-bottom:10px;letter-spacing:.18em}
+
+/* ── Lista con marca ───────────────────────────────────────────── */
+.lista{list-style:none;margin-top:20px;display:grid;gap:12px}
+.lista li{position:relative;padding-left:22px;color:var(--smoke);max-width:66ch}
+.lista li::before{content:'';position:absolute;left:0;top:11px;width:7px;height:1px;background:var(--gold)}
+.lista li strong{color:var(--cream);font-weight:500}
+
+/* ── Nota / aviso ──────────────────────────────────────────────── */
+.nota{margin-top:26px;padding:20px 22px;border:1px solid var(--line);
+  border-left:2px solid var(--gold);border-radius:3px;background:rgba(200,169,106,.04)}
+.nota p{font-size:14.5px;color:var(--smoke);margin:0}
+.nota p + p{margin-top:10px}
+
+/* ── Ficha de datos (información legal) ────────────────────────── */
+.datos{margin-top:26px;display:grid;gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.datos div{background:var(--plum-2);padding:15px 18px;display:flex;
+  gap:14px;flex-wrap:wrap;align-items:baseline}
+.datos dt,.datos .k{font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mauve);flex:0 0 190px;min-width:0}
+.datos dd,.datos .v{color:var(--cream);margin:0;min-width:0;overflow-wrap:anywhere;flex:1 1 180px}
+
+/* ── Enlaces hermanos + pie ────────────────────────────────────── */
+.hermanas{padding:44px 0 10px;display:flex;gap:10px 26px;flex-wrap:wrap}
+.hermanas a{font-size:13px;letter-spacing:.06em;color:var(--smoke);
+  border-bottom:1px solid var(--line);padding-bottom:3px}
+.hermanas a:hover{color:var(--gold);border-color:var(--gold)}
+footer{padding:26px 0 46px;color:var(--mauve);font-size:12.5px}
+footer a:hover{color:var(--gold)}
+
+/* ── Móvil ─────────────────────────────────────────────────────── */
+@media (max-width:520px){
+  .wrap{padding-left:20px;padding-right:20px}
+  .hero{padding:52px 0 40px}
+  .sec{padding:44px 0}
+  .datos dt,.datos .k{flex:1 1 100%}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation:none!important;transition:none!important}
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BLOQUE 46.9 · dirección de arte de las páginas de compañía
+
+   Andrés, el 28-sep: «los diseños de las últimas páginas que
+   construiste son pobres, no tenemos nada interactivo, nada funcional,
+   no tenemos una imagen, un diseño que resalte elegancia».
+
+   Tenía razón en las tres cosas. Esto es la respuesta a las tres.
+
+   LA IMAGEN, SIN FOTOGRAFÍA PRESTADA
+   Desde el bloque 17.A8c esta web no pide un solo fichero a un tercero:
+   las tipografías se sirven desde aquí y la CSP bloquea lo demás. Una
+   foto de banco de imágenes tendría que copiarse a `img/` —con su
+   licencia— y, sobre todo, repetir las seis de la portada en estas
+   cuatro páginas es justo lo que él llamó «no da buena imagen».
+
+   Así que la imagen la dibujamos: la marca de infinito a tamaño de
+   cartel, trazada con el degradado de oro, y un tejido de arcos finos
+   que se dibuja solo al entrar. Es nuestra, pesa cero y no manda la IP
+   de nadie a ninguna parte.
+
+   EL HUECO PARA LAS FOTOS DE VERDAD
+   Cuando haya fotografía propia, no hay que tocar el HTML. Se pone el
+   fichero en `img/` y se escribe una línea:
+
+       .hero-compania{ --foto:url(img/compania-empleo.jpg) }
+
+   Con `--foto` puesta, la portada usa la fotografía y el ornamento
+   dibujado pasa a ser la veladura que la funde con el fondo. Sin ella,
+   manda el dibujo. Las dos salidas están diseñadas, no es un apaño.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Portada ───────────────────────────────────────────────────
+
+   Primera versión: la foto de fondo al 34 % detrás de un degradado.
+   Con fotografía de verdad eso no sirve: estas son claras y aireadas,
+   y al 34 % sobre fondo oscuro se quedan en una mancha. Si hay una
+   fotografía, se enseña.
+
+   Así que la portada tiene dos formas, y las dos están diseñadas:
+   · sin foto  → el titular a todo lo ancho y la marca dibujada de fondo
+   · con foto  → dos columnas, el texto a la izquierda y la fotografía
+                 enmarcada a la derecha; en el móvil, una debajo de otra
+
+   El recorte lo hace el navegador con `object-fit:cover`, y cada página
+   dice POR DÓNDE con `object-position`. Los ficheros van con la escena
+   entera dentro: si un día se cambia la foto, no hay que recortarla a
+   mano, se mueve el `object-position` y ya.
+   ─────────────────────────────────────────────────────────────── */
+.hero-compania{position:relative;overflow:hidden;isolation:isolate;
+  padding:clamp(52px,9vw,92px) 0 clamp(44px,8vw,76px);border-bottom:1px solid var(--line)}
+.hero-compania::after{content:'';position:absolute;inset:0;z-index:-1;
+  background:
+    radial-gradient(120% 90% at 82% 8%, rgba(200,169,106,.13), transparent 62%),
+    radial-gradient(90% 70% at 0% 100%, rgba(140,116,130,.16), transparent 58%)}
+.hero-compania .wrap{position:relative}
+.hero-compania h1{font-family:var(--serif);font-weight:300;
+  font-size:clamp(34px,7.4vw,64px);line-height:1.04;letter-spacing:-.012em;
+  margin:18px 0 20px;text-wrap:balance;max-width:15ch}
+.hero-compania p.lead{font-size:clamp(15px,2.3vw,18px);color:var(--smoke);max-width:54ch;line-height:1.62}
+
+/* La marca, a tamaño de cartel, cuando NO hay fotografía. */
+.marca-cartel{position:absolute;z-index:-1;right:-4%;top:-12%;width:min(620px,74vw);
+  opacity:.38;pointer-events:none}
+.marca-cartel path{fill:none;stroke:url(#gg);stroke-width:1.1;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:520;stroke-dashoffset:520;animation:trazo 2.8s ease-out .25s forwards}
+@keyframes trazo{to{stroke-dashoffset:0}}
+@media (max-width:760px){ .marca-cartel{right:-16%;top:auto;bottom:-8%;width:88vw;opacity:.22} }
+
+/* Con fotografía: dos columnas, y la marca se aparta a un acento. */
+/* DOS columnas quiere decir dos hijos. La primera versión ponía el
+   `grid` sobre el `.wrap`, que tiene cinco —cintillo, titular, entrada,
+   cifras y foto—, así que el navegador los repartió por celdas: el
+   titular salió a la derecha y la fotografía abajo a la izquierda.
+   El texto va dentro de su propia columna. */
+.hero-compania.con-foto .wrap{display:grid;gap:clamp(26px,4vw,48px);align-items:center}
+.hero-texto{min-width:0}
+.hero-compania.con-foto .marca-cartel{opacity:.14;width:min(420px,58vw);right:-6%;top:-18%}
+.hero-foto{position:relative;min-width:0;order:-1}
+.hero-foto img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;
+  border-radius:16px;border:1px solid var(--line)}
+.hero-foto::after{content:'';position:absolute;inset:0;border-radius:16px;pointer-events:none;
+  background:linear-gradient(200deg,transparent 52%,rgba(13,11,15,.34))}
+@media (min-width:940px){
+  .hero-compania.con-foto .wrap{grid-template-columns:minmax(0,1fr) minmax(0,42%)}
+  .hero-foto{order:0}
+  .hero-foto img{aspect-ratio:4/5}
+  .hero-foto::before{content:'';position:absolute;inset:14px -14px -14px 14px;border-radius:16px;
+    border:1px solid rgba(200,169,106,.28);z-index:-1}
+}
+
+/* ── Banda de fotografía dentro de una sección ─────────────────── */
+.banda-foto{position:relative;margin:30px 0 0;border-radius:16px;overflow:hidden;
+  border:1px solid var(--line)}
+.banda-foto img{display:block;width:100%;height:auto;aspect-ratio:16/7;object-fit:cover}
+.banda-foto figcaption{position:absolute;left:0;right:0;bottom:0;
+  padding:clamp(18px,4vw,30px) clamp(18px,4vw,32px);
+  background:linear-gradient(0deg,rgba(13,11,15,.9),rgba(13,11,15,.55) 55%,transparent);
+  font-size:clamp(14px,2.2vw,16px);color:var(--cream);line-height:1.55;text-wrap:pretty}
+@media (max-width:520px){ .banda-foto img{aspect-ratio:4/3} }
+
+/* ── Cifras vivas ──────────────────────────────────────────────── */
+/* Cuatro cifras: 2×2 en el móvil y 4 en fila a partir de tablet. Con
+   `auto-fit` salían tres y una suelta a 390 px. */
+.cifras{display:grid;grid-template-columns:repeat(2,1fr);
+  gap:2px;margin-top:clamp(30px,5vw,44px);
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--line)}
+@media (min-width:640px){ .cifras{grid-template-columns:repeat(4,1fr)} }
+.cifras div{background:linear-gradient(160deg,rgba(36,24,32,.92),rgba(27,18,25,.92));
+  padding:18px 16px;min-width:0}
+.cifras b{display:block;font-family:var(--serif);font-weight:400;
+  font-size:clamp(28px,5vw,40px);line-height:1;
+  background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cifras span{display:block;margin-top:7px;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mauve);line-height:1.5;overflow-wrap:anywhere}
+
+/* ── Placas ────────────────────────────────────────────────────── */
+/* Los dos grupos de placas son de CUATRO. Con `auto-fit` entraban tres
+   en la primera fila y la cuarta se quedaba sola a 1280 y a 768, que es
+   la forma más barata de que un diseño parezca descuidado. Se fija el
+   número de columnas: 1 · 2 · 4. Cuatro elementos nunca dejan huérfana. */
+.placas{display:grid;grid-template-columns:1fr;gap:16px;margin-top:26px}
+@media (min-width:560px){ .placas{grid-template-columns:repeat(2,1fr)} }
+@media (min-width:1024px){ .placas{grid-template-columns:repeat(4,1fr)} }
+.placa{position:relative;padding:24px 22px 26px;border-radius:16px;min-width:0;
+  background:linear-gradient(158deg,rgba(36,24,32,.86),rgba(20,14,18,.86));
+  border:1px solid var(--line);transition:border-color .45s ease,transform .45s ease}
+.placa::before{content:'';position:absolute;left:22px;right:22px;top:0;height:1px;
+  background:var(--gold-grad);transform:scaleX(0);transform-origin:left;
+  transition:transform .55s cubic-bezier(.2,.7,.3,1)}
+.placa:hover{border-color:rgba(200,169,106,.42);transform:translateY(-2px)}
+.placa:hover::before{transform:scaleX(1)}
+.placa h3{font-family:var(--serif);font-weight:400;font-size:21px;margin:0 0 9px;color:var(--cream)}
+.placa p{color:var(--smoke);font-size:14.5px;line-height:1.62;margin:0}
+.placa .paso{display:block;font-family:var(--serif);font-size:15px;letter-spacing:.2em;
+  color:var(--gold);margin-bottom:12px}
+
+/* ── Vacantes ──────────────────────────────────────────────────── */
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 18px}
+.filtros button{font:inherit;font-size:12.5px;letter-spacing:.06em;cursor:pointer;
+  padding:8px 15px;border-radius:999px;color:var(--smoke);
+  background:transparent;border:1px solid var(--line);transition:.3s}
+.filtros button:hover{color:var(--cream);border-color:rgba(200,169,106,.4)}
+.filtros button[aria-pressed="true"]{color:var(--ink);border-color:transparent;
+  background:var(--gold-grad);font-weight:500}
+
+.vacantes{display:grid;gap:12px}
+.vac{border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  background:linear-gradient(158deg,rgba(36,24,32,.7),rgba(20,14,18,.7));
+  transition:border-color .4s ease}
+.vac:hover{border-color:rgba(200,169,106,.34)}
+.vac>button{width:100%;display:flex;gap:16px;align-items:flex-start;justify-content:space-between;
+  font:inherit;color:inherit;text-align:left;cursor:pointer;background:none;border:0;
+  padding:20px 22px;flex-wrap:wrap}
+.vac h3{font-family:var(--serif);font-weight:400;font-size:clamp(19px,3.2vw,23px);
+  margin:0 0 8px;color:var(--cream);line-height:1.25}
+.vac .meta{display:flex;flex-wrap:wrap;gap:7px 14px;font-size:12px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--mauve)}
+.vac .meta b{color:var(--gold);font-weight:500}
+.vac .sum{color:var(--smoke);font-size:14.5px;margin-top:11px;max-width:64ch;line-height:1.6}
+.vac .abrir{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);
+  display:grid;place-items:center;color:var(--gold);font-size:17px;line-height:1;
+  transition:transform .4s ease,border-color .4s ease}
+.vac>button[aria-expanded="true"] .abrir{transform:rotate(45deg);border-color:rgba(200,169,106,.5)}
+.vac .detalle{display:none;padding:0 22px 24px;border-top:1px solid var(--line);margin-top:2px}
+.vac .detalle.visible{display:block;animation:desplegar .45s ease}
+@keyframes desplegar{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.vac .detalle h4{font-family:var(--serif);font-weight:400;font-size:17px;color:var(--gold);
+  margin:20px 0 8px;letter-spacing:.02em}
+.vac .detalle p{color:var(--smoke);font-size:14.5px;line-height:1.68;white-space:pre-line;max-width:70ch}
+
+/* ── Formulario ────────────────────────────────────────────────── */
+.formulario{margin-top:26px;display:grid;gap:16px;
+  grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr))}
+.formulario .ancho{grid-column:1/-1}
+.campo{display:block;min-width:0}
+.campo span{display:block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mauve);margin-bottom:7px}
+.campo input,.campo textarea,.campo select{width:100%;max-width:100%;font:inherit;font-size:15px;
+  color:var(--cream);background:rgba(13,11,15,.6);border:1px solid var(--line);
+  border-radius:11px;padding:12px 14px;transition:border-color .3s ease}
+.campo textarea{min-height:128px;resize:vertical;line-height:1.6}
+.campo input:focus,.campo textarea:focus,.campo select:focus{outline:none;border-color:rgba(200,169,106,.6)}
+.campo select{appearance:none;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),
+                   linear-gradient(135deg,var(--gold) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 21px,calc(100% - 14px) 21px;
+  background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:42px}
+.fichero{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;
+  border:1px dashed var(--line);border-radius:13px;padding:16px 18px;min-width:0}
+.fichero label{flex:none;cursor:pointer;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold);border:1px solid rgba(200,169,106,.4);border-radius:999px;padding:9px 18px;
+  transition:.3s}
+.fichero label:hover{background:rgba(200,169,106,.1)}
+.fichero input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.fichero .nota{font-size:13px;color:var(--mauve);min-width:0;overflow-wrap:anywhere;line-height:1.5}
+.enviar{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:14px 18px;align-items:center}
+.enviar button{font:inherit;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;
+  cursor:pointer;border:0;border-radius:999px;padding:14px 34px;color:var(--ink);
+  background:var(--gold-grad);transition:transform .3s ease,opacity .3s ease}
+.enviar button:hover{transform:translateY(-1px)}
+.enviar button[disabled]{opacity:.5;cursor:default;transform:none}
+.enviar .estado{font-size:13.5px;color:var(--smoke);min-width:0;overflow-wrap:anywhere}
+.enviar .estado.mal{color:#E7A6A6}
+.enviar .estado.bien{color:#A8D8B9}
+
+/* ── Utilidades compartidas ────────────────────────────────────── */
+.aviso-caja{border:1px solid var(--line);border-left:2px solid var(--gold);
+  border-radius:0 13px 13px 0;padding:18px 20px;background:rgba(36,24,32,.5);margin-top:22px}
+.aviso-caja p{margin:0;font-size:14.5px;color:var(--smoke);line-height:1.66}
+.vacio{border:1px dashed var(--line);border-radius:16px;padding:clamp(28px,6vw,44px) 22px;text-align:center}
+.vacio p{color:var(--smoke);max-width:54ch;margin:0 auto}
+.cargando{color:var(--mauve);font-size:14px;letter-spacing:.06em}
+
+@media (max-width:420px){
+  .vac>button{padding:18px 17px}
+  .vac .detalle{padding:0 17px 20px}
+  .placa{padding:20px 18px 22px}
+}
+@media (prefers-reduced-motion:reduce){
+  .marca-cartel path{animation:none;stroke-dashoffset:0}
+  .placa,.placa::before,.vac,.vac .abrir,.enviar button{transition:none}
+  .vac .detalle.visible{animation:none}
+}
+
+/* Botón que se lee como enlace: la acción vive en un <button> porque no
+   navega a ninguna parte, pero tiene que parecer lo que es. */
+.enlace-oro{font:inherit;font-size:14px;letter-spacing:.06em;color:var(--gold);
+  background:none;border:0;padding:0;cursor:pointer;border-bottom:1px solid rgba(200,169,106,.35);
+  transition:border-color .3s ease}
+.enlace-oro:hover{border-bottom-color:var(--gold)}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BLOQUE 46.9b · las tres piezas que sí hacen algo
+
+   «no tenemos nada interactivo, nada funcional». Cada una de las otras
+   tres páginas se lleva una pieza que se toca y que cuenta algo que no
+   se puede contar igual de bien con un párrafo:
+
+   · seguridad          el viaje de un servicio, paso a paso
+   · información legal  a quién escribes según lo que necesitas
+   · sostenibilidad     cuántos envíos salen de un carrito
+
+   Ninguna es un adorno: las tres describen cómo funciona el sistema de
+   verdad, y la tercera enseña la única mejora de impacto que hoy
+   podemos demostrar.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Viaje (seguridad) ─────────────────────────────────────────── */
+.viaje{margin-top:26px}
+.viaje .pasos{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.viaje .pasos button{flex:1 1 118px;min-width:0;font:inherit;font-size:12px;letter-spacing:.06em;
+  cursor:pointer;text-align:left;padding:13px 14px;border-radius:12px;color:var(--smoke);
+  background:linear-gradient(158deg,rgba(36,24,32,.7),rgba(20,14,18,.7));
+  border:1px solid var(--line);transition:.35s}
+.viaje .pasos button:hover{color:var(--cream);border-color:rgba(200,169,106,.35)}
+.viaje .pasos button[aria-selected="true"]{color:var(--cream);border-color:rgba(200,169,106,.55)}
+.viaje .pasos b{display:block;font-family:var(--serif);font-size:15px;letter-spacing:.16em;
+  color:var(--gold);margin-bottom:6px;font-weight:400}
+.viaje .cuenta{border:1px solid var(--line);border-radius:16px;padding:clamp(20px,4vw,30px);
+  background:linear-gradient(158deg,rgba(36,24,32,.6),rgba(20,14,18,.6));min-height:112px}
+.viaje .cuenta h3{font-family:var(--serif);font-weight:400;font-size:clamp(20px,3.6vw,26px);
+  color:var(--cream);margin:0 0 10px}
+.viaje .cuenta p{color:var(--smoke);margin:0;max-width:66ch}
+.viaje .barra{height:2px;border-radius:2px;background:var(--line);margin-bottom:18px;overflow:hidden}
+.viaje .barra i{display:block;height:100%;background:var(--gold-grad);
+  transition:width .5s cubic-bezier(.2,.7,.3,1)}
+
+/* ── Enrutador (información legal) ─────────────────────────────── */
+.ruta{margin-top:26px;display:grid;gap:16px;grid-template-columns:1fr}
+@media (min-width:820px){ .ruta{grid-template-columns:270px 1fr} }
+.ruta .casos{display:flex;flex-direction:column;gap:6px;min-width:0}
+.ruta .casos button{font:inherit;font-size:14px;cursor:pointer;text-align:left;
+  padding:13px 16px;border-radius:12px;color:var(--smoke);background:transparent;
+  border:1px solid var(--line);transition:.32s;min-width:0;overflow-wrap:anywhere}
+.ruta .casos button:hover{color:var(--cream);border-color:rgba(200,169,106,.35)}
+.ruta .casos button[aria-selected="true"]{color:var(--ink);border-color:transparent;
+  background:var(--gold-grad);font-weight:500}
+.ruta .respuesta{border:1px solid var(--line);border-radius:16px;padding:clamp(20px,4vw,28px);
+  background:linear-gradient(158deg,rgba(36,24,32,.6),rgba(20,14,18,.6));min-width:0}
+.ruta .respuesta h3{font-family:var(--serif);font-weight:400;font-size:21px;color:var(--cream);margin:0 0 10px}
+.ruta .respuesta p{color:var(--smoke);margin:0 0 12px;max-width:62ch}
+.ruta .respuesta p:last-child{margin-bottom:0}
+.ruta .plazo{display:inline-block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);border:1px solid rgba(200,169,106,.3);border-radius:999px;padding:6px 14px;margin-top:4px}
+
+/* ── Envíos (sostenibilidad) ───────────────────────────────────── */
+.envios{margin-top:26px;border:1px solid var(--line);border-radius:16px;
+  padding:clamp(20px,4vw,28px);background:linear-gradient(158deg,rgba(36,24,32,.6),rgba(20,14,18,.6))}
+.envios .prov{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 22px}
+.envios .prov button{font:inherit;font-size:13px;cursor:pointer;padding:9px 16px;border-radius:999px;
+  color:var(--smoke);background:transparent;border:1px solid var(--line);transition:.3s}
+.envios .prov button:hover{color:var(--cream);border-color:rgba(200,169,106,.35)}
+.envios .prov button[aria-pressed="true"]{color:var(--ink);border-color:transparent;
+  background:var(--gold-grad);font-weight:500}
+.envios .marcador{display:grid;grid-template-columns:1fr 1fr;gap:2px;
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--line)}
+.envios .marcador div{background:rgba(20,14,18,.85);padding:18px 16px;min-width:0}
+.envios .marcador b{display:block;font-family:var(--serif);font-weight:400;
+  font-size:clamp(30px,6vw,44px);line-height:1;
+  background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.envios .marcador span{display:block;margin-top:7px;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mauve);line-height:1.5;overflow-wrap:anywhere}
+.envios .pie{margin:18px 0 0;font-size:14px;color:var(--smoke);max-width:64ch}
+
+@media (prefers-reduced-motion:reduce){
+  .viaje .pasos button,.ruta .casos button,.envios .prov button,.viaje .barra i{transition:none}
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   BLOQUE 54 · LAS PIEZAS QUE SE MIRAN
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── El sistema de movimiento ──────────────────────────────────────────
+   Bajo `.js`, que pone `compania.js` al arrancar. Sin JavaScript no se
+   oculta nada: es la misma guarda que `empleo.css`, y es la que impide
+   que un fallo de carga deje la página en blanco.
+   ────────────────────────────────────────────────────────────────────── */
+.js .rv{opacity:0;transform:translateY(16px);
+  transition:opacity .66s var(--suave,cubic-bezier(.22,1,.36,1)),
+             transform .66s var(--suave,cubic-bezier(.22,1,.36,1))}
+.js .rv.visto{opacity:1;transform:none}
+.js .rej .rv:nth-child(2),.js .lista .rv:nth-child(2){transition-delay:.06s}
+.js .rej .rv:nth-child(3),.js .lista .rv:nth-child(3){transition-delay:.12s}
+.js .lista .rv:nth-child(4){transition-delay:.18s}
+.js .lista .rv:nth-child(5){transition-delay:.24s}
+
+/* ── Dónde está tu dinero ──────────────────────────────────────────────
+   Tres sitios y un punto que se mueve entre ellos. El punto se queda en
+   «Retenido» tres momentos de cinco, y eso es lo que hay que ver: no es
+   una animación bonita, es el dato.
+   ────────────────────────────────────────────────────────────────────── */
+.sec-dinero{position:relative}
+.dinero{margin-top:clamp(26px,4vw,40px)}
+
+.din-pasos{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:clamp(22px,3vw,30px)}
+.din-pasos button{display:flex;align-items:baseline;gap:8px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line,rgba(232,224,213,.14));
+  border-radius:999px;padding:9px 15px;cursor:pointer;
+  color:rgba(232,224,213,.62);font:inherit;font-size:13px;text-align:start;
+  transition:border-color .35s,color .35s,background .35s}
+.din-pasos button b{font-family:var(--serif);font-weight:300;font-size:12px;
+  letter-spacing:.1em;color:rgba(200,169,106,.62);font-variant-numeric:tabular-nums}
+.din-pasos button:hover{border-color:rgba(200,169,106,.34);color:var(--cream)}
+.din-pasos button[aria-selected="true"]{background:rgba(200,169,106,.11);
+  border-color:rgba(200,169,106,.5);color:var(--cream)}
+.din-pasos button[aria-selected="true"] b{color:var(--gold)}
+
+.din-via{margin-bottom:clamp(20px,3vw,28px)}
+.din-riel{position:relative;height:2px;border-radius:2px;
+  background:rgba(232,224,213,.12);overflow:hidden}
+.din-riel i{position:absolute;inset-block:0;inset-inline-start:0;display:block;
+  background:linear-gradient(90deg,rgba(200,169,106,.5),var(--gold));
+  transition:inline-size .6s var(--suave,cubic-bezier(.22,1,.36,1))}
+
+.din-lugares{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;margin-top:16px}
+.lug{display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center}
+.lug .pt{width:11px;height:11px;border-radius:50%;
+  background:rgba(232,224,213,.16);border:1px solid rgba(232,224,213,.2);
+  transition:background .45s,box-shadow .45s,transform .45s,border-color .45s}
+.lug .lt{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(232,224,213,.42);transition:color .45s}
+/* aquí está el dinero ahora */
+.lug.aqui .pt{background:var(--gold);border-color:var(--gold);transform:scale(1.35);
+  box-shadow:0 0 0 6px rgba(200,169,106,.16),0 0 22px rgba(200,169,106,.5)}
+.lug.aqui .lt{color:var(--gold)}
+
+.din-cuenta{border-inline-start:1px solid rgba(200,169,106,.4);
+  padding-inline-start:clamp(14px,2vw,20px);min-height:104px}
+.din-cuenta h3{font-family:var(--serif);font-weight:400;
+  font-size:clamp(18px,2.4vw,22px);margin:0 0 8px;color:var(--cream)}
+.din-cuenta p{margin:0;color:var(--smoke);font-size:14.5px;line-height:1.62;max-width:56ch}
+
+/* La versión sin JavaScript: los cinco momentos, escritos y legibles.
+   Se sustituye al montar; si no se monta, esto es lo que se lee. */
+.plano{list-style:none;margin:0;padding:0;display:grid;gap:clamp(12px,1.8vw,18px)}
+@media (min-width:820px){.plano{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.plano li{border-top:1px solid var(--line,rgba(232,224,213,.14));padding-top:16px}
+.plano b{display:block;font-family:var(--serif);font-weight:300;font-size:12px;
+  letter-spacing:.2em;color:var(--gold);margin-bottom:10px;font-variant-numeric:tabular-nums}
+.plano h3{font-family:var(--serif);font-weight:400;font-size:16px;margin:0 0 7px;color:var(--cream)}
+.plano p{margin:0;color:var(--smoke);font-size:13.5px;line-height:1.6}
+
+.nota-suelta{margin-top:clamp(22px,3vw,30px);max-width:62ch;
+  font-size:13.5px;line-height:1.66;color:rgba(232,224,213,.56)}
+
+/* ── El botón de pánico ────────────────────────────────────────────────
+   Cuatro pasos en columna, con una línea que los une. No es una lista de
+   viñetas: es un recorrido, y el cuarto paso es el que importa.
+   ────────────────────────────────────────────────────────────────────── */
+.panico{margin-top:clamp(26px,4vw,40px)}
+.pan-lista{list-style:none;margin:0;padding:0;position:relative;
+  display:grid;gap:clamp(18px,2.6vw,26px)}
+.pan-p{position:relative;padding-inline-start:clamp(44px,6vw,58px)}
+.pan-p .n{position:absolute;inset-inline-start:0;top:1px;
+  width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--serif);font-weight:300;font-size:12px;
+  color:var(--gold);background:rgba(200,169,106,.1);
+  border:1px solid rgba(200,169,106,.34);font-variant-numeric:tabular-nums}
+/* el hilo que une un paso con el siguiente */
+.pan-p:not(:last-child)::before{content:'';position:absolute;
+  inset-inline-start:15px;top:34px;bottom:calc(-1 * clamp(18px,2.6vw,26px));
+  width:1px;background:linear-gradient(180deg,rgba(200,169,106,.34),rgba(200,169,106,.06))}
+.pan-p h3{font-family:var(--serif);font-weight:400;
+  font-size:clamp(16px,2.1vw,19px);margin:0 0 7px;color:var(--cream)}
+.pan-p p{margin:0;color:var(--smoke);font-size:14px;line-height:1.62;max-width:58ch}
+/* el último lleva el peso: es el que nadie cuenta */
+.pan-p:last-child .n{background:rgba(200,169,106,.2);border-color:var(--gold)}
+.pan-p:last-child h3{color:var(--gold)}
+
+/* ── Movimiento reducido ───────────────────────────────────────────────
+   Quien lo pide no quiere «menos»: quiere nada. El avance solo se apaga
+   desde JavaScript; aquí se apagan las transiciones por si acaso.
+   ────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  .js .rv,.js .rv.visto{transition:none;transform:none}
+  .din-riel i,.lug .pt,.lug .lt,.din-pasos button{transition:none}
+}

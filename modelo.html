@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="referrer" content="no-referrer" />
+<title>Babyloon · Modelo</title>
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<script src="i18n.js?v=10"></script>
+<script src="i18n-informe.js?v=3"></script>
+<script src="i18n-modelos.js?v=2"></script>
+<script src="modelos-es.js?v=1"></script>
+<script src="i18n-libros.js?v=2"></script>
+<script src="zip-ligero.js?v=1"></script>
+<script src="libros-aeat.js?v=3"></script>
+<script src="supabase-js-2.117.1.min.js"></script>
+<!--
+  modelo.html · El modelo oficial de la AEAT tal cual, con los importes de la
+  profesional en cada casilla. Toca una casilla: qué es, de dónde sale y los
+  movimientos que la forman. «Rellenar paso a paso» va casilla a casilla con
+  un botón de copiar, en el mismo orden que el formulario de la sede.
+  Datos: informe_contable (sesión de la profesional o enlace del gestor ?t=).
+  Formularios: modelos-es.js (España: 303 y 130). Textos: i18n-modelos.js.
+-->
+<style>
+  :root{--tinta:#1B1219;--suave:#6B5E66;--linea:#E4DCD3;--fondo:#FBF8F4;--oro:#9C7A3C;--oro2:#C8A96A;--bien:#2E7D57;--mal:#B23B3B;
+        --verde:#9DC05B;--verde2:#D5E3C3;--amarillo:#FFFDE3;--borde:#9FB28A}
+  *{box-sizing:border-box} html,body{margin:0;background:var(--fondo);color:var(--tinta);font:14px/1.5 'Jost',system-ui,-apple-system,Segoe UI,sans-serif}
+  .hoja{max-width:1080px;margin:0 auto;padding:24px 20px 120px}
+  h1,h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;margin:0}
+  h1{font-size:32px;line-height:1.15}
+  .marca{font-family:'Cormorant Garamond',Georgia,serif;color:var(--oro);letter-spacing:.08em;font-size:15px}
+  .sub{color:var(--suave);font-size:13.5px;margin:6px 0 0;max-width:720px}
+  .barra{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0}
+  select,button,.btn{font:inherit;font-size:13px;padding:8px 12px;border:1px solid var(--linea);background:#fff;color:var(--tinta);border-radius:6px;text-decoration:none;cursor:pointer}
+  .pri{background:var(--tinta);color:#fff;border-color:var(--tinta)} .oro{background:var(--oro2);border-color:var(--oro2);color:#1B1219}
+  button:disabled{opacity:.45;cursor:default}
+  /* Resultado */
+  .resumen{display:flex;gap:16px;flex-wrap:wrap;align-items:center;background:#fff;border:1px solid var(--linea);border-radius:10px;padding:14px 18px;margin:6px 0 14px}
+  .resumen .imp{font-family:'Cormorant Garamond',Georgia,serif;font-size:30px;line-height:1}
+  .resumen .est{font-size:13px;color:var(--suave)} .resumen .plazo{margin-left:auto;font-size:13px;color:var(--suave)}
+  .pagar .imp{color:var(--mal)} .favor .imp{color:var(--bien)}
+  .aviso{background:#FFF7E6;border:1px solid #E7CF9E;border-radius:8px;padding:10px 14px;font-size:13px;margin:0 0 12px}
+  details.como{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:10px 16px;margin:0 0 16px}
+  details.como summary{cursor:pointer;font-weight:500} details.como ol{margin:8px 0 2px;padding-left:20px} details.como li{margin:4px 0;font-size:13.5px}
+  /* El formulario, con el aire del de la AEAT */
+  .formu{background:#fff;border:1px solid var(--borde);border-radius:4px;overflow:hidden}
+  .aeat-cab{display:flex;gap:22px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--borde);font-size:14px}
+  .aeat-cab b{font-weight:600}
+  .tabs{position:sticky;top:0;z-index:5;display:flex;gap:6px;overflow-x:auto;background:#F3F6EE;border-bottom:1px solid var(--borde);padding:8px 10px}
+  .tabs a{white-space:nowrap;font-size:12.5px;padding:6px 10px;border-radius:4px;color:var(--tinta);text-decoration:none;border:1px solid transparent}
+  .tabs a:hover{border-color:var(--borde);background:#fff}
+  .pagina{padding:0 0 10px} .pagina>h2{background:var(--verde);color:#1F2A12;font-family:inherit;font-weight:600;font-size:16px;padding:10px 18px;margin:0}
+  .secc{margin:12px 14px 6px} .secc>h3{background:var(--verde2);font-size:14.5px;font-weight:600;margin:0 0 8px;padding:9px 14px;border-radius:2px}
+  .cabtipo{display:grid;grid-template-columns:minmax(200px,1fr) repeat(3,minmax(120px,190px));gap:10px;font-size:12.5px;color:#3B4A2A;padding:0 4px 4px}
+  .cabtipo span{text-align:center}
+  .grupo{display:grid;grid-template-columns:minmax(200px,1fr) auto;gap:6px 14px;align-items:center;padding:6px 4px;border-bottom:1px dotted #D7DECC}
+  .grupo .txt,.linea .txt{font-size:13.5px}
+  .grupo .filas{display:flex;flex-direction:column;gap:6px}
+  .fila{display:grid;grid-template-columns:repeat(3,minmax(120px,190px));gap:10px}
+  .linea{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:6px 4px;border-bottom:1px dotted #D7DECC}
+  .linea.fuerte .txt{font-weight:600} .linea .dcha{display:flex;gap:8px;align-items:center}
+  .cas{display:grid;grid-template-columns:44px 1fr;border:1px solid var(--borde);border-radius:2px;background:#fff;padding:0;min-width:120px;cursor:pointer;font:inherit;text-align:right;color:var(--tinta)}
+  .cas .n{background:#fff;border-right:1px solid var(--borde);text-align:center;font-size:12.5px;padding:5px 0;color:#2F3B22}
+  .cas .v{padding:5px 8px;font-variant-numeric:tabular-nums;font-size:13.5px;min-height:29px}
+  .cas.auto .v,.cas.off .v{background:var(--amarillo)} .cas.pre .v{background:#F1F1F1}
+  .cas.off{opacity:.55}
+  .cas.escribe{outline:2px solid var(--oro2);outline-offset:1px} .cas.escribe .v{font-weight:600}
+  .cas:focus-visible,.cas.actual{outline:3px solid var(--tinta);outline-offset:2px}
+  .cas.hecha{outline-color:var(--bien)}
+  .vacio-celda{min-width:120px}
+  .flag{display:grid;grid-template-columns:1fr 84px;gap:14px;align-items:center;padding:6px 4px;border-bottom:1px dotted #D7DECC;font-size:13.5px}
+  .flag .cas{grid-template-columns:1fr;min-width:84px;text-align:left} .flag .cas .v{background:var(--amarillo)}
+  .flag .cas.escribe .v{background:#fff}
+  .leyenda{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--suave);margin:10px 0}
+  .leyenda i{display:inline-block;width:14px;height:12px;border:1px solid var(--borde);vertical-align:-1px;margin-right:5px}
+  .pie{margin-top:26px;font-size:12px;color:var(--suave)}
+  /* Panel de la casilla */
+  .velo{position:fixed;inset:0;background:rgba(27,18,25,.35);z-index:20;display:none}
+  .panel{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:#fff;z-index:21;box-shadow:-8px 0 30px rgba(0,0,0,.15);
+         transform:translateX(105%);transition:transform .2s ease;display:flex;flex-direction:column}
+  .panel.abierto{transform:none} .velo.abierto{display:block}
+  .panel .pc{padding:18px 20px;border-bottom:1px solid var(--linea)} .panel .pb{padding:16px 20px;overflow:auto;flex:1}
+  .panel .num{display:inline-block;border:1px solid var(--borde);padding:2px 9px;font-weight:600;margin-right:8px}
+  .panel .etq{font-size:13.5px;color:var(--suave);margin:8px 0 0}
+  .panel .valor{display:flex;align-items:center;gap:12px;margin:14px 0}
+  .panel .valor b{font-size:26px;font-family:'Cormorant Garamond',Georgia,serif;font-variant-numeric:tabular-nums}
+  .chip{display:inline-block;font-size:11.5px;border-radius:20px;padding:2px 10px;border:1px solid var(--linea);color:var(--suave)}
+  .chip.in{border-color:var(--oro2);color:var(--oro)} .chip.auto{background:var(--amarillo)}
+  .ayuda{font-size:14px;margin:4px 0 14px}
+  .lb-op{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--linea);border-radius:8px;margin:0 0 8px;cursor:pointer;font-size:14px}
+  .lb-op input[type=text]{flex:1;min-width:0;padding:6px 8px;border:1px solid var(--linea);border-radius:6px;font:inherit}
+  .lb-av{font-size:13px;background:#FFF6E5;border-left:3px solid var(--oro2);padding:8px 10px;margin:8px 0 0;border-radius:4px}
+  .lb-ok{font-size:14px;margin:0 0 6px}
+  .nota-red{font-size:12.5px;color:var(--suave);background:#faf6ea;border-left:3px solid var(--oro2);padding:8px 10px;margin:10px 0 0;border-radius:4px}
+  table{width:100%;border-collapse:collapse;font-size:12.5px} th,td{padding:6px 6px;border-bottom:1px solid var(--linea);text-align:left;vertical-align:top}
+  th{font-weight:500;color:var(--suave);font-size:11.5px} td.n,th.n{text-align:right;white-space:nowrap} tfoot td{font-weight:600}
+  /* Guía paso a paso */
+  .guia{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--tinta);color:#fff;display:none}
+  .guia.on{display:block} .guia .in{max-width:1080px;margin:0 auto;padding:12px 20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .guia .q{font-size:12.5px;opacity:.75} .guia .c{font-size:16px} .guia .c b{font-size:22px;font-family:'Cormorant Garamond',Georgia,serif;margin-left:8px}
+  .guia .bt{margin-left:auto;display:flex;gap:8px} .guia button{border-color:#4a3a45;background:#2b2029;color:#fff} .guia .oro{background:var(--oro2);color:#1B1219;border-color:var(--oro2)}
+  .cargando,.error{padding:30px 0;color:var(--suave)} .error{color:var(--mal)}
+  @media (max-width:760px){
+    .hoja{padding:16px 12px 120px} h1{font-size:26px}
+    .cabtipo{display:none}
+    .grupo{grid-template-columns:1fr} .linea{grid-template-columns:1fr} .linea .dcha{justify-content:flex-end}
+    .fila{grid-template-columns:repeat(3,1fr);gap:6px} .cas{min-width:0;grid-template-columns:34px 1fr} .cas .v{font-size:12.5px;padding:5px 5px}
+    .vacio-celda{min-width:0} .flag{grid-template-columns:1fr 70px} .resumen .plazo{margin-left:0;width:100%}
+  }
+  @media print{
+    body{background:#fff} .hoja{padding:0;max-width:none} .barra,.tabs,.guia,.panel,.velo,details.como{display:none!important}
+    .pagina{break-inside:auto} .secc{break-inside:avoid} .formu{border:none}
+  }
+</style>
+</head>
+<body>
+<div class="hoja">
+  <div class="marca">BABYLOON</div>
+  <h1 id="titulo">Modelo</h1>
+  <p class="sub" id="sub"></p>
+  <div class="barra">
+    <select id="selModelo" aria-label="Modelo"></select>
+    <select id="selAnio" aria-label="Ejercicio"></select>
+    <select id="selTrim" aria-label="Periodo"></select>
+    <button class="oro" id="bGuia" disabled></button>
+    <button id="bLibros"></button>
+    <button id="bImprimir"></button>
+    <a class="btn" id="bVolver" href="profesional.html#finman"></a>
+  </div>
+  <div id="cuerpo"><div class="cargando" id="cargando">…</div></div>
+  <p class="pie" id="pie"></p>
+</div>
+<div class="velo" id="velo"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="pTit">
+  <div class="pc"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+    <div><span class="num" id="pNum"></span><span class="chip" id="pChip"></span><p class="etq" id="pTit"></p></div>
+    <button id="pCerrar"></button></div></div>
+  <div class="pb" id="pCuerpo"></div>
+</aside>
+<div class="guia" id="guia"><div class="in">
+  <div><div class="q" id="gPaso"></div><div class="c" id="gCasilla"></div></div>
+  <div class="bt"><button id="gAnt"></button><button class="oro" id="gCopiar"></button><button id="gSig"></button><button id="gCerrar" aria-label="×">×</button></div>
+</div></div>
+<script>
+(function(){
+  'use strict';
+  var SUPABASE_URL="https://qphatjblvojnfyghwmjy.supabase.co", SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  var T=function(k,alt){ try{ var s=BBL.t(k); return (s&&s!==k)?s:alt; }catch(_){ return alt; } };
+  var conDatos=function(t,v){ return String(t).replace(/\{(\w+)\}/g,function(_,k){ return v&&v[k]!=null?v[k]:''; }); };
+  var esc=function(s){ return (s==null?'':String(s)).replace(/[<>&"]/g,function(c){ return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]; }); };
+  var el=function(id){ return document.getElementById(id); };
+  var lang=function(){ return (window.BBL&&BBL.lang)||'es'; };
+  var eur=function(v){ var n=Number(v); if(v==null||!isFinite(n)) return '—';
+    try{ return new Intl.NumberFormat(lang(),{style:'currency',currency:'EUR'}).format(n); }catch(_){ return n.toFixed(2)+' €'; } };
+  // Como lo escribe la AEAT: 1.234,56 (para ver) · 1234,56 (para copiar y pegar)
+  var aeat=function(v){ var n=Number(v); if(!isFinite(n)) return ''; var s=Math.abs(n).toFixed(2).split('.');
+    return (n<0?'-':'')+s[0].replace(/\B(?=(\d{3})+(?!\d))/g,'.')+','+s[1]; };
+  var copiable=function(v){ var n=Number(v); return isFinite(n)?n.toFixed(2).replace('.',','):String(v); };
+  var fecha=function(f){ var p=String(f||'').slice(0,10).split('-'); return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:''; };
+  var fechaLarga=function(d){ try{ return new Intl.DateTimeFormat(lang(),{day:'numeric',month:'long',year:'numeric'}).format(d); }catch(_){ return d.toISOString().slice(0,10); } };
+
+  var PAIS=window.BBLModelos&&BBLModelos.ES;
+  var qs=new URLSearchParams(location.search), TOKEN=qs.get('t')||null;
+  if(TOKEN && !/^[a-f0-9]{64}$/.test(TOKEN)) TOKEN='x';
+  var hoy=new Date(), MOD=(qs.get('m')==='130')?'130':'303';
+  var ANIO=Number(qs.get('anio'))||hoy.getFullYear();
+  var TRIM=Number(qs.get('trim'))||Math.max(1,Math.ceil((hoy.getMonth()+1)/3)-1)||1;
+  if(TRIM<1||TRIM>4) TRIM=1;
+  var D=null, V={}, CTX={}, CASILLAS=[], PASOS=[], iPaso=0;
+
+  // ── Cabecera y controles ──
+  function textos(){
+    var F=PAIS.modelos[MOD];
+    document.title='Babyloon · '+T(F.titulo,'Modelo '+MOD);
+    el('titulo').innerHTML=esc(T(F.titulo,'Modelo '+MOD))+' · <bdi dir="ltr">'+TRIM+'T '+ANIO+'</bdi>';
+    el('sub').textContent=T('md_sub','');
+    el('bGuia').textContent=T('md_guia','Rellenar paso a paso');
+    el('bImprimir').textContent=T('md_imprimir','Imprimir');
+    el('bLibros').textContent=T('lb_boton','Libros para la AEAT (Excel)');
+    el('bVolver').textContent=T('md_volver','Volver al gestor');
+    el('pCerrar').textContent=T('md_cerrar','Cerrar');
+    el('gAnt').textContent=T('md_ant','Anterior'); el('gSig').textContent=T('md_sig','Siguiente'); el('gCopiar').textContent=T('md_copiar','Copiar');
+    el('pie').textContent=T('md_aviso','');
+    if(TOKEN) el('bVolver').style.display='none';
+  }
+  el('selModelo').innerHTML=['303','130'].map(function(m){ return '<option value="'+m+'"'+(m===MOD?' selected':'')+'>'+esc(T(PAIS.modelos[m].titulo,'Modelo '+m))+'</option>'; }).join('');
+  for(var a=hoy.getFullYear(); a>=hoy.getFullYear()-3; a--) el('selAnio').insertAdjacentHTML('beforeend','<option value="'+a+'"'+(a===ANIO?' selected':'')+'>'+a+'</option>');
+  el('selTrim').innerHTML=[1,2,3,4].map(function(q){ return '<option value="'+q+'"'+(q===TRIM?' selected':'')+'>'+q+'T</option>'; }).join('');
+  function irA(){ var p=new URLSearchParams(); if(TOKEN) p.set('t',TOKEN); p.set('m',el('selModelo').value); p.set('anio',el('selAnio').value); p.set('trim',el('selTrim').value); location.search=p.toString(); }
+  el('selModelo').onchange=irA; el('selAnio').onchange=irA; el('selTrim').onchange=irA;
+  el('bImprimir').onclick=function(){ window.print(); };
+  textos();
+  document.addEventListener('bbl:lang',function(){ textos(); if(D) pintar(); });
+
+  // ── Datos ──
+  function rango(q){ var d=new Date(Date.UTC(ANIO,(q-1)*3,1)), h=new Date(Date.UTC(ANIO,q*3,0)); return [d.toISOString().slice(0,10),h.toISOString().slice(0,10)]; }
+  function enTrim(f,q){ var r=rango(q), x=String(f||'').slice(0,10); return x>=r[0]&&x<=r[1]; }
+  function hastaTrim(f,q){ var r=rango(q), x=String(f||'').slice(0,10); return x>=ANIO+'-01-01'&&x<=r[1]; }
+  function tipoDe(x){ var b=Number(x.base)||0, i=Number(x.iva)||0; return b?Math.round(i/b*100):0; }
+  function mod(q){ return (D.modelos||[]).find(function(m){ return Number(m.trimestre)===q; })||null; }
+
+  async function cargar(){
+    try{
+      var r=await sb.rpc('informe_contable',{p_token:TOKEN,p_anio:ANIO,p_trim:null});
+      var d=r.data;
+      if(r.error||!d||!d.ok){
+        var e=(d&&d.error)||(r.error&&r.error.message)||'';
+        el('cuerpo').innerHTML='<p class="error">'+esc(e==='enlace_no_valido'?T('if_e_enlace','Este enlace no es válido, ha caducado o la profesional lo ha retirado. Pídele uno nuevo.')
+          :e==='gestor_no_incluido'?T('if_e_sesion','Para ver tu informe inicia sesión en Babyloon con tu cuenta profesional.')
+          :T('if_e_general','No se pudo cargar el informe. Inténtalo de nuevo.'))+'</p>'; el('bImprimir').disabled=true; return;
+      }
+      D=d; pintar();
+    }catch(_){ el('cuerpo').innerHTML='<p class="error">'+esc(T('if_e_general','No se pudo cargar el informe. Inténtalo de nuevo.'))+'</p>'; }
+  }
+
+  // Movimientos que forman cada casilla
+  function movimientos(clave){
+    var ing=(D.ingresos||[]), gas=(D.gastos||[]);
+    if(/^ing\d+$/.test(clave)){ var p=Number(clave.slice(3)); return {tipo:'ing',filas:ing.filter(function(x){ return enTrim(x.fecha,TRIM)&&tipoDe(x)===p; })}; }
+    if(clave==='ing') return {tipo:'ing',filas:ing.filter(function(x){ return enTrim(x.fecha,TRIM)&&Number(x.iva); })};
+    if(clave==='gas') return {tipo:'gas',filas:gas.filter(function(x){ return enTrim(x.fecha,TRIM)&&Number(x.iva_deducible); })};
+    if(clave==='ytd_ing') return {tipo:'ing',filas:ing.filter(function(x){ return hastaTrim(x.fecha,TRIM); })};
+    if(clave==='ytd_gas') return {tipo:'gas130',filas:gas.filter(function(x){ return hastaTrim(x.fecha,TRIM)&&Number(x.gasto_deducible); })};
+    var prev=[]; for(var q=1;q<TRIM;q++){ var m=mod(q); if(m&&!m.antes_del_alta) prev.push(m); }
+    if(clave==='comp') return {tipo:'trim',filas:prev.map(function(m){ return {q:m.trimestre,v:(m.m303||{})['71']}; }).filter(function(x){ return Number(x.v)<0; })};
+    if(clave==='prev130') return {tipo:'trim',filas:prev.map(function(m){ return {q:m.trimestre,v:(m.m130||{})['07']}; }).filter(function(x){ return Number(x.v)>0; })};
+    if(clave==='prev130neg') return {tipo:'trim',filas:prev.map(function(m){ return {q:m.trimestre,v:(m.m130||{})['19']}; }).filter(function(x){ return Number(x.v)<0; })};
+    return null;
+  }
+
+  // ── Pintar el formulario ──
+  function valorDe(c){ if(c.fijo!=null&&c.fijo!=='') return typeof c.fijo==='number'?aeat(c.fijo):c.fijo; var v=V[c.n]; return v==null?'':v; }
+  function claseDe(c,v){ var n=Number(v), lleno=v!==''&&isFinite(n)&&n!==0;
+    return {lleno:lleno, escribe:(c.k==='in'||c.k==='pre')&&lleno&&c.fijo==null}; }
+  function textoValor(c,v,info){
+    if(c.fijo!=null&&c.fijo!=='') return esc(typeof c.fijo==='number'?aeat(c.fijo):c.fijo);
+    if(v===''||v==null) return '';
+    if(c.k==='auto') return esc(aeat(v));                       // las amarillas enseñan también el cero
+    return info.lleno?esc(aeat(v)):'';
+  }
+  function casilla(c,txt){
+    if(!c) return '<span class="vacio-celda"></span>';
+    var v=valorDe(c), info=claseDe(c,v), idx=CASILLAS.length;
+    CASILLAS.push({c:c,txt:txt,v:v,info:info});
+    return '<button type="button" class="cas '+c.k+(info.escribe?' escribe':'')+'" data-i="'+idx+'" id="cas'+c.n+'" aria-label="'+esc(c.n)+'">'+
+      '<span class="n">'+esc(c.n)+'</span><span class="v">'+textoValor(c,v,info)+'</span></button>';
+  }
+  function flagHtml(f){
+    var v=f.v(V,CTX), idx=CASILLAS.length, escribe=typeof f.escribir==='function'?f.escribir(CTX):!!f.escribir;
+    CASILLAS.push({flag:f,txt:f.txt,v:v,info:{lleno:!!v,escribe:escribe&&!!v}});
+    return '<div class="flag"><span>'+esc(f.txt)+'</span><button type="button" class="cas'+(escribe&&v?' escribe':'')+'" data-i="'+idx+'"><span class="v">'+esc(v)+'</span></button></div>';
+  }
+  function seccion(s){
+    var h='<div class="secc"><h3>'+esc(s.titulo)+'</h3>';
+    if(s.flags) h+=s.flags.map(flagHtml).join('');
+    if(s.grupos){
+      if(s.cab) h+='<div class="cabtipo"><span></span>'+s.cab.map(function(x){ return '<span>'+esc(x)+'</span>'; }).join('')+'</div>';
+      h+=s.grupos.map(function(g){
+        return '<div class="grupo"><span class="txt">'+esc(g.txt)+'</span><div class="filas">'+
+          g.filas.map(function(f){ return '<div class="fila">'+f.celdas.map(function(c){ return casilla(c,g.txt); }).join('')+'</div>'; }).join('')+'</div></div>';
+      }).join('');
+      if(s.total) h+='<div class="linea fuerte"><span class="txt">'+esc(s.total.txt)+'</span><span class="dcha">'+casilla(s.total.c,s.total.txt)+'</span></div>';
+    }
+    if(s.lineas) h+=s.lineas.map(function(l){
+      return '<div class="linea'+(l.fuerte?' fuerte':'')+'"><span class="txt">'+esc(l.txt)+'</span><span class="dcha">'+(l.pct?casilla(l.pct,l.txt):'')+casilla(l.c,l.txt)+'</span></div>';
+    }).join('');
+    return h+'</div>';
+  }
+
+  function pintar(){
+    var F=PAIS.modelos[MOD], m=mod(TRIM);
+    if(!m){ el('cuerpo').innerHTML='<p class="error">'+esc(T('if_nada','Sin movimientos en este periodo.'))+'</p>'; return; }
+    V=Object.assign({},MOD==='303'?m.m303:m.m130);
+    CTX={trim:TRIM,anio:ANIO,eur:eur};
+    CASILLAS=[];
+    var idn=D.identificacion||{}, res=Number(V[PAIS.resultado[MOD]]||0), plazo=PAIS.plazo(ANIO,TRIM);
+    var est=res>0?T('md_res_pagar','A ingresar'):res<0?(MOD==='130'?T('md_res_neg130',''):(TRIM===4?T('md_res_dev',''):T('md_res_comp',''))):T('md_res_cero','');
+    var h='';
+    if(m.antes_del_alta) h+='<div class="aviso">'+esc(T('md_antes_alta',''))+'</div>';
+    h+='<div class="resumen '+(res>0?'pagar':res<0?'favor':'')+'"><div><div class="imp">'+esc(eur(res))+'</div><div class="est">'+esc(est)+'</div></div>'+
+       '<div class="plazo">'+esc(conDatos(T('md_plazo','Plazo: hasta el {f}'),{f:fechaLarga(plazo)}))+'</div></div>';
+    if(MOD==='303'&&!Number(V['27'])&&!Number(V['45'])) h+='<div class="aviso">'+esc(T('md_sin_act',''))+'</div>';
+    h+='<details class="como"><summary>'+esc(T('md_como','Cómo presentarlo'))+'</summary><ol>'+
+       '<li>'+esc(T('md_paso1',''))+'</li><li>'+esc(conDatos(T('md_paso2',''),{m:MOD,a:ANIO,p:TRIM+'T'}))+'</li>'+
+       '<li>'+esc(T('md_paso3',''))+'</li><li>'+esc(T('md_paso4',''))+'</li></ol>'+
+       '<p style="margin:8px 0 0;font-size:13.5px">'+esc(T('lb_paso',''))+'</p></details>';
+    h+='<div class="leyenda"><span><i style="outline:2px solid var(--oro2)"></i>'+esc(T('md_escribir','Escríbela'))+'</span>'+
+       '<span><i style="background:var(--amarillo)"></i>'+esc(T('md_auto','La calcula el formulario'))+'</span>'+
+       '<span><i></i>'+esc(T('md_vacia','Déjala vacía'))+'</span></div>';
+    h+='<div class="formu"><div class="aeat-cab"><span><b>NIF:</b> '+esc(idn.nif||'—')+'</span><span><b>'+esc(T('md_nombre','Apellidos y nombre'))+':</b> '+
+       esc(idn.nombre_fiscal||idn.nombre||'—')+'</span><span><b>'+esc(T('md_periodo','Periodo'))+':</b> <bdi dir="ltr">'+TRIM+'T '+ANIO+'</bdi></span></div>';
+    if(F.paginas.length>1) h+='<nav class="tabs">'+F.paginas.map(function(p){ return '<a href="#pg-'+p.id+'">'+esc(p.nombre)+'</a>'; }).join('')+'</nav>';
+    h+=F.paginas.map(function(p){ return '<section class="pagina" id="pg-'+p.id+'"><h2>'+esc(p.nombre)+'</h2>'+p.secciones.map(seccion).join('')+'</section>'; }).join('');
+    h+='</div>';
+    el('cuerpo').innerHTML=h;
+    el('cuerpo').querySelectorAll('.cas[data-i]').forEach(function(b){ b.onclick=function(){ abrir(Number(b.dataset.i)); }; });
+    // Pasos de la guía: lo que hay que escribir, en el orden del formulario
+    PASOS=CASILLAS.map(function(x,i){ return x.info.escribe?i:-1; }).filter(function(i){ return i>=0; });
+    el('bGuia').disabled=!PASOS.length || !!m.antes_del_alta;
+    el('bLibros').disabled=!!m.antes_del_alta;
+  }
+
+  // ── Panel de una casilla ──
+  function ayudaDe(c){ var h=c.h; if(typeof h==='function') h=h(V,CTX); if(!h) return ''; return conDatos(T(h[0],''),h[1]||{}); }
+  function tablaMovs(mv){
+    if(!mv) return '';
+    var h='<h4 style="margin:6px 0">'+esc(T('md_movs','Lo que suma esta casilla'))+'</h4>';
+    if(!mv.filas.length) return h+'<p style="color:var(--suave);font-size:13px">'+esc(T('md_sin_movs',''))+'</p>';
+    var sum=function(f){ return mv.filas.reduce(function(s,x){ return s+(Number(f(x))||0); },0); };
+    if(mv.tipo==='trim') return h+'<table><thead><tr><th>'+esc(T('md_c_trim','Trimestre'))+'</th><th class="n"></th></tr></thead><tbody>'+
+      mv.filas.map(function(x){ return '<tr><td>'+x.q+'T '+ANIO+'</td><td class="n">'+esc(aeat(x.v))+'</td></tr>'; }).join('')+'</tbody></table>';
+    if(mv.tipo==='ing') return h+'<table><thead><tr><th>'+esc(T('md_c_fecha','Fecha'))+'</th><th>'+esc(T('md_c_concepto','Concepto'))+'</th><th class="n">'+
+      esc(T('md_c_base','Base'))+'</th><th class="n">'+esc(T('md_c_iva','IVA'))+'</th></tr></thead><tbody>'+
+      mv.filas.map(function(x){ return '<tr><td>'+fecha(x.fecha)+'</td><td>'+esc((x.factura?x.factura+' · ':'')+(x.contraparte||''))+'</td><td class="n">'+
+        esc(aeat(x.base))+'</td><td class="n">'+esc(aeat(x.iva))+'</td></tr>'; }).join('')+
+      '</tbody><tfoot><tr><td colspan="2"></td><td class="n">'+esc(aeat(sum(function(x){ return x.base; })))+'</td><td class="n">'+esc(aeat(sum(function(x){ return x.iva; })))+'</td></tr></tfoot></table>';
+    if(mv.tipo==='gas') return h+'<table><thead><tr><th>'+esc(T('md_c_fecha','Fecha'))+'</th><th>'+esc(T('md_c_concepto','Concepto'))+'</th><th class="n">'+
+      esc(T('md_c_base','Base'))+'</th><th class="n">'+esc(T('md_c_pct','% deducible'))+'</th><th class="n">'+esc(T('md_c_iva','IVA'))+'</th></tr></thead><tbody>'+
+      mv.filas.map(function(x){ var p=Number(x.pct_iva_recuperable); return '<tr><td>'+fecha(x.fecha)+'</td><td>'+esc((x.proveedor||'')+' · '+T('gx_cat_'+(x.categoria||''),x.categoria_nombre||''))+'</td><td class="n">'+
+        esc(aeat(Number(x.base)*p))+'</td><td class="n">'+Math.round(p*100)+' %</td><td class="n">'+esc(aeat(x.iva_deducible))+'</td></tr>'; }).join('')+
+      '</tbody><tfoot><tr><td colspan="2"></td><td class="n">'+esc(aeat(sum(function(x){ return Number(x.base)*Number(x.pct_iva_recuperable); })))+'</td><td></td><td class="n">'+esc(aeat(sum(function(x){ return x.iva_deducible; })))+'</td></tr></tfoot></table>';
+    if(mv.tipo==='gas130') return h+'<table><thead><tr><th>'+esc(T('md_c_fecha','Fecha'))+'</th><th>'+esc(T('md_c_concepto','Concepto'))+'</th><th class="n">'+
+      esc(T('md_c_base','Base'))+'</th><th class="n">'+esc(T('md_c_ded','Deducible'))+'</th></tr></thead><tbody>'+
+      mv.filas.map(function(x){ return '<tr><td>'+fecha(x.fecha)+'</td><td>'+esc((x.proveedor||'')+' · '+T('gx_cat_'+(x.categoria||''),x.categoria_nombre||''))+'</td><td class="n">'+
+        esc(aeat(x.base))+'</td><td class="n">'+esc(aeat(x.gasto_deducible))+'</td></tr>'; }).join('')+
+      '</tbody><tfoot><tr><td colspan="2"></td><td class="n">'+esc(aeat(sum(function(x){ return x.base; })))+'</td><td class="n">'+esc(aeat(sum(function(x){ return x.gasto_deducible; })))+'</td></tr></tfoot></table>';
+    return '';
+  }
+  // Céntimos de redondeo: la AEAT calcula la cuota sobre la base total (07 × 21 %),
+  // no factura a factura; y las sumas línea a línea pueden bailar un céntimo.
+  function redondeo(c,mv){
+    if(!mv||!mv.filas.length) return '';
+    var r2=function(x){ return Math.round(x*100)/100; }, sum=function(f){ return r2(mv.filas.reduce(function(s,x){ return s+(Number(f(x))||0); },0)); };
+    var nota=function(t){ return '<p class="nota-red">'+esc(t)+'</p>'; };
+    if(mv.tipo==='ing' && /^ing\d+$/.test(c.movs)){
+      var p=Number(c.movs.slice(3)), b=sum(function(x){ return x.base; }), iv=sum(function(x){ return x.iva; }), cu=r2(b*p/100);
+      if(Math.abs(iv-cu)>=0.005) return nota(conDatos(T('md_red_iva',''),{a:aeat(iv),b:aeat(b),p:p,c:aeat(cu)}));
+      return '';
+    }
+    var v=Number(V[c.n]); if(!isFinite(v)) return '';
+    var cols=mv.tipo==='ing'?[sum(function(x){ return x.base; }),sum(function(x){ return x.iva; })]
+      :mv.tipo==='gas'?[sum(function(x){ return Number(x.base)*Number(x.pct_iva_recuperable); }),sum(function(x){ return x.iva_deducible; })]
+      :mv.tipo==='gas130'?[sum(function(x){ return x.base; }),sum(function(x){ return x.gasto_deducible; })]:[];
+    if(!cols.length||cols.some(function(s){ return Math.abs(s-v)<0.005; })) return '';
+    var cerca=cols.filter(function(s){ return Math.abs(s-v)<=0.10; })[0];
+    return cerca==null?'':nota(conDatos(T('md_red',''),{a:aeat(cerca),b:aeat(v)}));
+  }
+  function abrir(i){
+    var x=CASILLAS[i]; if(!x) return;
+    var c=x.c||{}, esFlag=!!x.flag;
+    el('pNum').textContent=esFlag?'':c.n; el('pNum').style.display=esFlag?'none':'';
+    var k=esFlag?(x.info.escribe?'in':'auto'):(x.info.escribe?'in':c.k==='auto'?'auto':(x.info.lleno?'auto':'off'));
+    el('pChip').style.display=''; el('pChip').className='chip '+k; el('pChip').textContent=k==='in'?T('md_escribir','Escríbela'):k==='auto'?T('md_auto','La calcula el formulario'):T('md_vacia','Déjala vacía');
+    el('pTit').textContent=x.txt||'';
+    var ay=esFlag?T(x.flag.h,''):ayudaDe(c);
+    var val=esFlag?x.v:(c.fijo!=null&&c.fijo!==''?(typeof c.fijo==='number'?aeat(c.fijo):c.fijo):(x.info.lleno||c.k==='auto'?aeat(x.v):''));
+    var h='<p class="ayuda">'+esc(ay)+'</p>';
+    if(val!=='' && val!=null) h+='<div class="valor"><b>'+esc(val)+'</b>'+(x.info.escribe?'<button class="oro" id="pCopiar">'+esc(T('md_copiar','Copiar'))+'</button>':'')+'</div>';
+    if(!esFlag&&c.movs){ var mv=movimientos(c.movs); h+=tablaMovs(mv)+redondeo(c,mv); }
+    el('pCuerpo').innerHTML=h;
+    var bc=el('pCopiar'); if(bc) bc.onclick=function(){ copiar(esFlag?x.v:copiable(x.v),bc); };
+    el('panel').classList.add('abierto'); el('velo').classList.add('abierto'); el('pCerrar').focus();
+  }
+  function cerrar(){ el('panel').classList.remove('abierto'); el('velo').classList.remove('abierto'); }
+  el('pCerrar').onclick=cerrar; el('velo').onclick=cerrar;
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') cerrar(); });
+  function copiar(txt,btn){
+    var ok=function(){ if(btn){ var t=btn.textContent; btn.textContent=T('md_copiado','Copiado'); setTimeout(function(){ btn.textContent=t; },1400); } };
+    try{ navigator.clipboard.writeText(String(txt)).then(ok,function(){ viejo(); ok(); }); }catch(_){ viejo(); ok(); }
+    function viejo(){ var a=document.createElement('textarea'); a.value=String(txt); document.body.appendChild(a); a.select(); try{ document.execCommand('copy'); }catch(_){} a.remove(); }
+  }
+
+  // ── Guía paso a paso ──
+  function paso(){
+    var i=PASOS[iPaso], x=CASILLAS[i]; if(x==null) return;
+    document.querySelectorAll('.cas.actual').forEach(function(b){ b.classList.remove('actual'); });
+    var b=document.querySelector('.cas[data-i="'+i+'"]'); if(b){ b.classList.add('actual'); b.scrollIntoView({block:'center',behavior:'smooth'}); }
+    el('gPaso').textContent=conDatos(T('md_guia_paso','Paso {i} de {n}'),{i:iPaso+1,n:PASOS.length})+' · '+(x.txt||'').slice(0,90);
+    el('gCasilla').innerHTML=(x.flag?'':esc(conDatos(T('md_guia_casilla','Casilla {c}'),{c:x.c.n})))+'<b>'+esc(x.flag?x.v:aeat(x.v))+'</b>';
+    el('gAnt').disabled=iPaso===0; el('gSig').textContent=iPaso===PASOS.length-1?'✓':T('md_sig','Siguiente');
+  }
+  el('bGuia').onclick=function(){ if(!PASOS.length) return; iPaso=0; el('guia').classList.add('on'); paso(); };
+  el('gAnt').onclick=function(){ if(iPaso>0){ iPaso--; paso(); } };
+  el('gSig').onclick=function(){
+    var b=document.querySelector('.cas[data-i="'+PASOS[iPaso]+'"]'); if(b) b.classList.add('hecha');
+    if(iPaso<PASOS.length-1){ iPaso++; paso(); }
+    else { el('gPaso').textContent=''; el('gCasilla').textContent=T('md_guia_fin',''); el('gSig').disabled=true; setTimeout(function(){ el('gSig').disabled=false; },800); }
+  };
+  el('gCopiar').onclick=function(){ var x=CASILLAS[PASOS[iPaso]]; if(x) copiar(x.flag?x.v:copiable(x.v),el('gCopiar')); };
+  el('gCerrar').onclick=function(){ el('guia').classList.remove('on'); document.querySelectorAll('.cas.actual').forEach(function(b){ b.classList.remove('actual'); }); };
+
+  // ── Libros registro para importar en la AEAT (libros-aeat.js) ──
+  function panelLibre(titulo,html){
+    el('pNum').style.display='none'; el('pChip').className='chip'; el('pChip').textContent=''; el('pChip').style.display='none';
+    el('pTit').textContent=titulo; el('pCuerpo').innerHTML=html;
+    el('panel').classList.add('abierto'); el('velo').classList.add('abierto');
+  }
+  function etiquetaTrim(){ return TRIM+'T '+ANIO; }
+  async function libros(){
+    var b=el('bLibros'); b.disabled=true;
+    try{
+      var r=await sb.rpc('libros_registro_aeat',{p_token:TOKEN,p_anio:ANIO,p_trim:TRIM}), d=r.data;
+      if(r.error||!d||!d.ok) throw 0;
+      if(!d.iae && !TOKEN){ pedirIae(d); return; }
+      bajarLibros(d);
+    }catch(_){ panelLibre(T('lb_titulo',''),'<p class="error">'+esc(T('lb_error',''))+'</p>'); }
+    finally{ b.disabled=false; }
+  }
+  function pedirIae(d){
+    var op=function(v,t,ch){ return '<label class="lb-op"><input type="radio" name="lbIae" value="'+v+'"'+(ch?' checked':'')+'> <span>'+esc(t)+'</span></label>'; };
+    panelLibre(T('lb_titulo',''),'<p class="ayuda">'+esc(T('lb_iae',''))+'</p>'+op('972.1',T('lb_iae_1','972.1'),true)+op('972.2',T('lb_iae_2','972.2'))+
+      '<label class="lb-op"><input type="radio" name="lbIae" value="otro"> <span>'+esc(T('lb_iae_otro',''))+'</span> <input type="text" id="lbOtro" inputmode="decimal" placeholder="000.0" maxlength="6"></label>'+
+      '<p class="error" id="lbMal" style="display:none"></p><div class="valor"><button class="oro" id="lbSeguir">'+esc(T('lb_guardar_bajar','Guardar y descargar'))+'</button></div>');
+    el('lbOtro').onfocus=function(){ document.querySelector('input[name=lbIae][value=otro]').checked=true; };
+    el('lbSeguir').onclick=async function(){
+      var v=(document.querySelector('input[name=lbIae]:checked')||{}).value; if(v==='otro') v=el('lbOtro').value.trim();
+      var bt=el('lbSeguir'); bt.disabled=true;
+      try{
+        var g=await sb.rpc('guardar_epigrafe_iae',{p_epigrafe:v});
+        if(g.error||!g.data||!g.data.ok){ el('lbMal').textContent=T('lb_iae_mal',''); el('lbMal').style.display=''; bt.disabled=false; return; }
+        d.iae=g.data.iae; bajarLibros(d);
+      }catch(_){ el('lbMal').textContent=T('lb_error',''); el('lbMal').style.display=''; bt.disabled=false; }
+    };
+  }
+  function bajarLibros(d){
+    var L=BBLLibros.construir(d), a=document.createElement('a');
+    a.href=URL.createObjectURL(L.blob); a.download=L.nombre; document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },2000);
+    var s=L.resumen;
+    panelLibre(T('lb_titulo',''),'<p class="lb-ok"><b>'+esc(L.nombre)+'</b></p><p class="ayuda">'+
+      esc(conDatos(T('lb_ok',''),{i:s.ingresos,g:s.gastos,b:eur(s.base),d:eur(s.deducible)}))+'</p>'+
+      '<p class="ayuda">'+esc(conDatos(T('lb_ayuda',''),{p:etiquetaTrim()}))+'</p>'+
+      L.avisos.map(function(x){ var v=Object.assign({},x.v||{}); if(v.i!=null) v.i=eur(v.i); return '<p class="lb-av">'+esc(conDatos(T(x.k,''),v))+'</p>'; }).join(''));
+  }
+  el('bLibros').onclick=libros;
+
+  el('cargando').textContent=T('if_cargando','Cargando…');
+  cargar();
+})();
+</script>
+</body>
+</html>

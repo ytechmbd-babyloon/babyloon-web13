@@ -1,0 +1,36 @@
+# ═══════════════════════════════════════════════════════════════════════
+# Lo que se queda en la carpeta pero NO se publica.
+#
+# Sintaxis de `.gitignore`. Wrangler no sube los ficheros que casen con
+# estas líneas, así que una fuente puede vivir al lado de lo que genera
+# sin acabar servida en babyloon.app.
+# ═══════════════════════════════════════════════════════════════════════
+
+# ── Notas internas ─────────────────────────────────────────────────────
+# (ACTUALIZAR.md lleva dentro el nombre del proyecto de Cloudflare.)
+ACTUALIZAR.md
+LEEME.md
+
+# ── Fuentes · bloque 49.7 ──────────────────────────────────────────────
+
+# El diccionario entero de la página de empleo. Desde el 49.7 la página
+# carga `i18n-empleo-<idioma>.js` y se baja UNO, no dieciséis. Este
+# fichero ya no se sirve, pero es la FUENTE desde la que se generan los
+# dieciséis: aquí se añade una clave y de aquí salen los partidos. Por eso
+# se queda en la carpeta en vez de exiliarse a otro sitio donde acabaría
+# desincronizado. Publicarlo serían 235 KB que nadie descarga.
+i18n-empleo.js
+
+# El generador de las 43 páginas de ciudad, y sus plantillas. Es código
+# nuestro, no es web: estaban subiéndose y se leían desde fuera.
+generar_ciudades.py
+plantilla_estilos.txt
+plantilla_header.txt
+
+# ── Originales de cámara ───────────────────────────────────────────────
+# 3,2 y 4,1 MB para unas tarjetas de 300 px de ancho. Lo que se sirve son
+# los `-480.webp`, `-960.webp` y `-720.jpg` de al lado. Los originales se
+# quedan porque son los tuyos y de ellos se vuelve a partir si algún día
+# hay que recortar de otra manera.
+img/ciudad-marbella.jpg
+img/ciudad-nueva-york.jpg

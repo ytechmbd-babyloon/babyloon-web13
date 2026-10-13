@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Babyloon</title>
+  <rect width="512" height="512" fill="#0D0B0F"/>
+  <path fill="none" stroke="#C8A96A" stroke-width="7" stroke-linecap="round" transform="translate(76,166) scale(3)"
+    d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/>
+</svg>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tarjeta regalo · Babyloon</title>
+<meta name="description" content="Regala belleza de lujo. Compra y canjea tarjetas regalo Babyloon para servicios a domicilio y boutique en Málaga, Marbella, Madrid y Miami." />
+<meta name="keywords" content="tarjeta regalo belleza, gift card belleza, regalar maquillaje, regalar peluquería, Babyloon" />
+<meta name="theme-color" content="#160D13" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="canonical" href="https://babyloon.app/regalo.html" />
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<style>
+  :root{--plum:#160D13;--ink:#0D0B0F;--gold:#C9A96E;--gold-lt:#F0DCB4;--gold-dk:#8E723F;--cream:#F6EFE3;
+    --cream-dim:#B9AE9E;--line:rgba(201,169,110,.16);--line-soft:rgba(246,239,227,.07);
+    --ok:#3DD68C;--err:#E05252;--serif:'Cormorant Garamond',serif;--sans:'Jost',system-ui,sans-serif;
+    --gold-grad:linear-gradient(135deg,var(--gold-lt),var(--gold))}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--plum);color:var(--cream);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:820px;margin:0 auto;padding:0 22px}
+  .inf path{stroke:url(#gg);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .gold-text{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .eyebrow{font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold)}
+  header{position:sticky;top:0;z-index:50;background:rgba(22,13,19,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:70px;max-width:1100px;margin:0 auto;padding:0 22px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:23px}
+  .nav a.back{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-dim)}
+  .nav a.back:hover{color:var(--gold)}
+  .hero{text-align:center;padding:46px 0 8px}
+  .hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(36px,6vw,58px);margin:10px 0 8px}
+  .hero p{color:var(--cream-dim);font-size:14.5px;max-width:480px;margin:0 auto}
+  .tabs{display:flex;gap:5px;justify-content:center;margin:24px auto 0;max-width:380px;background:rgba(246,239,227,.04);border:1px solid var(--line);border-radius:40px;padding:5px}
+  .tabs button{flex:1;background:none;border:none;color:var(--cream-dim);padding:11px;border-radius:30px;cursor:pointer;font-size:13px;letter-spacing:.06em;transition:.3s;font-family:var(--sans)}
+  .tabs button.on{background:var(--gold-grad);color:var(--plum);font-weight:600}
+  .pane{display:none;padding:34px 0 90px}.pane.on{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* preview de la tarjeta */
+  .preview{max-width:400px;margin:0 auto 34px}
+  .gcard{position:relative;aspect-ratio:1.62;border-radius:18px;overflow:hidden;padding:24px;display:flex;flex-direction:column;
+    box-shadow:0 30px 70px -30px rgba(0,0,0,.7);transition:background .6s ease}
+  .gcard .stars{position:absolute;inset:0;opacity:0;transition:opacity .6s}
+  .gcard.galaxy .stars{opacity:1}
+  .gcard .stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(255,255,255,.75)}
+  .gcard .gc-top{display:flex;align-items:center;gap:8px}
+  .gcard .gc-brand{font-family:var(--serif);font-size:20px;font-weight:500}
+  .gcard .gc-label{margin-left:auto;font-size:8.5px;letter-spacing:.28em}
+  .gcard .gc-amt{font-family:var(--serif);font-size:44px;font-weight:600;margin:auto 0;line-height:1}
+  .gcard .gc-bottom{display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:.14em}
+  .gcard .shimmer{position:absolute;top:0;bottom:0;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.14),transparent);
+    transform:skewX(-18deg);animation:shim 4.5s ease-in-out infinite}
+  @keyframes shim{0%{left:-45%}55%,100%{left:130%}}
+  @media(prefers-reduced-motion:reduce){.shimmer{animation:none;opacity:0}}
+
+  .block-label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin:0 0 14px 2px}
+  .occ-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:30px}
+  .occ{border:1px solid var(--line);border-radius:12px;padding:16px 8px;text-align:center;cursor:pointer;transition:.25s;background:rgba(0,0,0,.15)}
+  .occ:hover{border-color:rgba(201,169,110,.5)}
+  .occ.on{border-color:var(--gold);background:rgba(201,169,110,.1)}
+  .occ .em{font-size:24px}.occ .nm{font-size:12px;color:var(--cream-dim);margin-top:6px;word-break:keep-all}
+  .occ.on .nm{color:var(--cream)}
+  .des-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:30px}
+  .des{aspect-ratio:1.5;border-radius:12px;cursor:pointer;border:2px solid transparent;transition:.25s;position:relative;overflow:hidden}
+  .des.on{border-color:var(--gold);transform:translateY(-2px)}
+  .des span{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:8.5px;letter-spacing:.05em;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+  .amounts{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px}
+  .amt{flex:1;min-width:60px;background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:10px;padding:14px 6px;text-align:center;cursor:pointer;font-family:var(--serif);font-size:21px;color:var(--cream);transition:.2s}
+  .amt.on{border-color:var(--gold);background:rgba(201,169,110,.12);color:var(--gold)}
+  label.fld{display:block;margin-bottom:15px}
+  label.fld span{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+  input,textarea{width:100%;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:8px;padding:12px 14px;color:var(--cream);font-family:var(--sans);font-size:14.5px}
+  input:focus,textarea:focus{outline:none;border-color:var(--gold)}
+  textarea{resize:vertical;min-height:64px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  .btn-gold{width:100%;background:var(--gold-grad);color:var(--plum);border:none;border-radius:14px;
+    padding:17px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;cursor:pointer;transition:.3s;margin-top:8px;
+    box-shadow:0 18px 40px -18px rgba(201,169,110,.6)}
+  .btn-gold:hover{filter:brightness(1.05)}.btn-gold:disabled{opacity:.6;cursor:default;box-shadow:none}
+  .msg{font-size:13.5px;margin-top:15px;text-align:center;min-height:20px}.msg.err{color:var(--err)}.msg.ok{color:var(--ok)}
+  .hint{color:var(--cream-dim);font-size:12px;text-align:center;margin-top:14px}
+  .card-pane{background:rgba(0,0,0,.16);border:1px solid var(--line);border-radius:16px;padding:30px}
+  .code-box{text-align:center;padding:28px;border:1px dashed var(--gold);border-radius:14px;margin-top:18px}
+  .code-box .code{font-family:var(--serif);font-size:32px;color:var(--gold);letter-spacing:.1em;margin:8px 0}
+  @media(max-width:560px){.row{grid-template-columns:1fr}.occ-grid{gap:8px}.des-grid{gap:8px}}
+  .share-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+  .sh{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:30px;padding:11px 20px;
+    font-size:12.5px;letter-spacing:.04em;color:var(--cream);cursor:pointer;background:rgba(0,0,0,.2);transition:.25s;font-family:var(--sans)}
+  .sh:hover{border-color:var(--gold);color:var(--gold)}
+  .sh.wa{background:#25D366;border-color:#25D366;color:#fff}.sh.wa:hover{filter:brightness(1.08);color:#fff}
+  .sh.cp.done{border-color:var(--ok);color:var(--ok)}
+</style>
+<link rel="stylesheet" href="movil.css?v=1" />
+
+<link rel="stylesheet" href="estetica.css?v=2" />
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8E723F"/><stop offset=".42" stop-color="#F0DCB4"/><stop offset=".72" stop-color="#C9A96E"/><stop offset="1" stop-color="#8E723F"/></linearGradient></defs></svg>
+
+<header><div class="nav">
+  <a href="index.html" class="brand"><svg class="inf" width="34" height="17" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>Babyloon</a>
+  <a href="index.html" class="back">← Inicio</a>
+</div></header>
+
+<section class="hero"><div class="wrap">
+  <span class="eyebrow" data-i18n="gc_eyebrow">Tarjeta regalo</span>
+  <h1><span data-i18n="gc_h1a">Regala</span> <span class="gold-text" data-i18n="gc_h1b">belleza</span></h1>
+  <p data-i18n="gc_sub">El regalo perfecto: servicios de belleza de lujo a domicilio y boutique.</p>
+  <div class="tabs">
+    <button id="tabBuy" class="on" data-i18n="gc_buy">Comprar</button>
+    <button id="tabRedeem" data-i18n="gc_redeem">Canjear</button>
+  </div>
+</div></section>
+
+<!-- COMPRAR -->
+<section class="pane on" id="paneBuy"><div class="wrap" id="buyWrap">
+  <!-- preview -->
+  <div class="preview">
+    <div class="gcard" id="gcard">
+      <div class="stars" id="stars"></div>
+      <div class="shimmer"></div>
+      <div class="gc-top">
+        <svg class="inf" width="26" height="13" viewBox="0 0 120 60" style="filter:none"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z" id="gcInf"/></svg>
+        <span class="gc-brand" id="gcBrand">Babyloon</span>
+        <span class="gc-label" id="gcLabel">GIFT CARD</span>
+      </div>
+      <div class="gc-amt" id="gcAmt">…</div>
+      <div class="gc-bottom">
+        <span id="gcTo">PARA: —</span>
+        <span id="gcTag">∞ BELLEZA SIN FIN</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="block-label" data-i18n="gc_occasion">Ocasión</p>
+  <div class="occ-grid" id="occGrid"></div>
+
+  <p class="block-label" data-i18n="gc_design">Diseño</p>
+  <div class="des-grid" id="desGrid"></div>
+
+  <p class="block-label" data-i18n="gc_amount_l">Importe</p>
+  <div class="amounts" id="amounts">
+    <div class="amt">…</div>
+    <div class="amt">…</div>
+    <div class="amt">…</div>
+    <div class="amt">…</div>
+    <div class="amt">…</div>
+  </div>
+  <label class="fld"><span id="customLbl">O importe personalizado</span><input id="customAmt" type="number" inputmode="decimal" placeholder="75" /></label>
+
+  <div class="row">
+    <label class="fld"><span data-i18n="gc_rname">Nombre de quien lo recibe</span><input id="rName" placeholder="María" /></label>
+    <label class="fld"><span data-i18n="gc_remail">Email de quien lo recibe</span><input id="rEmail" type="email" placeholder="maria@email.com" /></label>
+  </div>
+  <label class="fld"><span data-i18n="gc_sname">Tu nombre</span><input id="sName" placeholder="Andrés" /></label>
+  <label class="fld"><span data-i18n="gc_msg">Mensaje (opcional)</span><textarea id="msg" placeholder="Un detalle para ti…"></textarea></label>
+  <button class="btn-gold" id="buyBtn"><span data-i18n="gc_pay">Pagar y enviar</span> <span id="btnAmt">…</span></button>
+  <div class="msg" id="buyMsg"></div>
+  <p class="hint" data-i18n="gc_secure">Pago seguro con Stripe. Al pagar recibes el código para compartirlo.</p>
+  <p class="hint" data-i18n="gc_no_expira">Esta tarjeta regalo no caduca.</p>
+</div></section>
+
+<!-- CANJEAR -->
+<section class="pane" id="paneRedeem"><div class="wrap">
+  <div class="card-pane">
+    <label class="fld"><span data-i18n="gc_code">Código de la tarjeta</span><input id="redeemCode" placeholder="BL-XXXX-XXXX-XXXX" style="text-transform:uppercase" /></label>
+    <button class="btn-gold" id="redeemBtn" data-i18n="gc_redeem_btn">Canjear en mi cuenta</button>
+    <div class="msg" id="redeemMsg"></div>
+    <p class="hint" data-i18n="gc_aviso_canje">Debes iniciar sesión. Los puntos se añaden a tu monedero Babyloon.</p>
+  </div>
+</div></section>
+
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="conexion.js?v=1"></script>
+<script src="i18n.js?v=10"></script>
+<script src="i18n-index.js?v=4"></script>
+<script src="i18n-index-it.js?v=1"></script>
+<script src="i18n-index-nl.js?v=1"></script>
+<script src="i18n-index-pl.js?v=1"></script>
+<script src="i18n-index-el.js?v=1"></script>
+<script src="i18n-index-hu.js?v=1"></script>
+<script src="i18n-index-5.js?v=2"></script>
+<script src="i18n-regalo-completar.js?v=1"></script>
+  <script src="i18n-regalo-avisos.js?v=2"></script>
+<script src="i18n-5-resto.js?v=1"></script>
+  <script src="i18n-auth.js?v=1"></script>
+  <script src="i18n-auth-extra.js?v=2"></script>
+  <script src="i18n-aceptacion.js?v=1"></script>
+<script src="i18n-regalo-6145.js?v=1"></script>
+<script src="i18n-regalo-6168.js?v=1"></script>
+<script src="app-link.js"></script>
+<script src="money.js?v=2"></script>
+<script>
+  const SUPABASE_URL="https://qphatjblvojnfyghwmjy.supabase.co";
+  const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  window.__sbClient = sb;
+  const $=id=>document.getElementById(id);
+  const T=(k,f)=>{try{const v=window.BBL&&BBL.t(k);return (v&&v!==k)?v:f;}catch(_){return f;}};
+  // 61.45 · Los puntos, escritos como en la app (fmtPuntos): punto de miles,
+  // coma decimal y, si son enteros, sin decimales.
+  const pts=n=>{const x=Number(n)||0,c=Math.round(Math.abs(x)*100),r=c%100,
+    e=String(Math.floor(c/100)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    return (x<0&&c>0?'-':'')+(r?e+','+String(r).padStart(2,'0'):e);};
+
+  // datos (coherentes con la app)
+  const OCCASIONS=[
+    {id:'navidad',em:'🎄',key:'occChristmas',es:'Navidad',grad:['#13251C','#0E1813']},
+    {id:'cumple',em:'🎂',key:'occBirthday',es:'Cumpleaños',grad:['#2A1726','#160D14']},
+    // 61.45 · Sin ocasiones con género: «Para ti» y «Día de la amistad», como
+    // la app (antes, aquí «Para ella» y «Para él»).
+    {id:'parati',em:'✨',key:'occForYou',es:'Para ti',grad:['#2A1424','#160C14']},
+    {id:'amistad',em:'🤝',key:'occFriendship',es:'Día de la amistad',grad:['#1C1A22','#0F0D12']},
+    {id:'boda',em:'💍',key:'occWedding',es:'Boda',grad:['#272018','#16110C']},
+    {id:'madre',em:'🌸',key:'occMother',es:'Día de la madre',grad:['#2A1A22','#160D13']},
+  ];
+  const DESIGNS=[
+    {id:'champagne',name:'Champagne',grad:['#3A2C14','#CAA667','#8E6F38'],text:'#2A1F0C'},
+    {id:'rosegold',name:'Rose Gold',grad:['#3A1E1C','#D9A39B','#9C5F59'],text:'#3A1816'},
+    {id:'galaxy',name:'Galaxy',grad:['#161038','#352A63','#120C2A'],text:'#EDE7FF',stars:true},
+    {id:'pastel',name:'Pastel',grad:['#F4E9E6','#E7D6E6','#D9E6DF'],text:'#4A3A44'},
+  ];
+  // 61.68 · La tarjeta, en la moneda de quien la compra: la de su cuenta y,
+  // sin cuenta, la del pais desde el que mira (Money.mine); si no se sabe,
+  // dolares. Los importes para elegir, el minimo y el maximo los dice el
+  // servidor en esa moneda (importes_de_tarjeta_regalo): 25, 50 y 100
+  // libras o dolares; 5.000 y 10.000 yenes; 500 y 1.000 pesos. La moneda
+  // viaja al cobro. Antes, euros para todo el mundo.
+  let MONEDA=null, IMPORTES=[], MINIMO=null, MAXIMO=null, DECIMALES=2;
+  let state={amount:null,occasion:null,design:'champagne'};
+  const imp=v=>(v==null||MONEDA==null)?'…'
+    :(Number.isInteger(Number(v))?Money.formatShort(v,MONEDA):Money.format(v,MONEDA));
+
+  // preview
+  function paint(){
+    const d=DESIGNS.find(x=>x.id===state.design);
+    const g=$('gcard');
+    g.style.background='linear-gradient(135deg,'+d.grad.join(',')+')';
+    g.style.color=d.text;
+    g.classList.toggle('galaxy',!!d.stars);
+    document.getElementById('gcInf').setAttribute('stroke',d.text);
+    document.getElementById('gcInf').setAttribute('fill','none');
+    // 61.68 · En la moneda de quien la compra: el importe ya esta en ella y
+    // no se convierte, solo se escribe con el formateador compartido.
+    $('gcAmt').textContent=imp(state.amount);
+    $('customLbl').textContent=T('gc_custom_m','O importe personalizado ({moneda})')
+      .replace('{moneda}', MONEDA?Money.symbol(MONEDA):'…');
+    const to=$('rName').value.trim();
+    $('gcTo').textContent=(T('gc_for','PARA')+': '+(to?to.toUpperCase():'—'));
+    const occ=state.occasion?OCCASIONS.find(o=>o.id===state.occasion):null;
+    $('gcTag').textContent = occ ? (T(occ.key,occ.es).toUpperCase()) : '∞ '+T('gc_endless','BELLEZA SIN FIN');
+    $('btnAmt').textContent=imp(state.amount);
+  }
+  // estrellas para galaxy
+  (function(){const s=$('stars');let h='';for(let i=0;i<16;i++){h+='<i style="left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;opacity:'+(0.4+Math.random()*0.6)+'"></i>';}s.innerHTML=h;})();
+
+  // ocasiones
+  $('occGrid').innerHTML=OCCASIONS.map(o=>`<div class="occ" data-o="${o.id}"><div class="em">${o.em}</div><div class="nm" data-i18n="${o.key}">${o.es}</div></div>`).join('');
+  $('occGrid').addEventListener('click',e=>{const el=e.target.closest('.occ');if(!el)return;
+    state.occasion=el.dataset.o;
+    document.querySelectorAll('.occ').forEach(x=>x.classList.toggle('on',x===el));paint();});
+  // diseños
+  $('desGrid').innerHTML=DESIGNS.map(d=>`<div class="des${d.id===state.design?' on':''}" data-d="${d.id}" style="background:linear-gradient(135deg,${d.grad.join(',')})"><span>${d.name}</span></div>`).join('');
+  $('desGrid').addEventListener('click',e=>{const el=e.target.closest('.des');if(!el)return;
+    state.design=el.dataset.d;document.querySelectorAll('.des').forEach(x=>x.classList.toggle('on',x===el));paint();});
+  // importes · 61.68: los dice el servidor, en la moneda de quien compra
+  function pintaImportes(){
+    $('amounts').innerHTML=IMPORTES.map(v=>
+      `<div class="amt${v===state.amount?' on':''}" data-v="${v}">${imp(v)}</div>`).join('');
+    const c=$('customAmt');
+    if(MINIMO!=null) c.min=String(MINIMO); else c.removeAttribute('min');
+    if(MAXIMO!=null) c.max=String(MAXIMO); else c.removeAttribute('max');
+    c.step=DECIMALES===0?'1':'0.01';
+    if(IMPORTES.length>1) c.placeholder=String(IMPORTES[1]*1.5);
+  }
+  $('amounts').addEventListener('click',e=>{const a=e.target.closest('.amt');if(!a||!a.dataset.v)return;
+    $('customAmt').value='';state.amount=Number(a.dataset.v);
+    document.querySelectorAll('.amt').forEach(x=>x.classList.toggle('on',x===a));paint();});
+  $('customAmt').addEventListener('input',e=>{let v=Number(e.target.value);if(v>0){
+    v=DECIMALES===0?Math.round(v):Math.round(v*100)/100;
+    state.amount=v;document.querySelectorAll('.amt').forEach(x=>x.classList.remove('on'));paint();}});
+  async function cargarMoneda(){
+    let code=null, d=null;
+    try{ code=(await Money.mine(sb)).code; }catch(_){ code=Money.myCode(); }
+    try{ const r=await sb.rpc('importes_de_tarjeta_regalo',{p_moneda:code}); if(r&&!r.error) d=r.data; }catch(_){}
+    if(d&&d.ok===true&&Array.isArray(d.importes)&&d.importes.length){
+      MONEDA=String(d.moneda).toUpperCase(); IMPORTES=d.importes.map(Number);
+      MINIMO=Number(d.minimo); MAXIMO=Number(d.maximo); DECIMALES=(Number(d.decimales)===0)?0:2;
+    }else{
+      // Sin respuesta del servidor: en dolares, con los importes de siempre.
+      // El cobro vuelve a mirar el minimo y el maximo.
+      MONEDA='USD'; IMPORTES=[25,50,100,150,300]; MINIMO=null; MAXIMO=null; DECIMALES=2;
+    }
+    state.amount=IMPORTES[Math.min(1,IMPORTES.length-1)];
+    $('customAmt').value='';
+    pintaImportes(); paint();
+  }
+  $('rName').addEventListener('input',paint);
+  document.addEventListener('bbl:lang',paint);
+  paint();
+  cargarMoneda();
+
+  // tabs
+  function tab(w){$('tabBuy').classList.toggle('on',w==='buy');$('tabRedeem').classList.toggle('on',w==='redeem');
+    $('paneBuy').classList.toggle('on',w==='buy');$('paneRedeem').classList.toggle('on',w==='redeem');}
+  $('tabBuy').addEventListener('click',()=>tab('buy'));
+  $('tabRedeem').addEventListener('click',()=>tab('redeem'));
+
+  // COMPRAR → Stripe Checkout
+  $('buyBtn').addEventListener('click',async()=>{
+    const m=$('buyMsg');
+    if(MONEDA==null||state.amount==null){m.textContent=T('gc_err','No se pudo iniciar el pago.');m.className='msg err';return;}
+    if(MINIMO!=null&&state.amount<MINIMO){m.textContent=T('gc_min','El importe mínimo es {min}.').replace('{min}',Money.format(MINIMO,MONEDA));m.className='msg err';return;}
+    if(MAXIMO!=null&&state.amount>MAXIMO){m.textContent=T('gc_max','El importe máximo es {max}.').replace('{max}',Money.format(MAXIMO,MONEDA));m.className='msg err';return;}
+    if(!$('rEmail').value.trim()){m.textContent=T('gc_need_email','Introduce el email de quien recibe.');m.className='msg err';return;}
+    $('buyBtn').disabled=true;m.textContent=T('gc_processing','Redirigiendo al pago seguro…');m.className='msg';
+    try{
+      const {data:{session}}=await sb.auth.getSession();
+      const r=await fetch(`${SUPABASE_URL}/functions/v1/gift-purchase`,{method:'POST',
+        headers:{'Authorization':`Bearer ${session?session.access_token:SUPABASE_KEY}`,'apikey':SUPABASE_KEY,'Content-Type':'application/json'},
+        body:JSON.stringify({action:'create',amount:state.amount,currency:MONEDA,design_id:state.design,occasion:state.occasion||'',
+          recipient_email:$('rEmail').value.trim(),recipient_name:$('rName').value.trim(),
+          sender_name:$('sName').value.trim(),sender_id:session?session.user.id:null,message:$('msg').value.trim(),origin:location.origin})});
+      const d=await r.json();
+      if(d.url){
+        // Se va a Stripe: el evento se manda ANTES de salir de la página,
+        // porque si vuelve por otra puerta ya no lo contamos.
+        try{ if(window.BBLPresencia) BBLPresencia.evento('tarjeta_regalo_pago',
+          {importe:state.amount, moneda:MONEDA, diseno:state.design}); }catch(_){}
+        location.href=d.url;}
+      else{
+        // 61.68 · El minimo y el maximo que dice el cobro, en su moneda.
+        const e=d.error, mon=d.currency||MONEDA;
+        m.textContent=(e==='stripe_not_configured')?T('gc_notcfg','El pago no está configurado.')
+          :(e==='invalid_amount'&&d.max!=null&&state.amount>Number(d.max))?T('gc_max','El importe máximo es {max}.').replace('{max}',Money.format(Number(d.max),mon))
+          :(e==='invalid_amount'&&d.min!=null)?T('gc_min','El importe mínimo es {min}.').replace('{min}',Money.format(Number(d.min),mon))
+          :(e||T('gc_err','No se pudo iniciar el pago.'));
+        m.className='msg err';$('buyBtn').disabled=false;}
+    }catch(e){m.textContent=String(e.message||e);m.className='msg err';$('buyBtn').disabled=false;}
+  });
+
+  // CANJEAR
+  $('redeemBtn').addEventListener('click',async()=>{
+    const m=$('redeemMsg'),code=$('redeemCode').value.trim().toUpperCase();
+    if(!code){m.textContent=T('gc_need_code','Introduce el código.');m.className='msg err';return;}
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session){m.innerHTML=T('gc_login','Debes <a href="cliente.html" style="color:var(--gold)">iniciar sesión</a> para canjear.');m.className='msg err';return;}
+    $('redeemBtn').disabled=true;m.textContent=T('gc_redeeming','Canjeando…');m.className='msg';
+    try{
+      const {data,error}=await sb.rpc('redeem_gift_card',{p_code:code,p_client_id:session.user.id});
+      if(data && data.success===true){ try{ if(window.BBLPresencia)
+        BBLPresencia.evento('tarjeta_regalo_canjeada',{}); }catch(_){} }
+      if(error||!data||data.success!==true){
+        // 61.45 · El «no», por su motivo y en el idioma de quien canjea. Antes
+        // salía el texto del servidor, en español.
+        const mot=(data&&data.motivo)||'';
+        m.textContent = mot==='caducada' ? T('gc_caducada','Esta tarjeta regalo ha caducado.')
+          : mot==='propia' ? T('gc_propia','No puedes canjear una tarjeta que has comprado tú: es para quien la recibe.')
+          : mot==='sin_tipo_de_cambio' ? T('gc_sin_cambio','Esta tarjeta está en una moneda que todavía no se puede canjear. Sigue valiendo: inténtalo más adelante.')
+          : T('gc_invalid','Código no válido o ya canjeado.');
+        m.className='msg err';}
+      else{
+        // 61.45 · Son puntos, no saldo en dinero (antes, «Saldo añadido:
+        // 50,00 €»): cuántos y, si son de regalo, que lo son (61.44b).
+        const b=data.bolsas||{};
+        const reg=Number(b.regalados||0);
+        const comp=(b.comprados!=null)?Number(b.comprados):(reg>0?0:Number(data.puntos||0));
+        m.textContent = (reg>0&&comp>0)
+          ? T('gc_canje_mixto','¡Canjeada! Puntos añadidos a tu monedero: {comprados} comprados y {regalo} de regalo.')
+              .replace('{comprados}',pts(comp)).replace('{regalo}',pts(reg))
+          : reg>0
+          ? T('gc_canje_regalo','¡Canjeada! {puntos} puntos de regalo añadidos a tu monedero: valen para cualquier servicio o producto.').replace('{puntos}',pts(reg))
+          : T('gc_canje_ok','¡Canjeada! {puntos} puntos añadidos a tu monedero.').replace('{puntos}',pts(comp));
+        m.className='msg ok'; }
+    }catch(e){m.textContent=String(e.message||e);m.className='msg err';}
+    $('redeemBtn').disabled=false;
+  });
+
+  // compartir el código
+  function buildShare(code){
+    const url='https://babyloon.app/regalo.html';
+    const txt=T('gc_share_text','Te regalo belleza ✨ Canjea tu tarjeta Babyloon con el código')+' '+code+' · '+url;
+    const row=document.getElementById('shareRow'); if(!row)return;
+    row.innerHTML='<a class="sh wa" href="https://wa.me/?text='+encodeURIComponent(txt)+'" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.5A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-2.8.9.9-2.7-.2-.3A8 8 0 1112 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8.9-.3.2-.5 0a6.5 6.5 0 01-1.9-1.2 7.2 7.2 0 01-1.3-1.7c-.1-.2 0-.3.1-.4l.4-.4.2-.4v-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 00-.7.3A2.8 2.8 0 006 8.6a4.9 4.9 0 001 2.6 11.2 11.2 0 004.3 3.8c.6.3 1.1.4 1.5.5a3.6 3.6 0 001.6.1c.5-.1 1.4-.6 1.6-1.1s.2-1 .1-1.1-.2-.2-.4-.3z"/></svg> '+T('gc_wa','WhatsApp')+'</a>'+
+      '<button class="sh cp" id="shCopy"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg> '+T('gc_copy','Copiar código')+'</button>'+
+      (navigator.share?'<button class="sh nv" id="shNative">'+T('gc_more','Compartir')+'</button>':'');
+    document.getElementById('shCopy').addEventListener('click',()=>{
+      const btn=document.getElementById('shCopy');
+      navigator.clipboard.writeText(code).then(()=>{ btn.classList.add('done'); btn.innerHTML='✓ '+T('gc_copied','¡Copiado!'); setTimeout(()=>buildShare(code),1800); }).catch(()=>{});
+    });
+    const nv=document.getElementById('shNative');
+    if(nv) nv.addEventListener('click',()=>{ navigator.share({title:'Babyloon',text:txt,url:url}).catch(()=>{}); });
+  }
+
+  // vuelta de Stripe
+  (async()=>{
+    const p=new URLSearchParams(location.search);
+    if(p.get('success')==='1'&&p.get('session_id')){
+      tab('buy');const box=$('buyWrap');
+      box.innerHTML='<div class="card-pane"><div class="msg">'+T('gc_confirming','Confirmando tu tarjeta…')+'</div></div>';
+      try{
+        const r=await fetch(`${SUPABASE_URL}/functions/v1/gift-purchase`,{method:'POST',
+          headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json'},
+          body:JSON.stringify({action:'confirm',session_id:p.get('session_id')})});
+        const d=await r.json();
+        if(d.code){
+          box.innerHTML='<div class="card-pane" style="text-align:center"><div class="eyebrow">'+T('gc_ready','Tarjeta lista')+'</div><div class="code-box"><div style="font-size:10px;letter-spacing:.2em;color:var(--cream-dim)">'+T('gc_card','Tarjeta regalo')+'</div><div class="code">'+d.code+'</div><p class="hint">'+T('gc_no_expira','Esta tarjeta regalo no caduca.')+'</p><p class="hint">'+T('gc_share','Comparte este código con quien la recibe para que la canjee.')+'</p></div><div class="share-row" id="shareRow"></div></div>';
+          buildShare(d.code);
+        }
+        else{box.innerHTML='<div class="card-pane"><div class="msg err">'+(d.error||T('gc_err','Error al confirmar.'))+'</div></div>';}
+      }catch(e){box.innerHTML='<div class="card-pane"><div class="msg err">'+String(e.message||e)+'</div></div>';}
+    }else if(p.get('canceled')==='1'){$('buyMsg').textContent=T('gc_canceled','Pago cancelado.');}
+  })();
+</script>
+<script src="cookies.js?v=2"></script>
+<script src="presencia.js?v=2"></script>
+<script src="lujo.js?v=1"></script>
+<script src="auth.js?v=5"></script>
+<script src="aceptacion.js?v=1"></script>
+</body>
+</html>

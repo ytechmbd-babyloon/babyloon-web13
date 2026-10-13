@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Novias · Babyloon</title>
+<meta name="description" content="Encuentra tu maquilladora, tu estilista y tu manicurista para el día de tu boda, donde te cases. Guárdalas y reserva Privée en la app." />
+<link href="fuentes.css?v=1" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0D0B0F;--ink-2:#120C10;--plum:#241820;--plum-2:#1B1219;--gold:#C8A96A;--gold-lite:#F3E0BC;
+    --cream:#F9F5EE;--smoke:#E8E0D5;--mauve:#8C7482;--mauve-dim:#6B5766;
+    --line:rgba(200,169,106,.16);--line-soft:rgba(249,245,238,.07);
+    --online:#3DD68C;--err:#E0857C;
+    --serif:'Cormorant Garamond',serif;--sans:'Jost',system-ui,sans-serif;
+    --gold-grad:linear-gradient(135deg,#8E723F 0%,#F3E0BC 42%,#C9A96E 72%,#9C8050 100%);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:var(--sans);font-weight:300;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  .display{font-family:var(--serif);font-weight:300;letter-spacing:.01em}
+  .eyebrow{font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);font-weight:500}
+  .gold-text{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .inf path{stroke:url(#gg);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+  header{border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;
+    background:rgba(13,11,15,.88);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:23px}
+  .nav-right{display:flex;align-items:center;gap:16px}
+  .back{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--smoke);white-space:nowrap}
+  .back:hover{color:var(--gold)}
+
+  /* ── El comienzo ── */
+  .hero{padding:64px 0 40px;text-align:center;position:relative}
+  .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(52% 78% at 50% 0%,rgba(200,169,106,.1),transparent 70%)}
+  .hero h1{font-size:clamp(38px,6.4vw,72px);line-height:1.04;margin:14px 0 16px;position:relative}
+  .hero p{color:var(--smoke);max-width:56ch;margin:0 auto;font-size:clamp(15px,1.7vw,18px)}
+
+  /* ── La boda ── */
+  .boda{border:1px solid var(--line);border-radius:12px;background:var(--plum-2);
+    padding:22px 24px;margin:8px 0 34px;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:16px;align-items:end}
+  .campo{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .campo label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mauve)}
+  .campo input,.campo select{background:rgba(0,0,0,.28);border:1px solid var(--line);
+    border-radius:20px;color:var(--cream);font-family:var(--sans);font-size:13.5px;
+    padding:11px 14px;width:100%;-webkit-appearance:none;appearance:none}
+  .campo input:focus,.campo select:focus{outline:none;border-color:var(--gold)}
+  .campo select option{background:#1B1219;color:var(--cream)}
+  .campo.si-no{flex-direction:row;align-items:center;gap:10px}
+  /* La casilla del novio no se veía marcar, y el motivo estaba dos
+     reglas más arriba: `.campo input` lleva `appearance:none`, que en
+     una casilla borra el dibujo entero del navegador. Se marcaba —el
+     DOM cambiaba— y no se notaba nada. `accent-color` tampoco sirve de
+     nada con `appearance:none`.
+     Se dibuja a mano, que además queda en la línea de la casa: filo
+     dorado, relleno dorado al marcar y una uve oscura encima. */
+  .campo.si-no input{appearance:none;-webkit-appearance:none;
+    width:20px;height:20px;flex:none;padding:0;border-radius:5px;
+    border:1px solid rgba(200,169,106,.55);background:rgba(0,0,0,.28);
+    cursor:pointer;position:relative;transition:background .18s,border-color .18s}
+  .campo.si-no input:hover{border-color:var(--gold)}
+  .campo.si-no input:checked{background:var(--gold);border-color:var(--gold)}
+  .campo.si-no input:checked::after{content:'';position:absolute;left:6.5px;top:2.5px;
+    width:5px;height:10px;border:solid #1B1219;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .campo.si-no input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .campo.si-no label{cursor:pointer}
+  .campo.si-no label{text-transform:none;letter-spacing:0;font-size:13px;color:var(--smoke)}
+
+  /* ── Los cuatro oficios ── */
+  .oficios{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+  .oficio{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smoke);
+    border:1px solid var(--line);padding:10px 18px;border-radius:22px;cursor:pointer;
+    white-space:nowrap;transition:.25s;background:none;font-family:var(--sans)}
+  .oficio:hover{border-color:var(--gold);color:var(--gold)}
+  .oficio.on{background:var(--gold-grad);color:var(--ink);border-color:transparent;font-weight:500}
+
+  /* ── Las profesionales ── */
+  .lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:18px}
+  .lista .aviso{grid-column:1/-1;margin-bottom:0}
+  .ficha{border:1px solid var(--line);border-radius:12px;background:var(--plum-2);
+    padding:20px;display:flex;flex-direction:column;gap:12px;transition:.3s ease}
+  .ficha:hover{border-color:rgba(200,169,106,.4);transform:translateY(-3px)}
+  .ficha .arriba{display:flex;gap:14px;align-items:center}
+  .ficha .foto{width:62px;height:62px;border-radius:50%;object-fit:cover;flex-shrink:0;
+    background:radial-gradient(circle,rgba(200,169,106,.16),var(--ink));
+    border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+    font-family:var(--serif);font-size:24px;color:var(--gold)}
+  .ficha h3{font-family:var(--serif);font-size:21px;font-weight:500;line-height:1.15}
+  .ficha .donde{font-size:12.5px;color:var(--mauve);margin-top:2px}
+  .sellos{display:flex;gap:6px;flex-wrap:wrap}
+  .sello{font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;padding:4px 9px;
+    border-radius:20px;border:1px solid var(--line);color:var(--smoke);white-space:nowrap}
+  .sello.oro{color:var(--gold);border-color:rgba(200,169,106,.42)}
+  .sello.ok{color:var(--online);border-color:rgba(61,214,140,.3)}
+  .ficha .bio{font-size:13px;line-height:1.55;color:var(--mauve);
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .bodas{font-size:12px;color:var(--smoke);border-top:1px solid var(--line-soft);padding-top:11px}
+  .bodas b{color:var(--gold);font-weight:500}
+  .ficha .pie{margin-top:auto;display:flex;gap:10px;align-items:center;padding-top:4px}
+  .guardar{flex:1;font-family:var(--sans);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+    border:1px solid var(--line);background:none;color:var(--smoke);padding:11px 14px;
+    border-radius:22px;cursor:pointer;transition:.25s}
+  .guardar:hover{border-color:var(--gold);color:var(--gold)}
+  .guardar.on{background:var(--gold-grad);color:var(--ink);border-color:transparent;font-weight:500}
+  .ver{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mauve);
+    white-space:nowrap;background:none;border:none;cursor:pointer;font-family:var(--sans);padding:0}
+  .ver:hover{color:var(--gold)}
+
+  /* ── El tablero ── */
+  .tablero{position:sticky;bottom:0;z-index:25;margin-top:38px;
+    border-top:1px solid var(--line);background:rgba(13,11,15,.95);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  .tablero-in{display:flex;align-items:center;gap:18px;padding:16px 0;flex-wrap:wrap;
+    /* Hueco a la derecha para el globo de «Hablar con Baby», que va
+       fijo en esa esquina y tapaba el botón de reservar. */
+    padding-right:190px}
+  .tablero .cuenta{font-family:var(--serif);font-size:30px;line-height:1;color:var(--cream)}
+  .tablero .txt{flex:1;min-width:180px}
+  .tablero .txt small{display:block;color:var(--mauve);font-size:12.5px;margin-top:2px}
+  .caras{display:flex;align-items:center}
+  .caras img,.caras span{width:34px;height:34px;border-radius:50%;object-fit:cover;
+    border:1px solid var(--line);margin-left:-9px;background:var(--plum);
+    display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gold);
+    font-family:var(--serif)}
+  .caras :first-child{margin-left:0}
+  /* Bloque 20.2c · el permiso para escribirle.
+     Va DESPUÉS de la lista, no antes: primero que vea que hay gente para
+     su boda, y sólo entonces se le pide el correo. Pedirlo de entrada,
+     sin haber enseñado nada, es un peaje.
+     Los campos van a 16px a propósito: por debajo, Safari de iPhone hace
+     zoom al enfocarlos y la página salta. */
+  .contacto{border:1px solid var(--line);border-radius:16px;background:var(--plum-2);
+    padding:20px 22px;margin:26px 0 8px}
+  .contacto h3{font-family:var(--serif);font-weight:300;font-size:21px;margin-bottom:6px}
+  .contacto .si-no{display:flex;align-items:flex-start;gap:10px;margin:10px 0 2px}
+  .contacto .si-no input{width:18px;height:18px;margin-top:2px;accent-color:var(--gold);flex:none}
+  .contacto .si-no label{font-size:14px;line-height:1.45;color:var(--smoke);cursor:pointer}
+  .contacto .datos{display:none;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .contacto .datos.abierto{display:flex}
+  .contacto .datos input{flex:1 1 210px;min-width:0;background:rgba(0,0,0,.3);
+    border:1px solid var(--line);border-radius:10px;color:var(--cream);
+    font-family:var(--sans);font-size:16px;padding:12px 14px}
+  .contacto .datos input:focus{outline:none;border-color:var(--gold)}
+  .contacto .datos button{flex:0 0 auto}
+  .contacto .legal{font-size:12px;color:var(--mauve);margin-top:10px;line-height:1.5}
+  .contacto .dicho{font-size:14px;margin-top:12px;min-height:20px}
+  .contacto .dicho.ok{color:#3DD68C} .contacto .dicho.err{color:#E0857C}
+  @media(max-width:560px){ .contacto .datos input{flex:1 1 100%} .contacto .datos button{width:100%} }
+  .btn-oro{font-family:var(--sans);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    font-weight:500;color:var(--ink);padding:13px 24px;border-radius:24px;border:none;
+    background:var(--gold-grad);background-size:180% 180%;cursor:pointer;transition:.3s;white-space:nowrap}
+  .btn-oro:hover{background-position:100% 0}
+
+  /* ── La ficha, en una capa encima ──────────────────────────
+     Se abre aquí y no en otra página a propósito: la novia está
+     comparando, y mandarla a otra pantalla la obliga a volver y a
+     perder los filtros y el sitio de la lista. */
+  .capa{position:fixed;inset:0;z-index:60;background:rgba(6,4,7,.82);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:center;padding:24px;
+    opacity:0;visibility:hidden;transition:.28s}
+  .capa.open{opacity:1;visibility:visible}
+  .capa-caja{background:var(--plum-2);border:1px solid var(--line);border-radius:16px;
+    width:min(720px,100%);max-height:88vh;overflow-y:auto;padding:30px}
+  .capa-x{position:absolute;top:18px;right:20px;background:none;border:none;
+    color:var(--mauve);font-size:26px;line-height:1;cursor:pointer}
+  .capa-x:hover{color:var(--gold)}
+  .fp-top{display:flex;gap:18px;align-items:center;margin-bottom:16px}
+  .fp-foto{width:88px;height:88px;border-radius:50%;object-fit:cover;flex-shrink:0;
+    border:1px solid var(--line);background:radial-gradient(circle,rgba(200,169,106,.16),var(--ink));
+    display:flex;align-items:center;justify-content:center;font-family:var(--serif);
+    font-size:34px;color:var(--gold)}
+  .fp-top h3{font-family:var(--serif);font-size:28px;font-weight:500;line-height:1.1}
+  .fp-bio{font-size:14px;line-height:1.65;color:var(--smoke);margin:14px 0}
+  .fp-tit{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+    margin:22px 0 10px}
+  .fp-serv{display:flex;flex-wrap:wrap;gap:7px}
+  .fp-serv span{font-size:12px;border:1px solid var(--line-soft);border-radius:18px;
+    padding:6px 12px;color:var(--smoke)}
+  .fp-serv span.boda{border-color:rgba(200,169,106,.42);color:var(--gold)}
+  .fp-fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+  .fp-fotos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;
+    border:1px solid var(--line-soft)}
+  .fp-op{border-top:1px solid var(--line-soft);padding:12px 0;font-size:13.5px;color:var(--smoke)}
+  .fp-op .quien{color:var(--mauve);font-size:12px;margin-top:3px}
+  .fp-pie{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+  .fp-pie .guardar{flex:1 1 200px}
+  .fp-nota{font-size:12px;color:var(--mauve-dim);margin-top:12px;line-height:1.55}
+
+  /* El aviso honesto cuando la lista sale corta */
+  .aviso{border:1px solid var(--line);border-radius:12px;background:rgba(200,169,106,.05);
+    padding:18px 20px;margin-bottom:18px;font-size:13.5px;line-height:1.6;color:var(--smoke)}
+  .aviso b{color:var(--gold);font-weight:500}
+
+  .vacio{text-align:center;padding:60px 20px;color:var(--mauve)}
+  .cargando{text-align:center;padding:48px;color:var(--mauve-dim);font-size:13px}
+
+  footer{border-top:1px solid var(--line);margin-top:10px;padding:34px 0;color:var(--mauve);font-size:12.5px}
+  .pie-nav{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+  .pie-nav a:hover{color:var(--gold)}
+
+  @media(max-width:680px){
+    .hero{padding:34px 0 24px}
+    .boda{padding:18px;gap:14px;margin-bottom:26px}
+    .lista{grid-template-columns:1fr;gap:14px}
+    /* En móvil el globo se pone encima del botón igualmente, así que
+       el hueco va abajo y no a la derecha. */
+    .tablero-in{gap:12px;padding:13px 0 64px;padding-right:0}
+    .tablero .cuenta{font-size:24px}
+    /* 32.7 · `white-space:nowrap` con «Забронировать Privée в
+       приложении» son 364 px dentro de una pantalla de 320. Un botón
+       ancho se parte; una página no. */
+    .btn-oro{flex:1 1 100%;text-align:center;white-space:normal;max-width:100%;
+      padding-left:16px;padding-right:16px;line-height:1.35}
+  }
+</style>
+<link rel="stylesheet" href="movil.css?v=1" />
+<link rel="stylesheet" href="estetica.css?v=2" />
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <linearGradient id="gg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#8E723F"/><stop offset=".42" stop-color="#F3E0BC"/>
+    <stop offset=".72" stop-color="#C9A96E"/><stop offset="1" stop-color="#9C8050"/>
+  </linearGradient></defs></svg>
+
+<header><div class="wrap nav">
+  <a href="index.html" class="brand"><svg class="inf" width="36" height="18" viewBox="0 0 120 60"><path d="M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z"/></svg>Babyloon</a>
+  <div class="nav-right">
+    <a href="profesionales.html" class="back" data-i18n="pf_eyebrow">Profesionales</a>
+    <a href="index.html" class="back">← <span data-i18n="p_inicio">Inicio</span></a>
+  </div>
+</div></header>
+
+<section class="hero"><div class="wrap">
+  <span class="eyebrow" data-i18n="nv_eyebrow">Novias</span>
+  <h1 class="display"><span data-i18n="nv_h1a">Tu equipo</span><br>
+    <span class="gold-text" data-i18n="nv_h1b">para ese día</span></h1>
+  <p data-i18n="nv_lead">Maquillaje, peinado y uñas para ti, barbería para él. Búscalos donde te cases,
+    guárdalos en tu lista y reserva Privée cuando lo tengas claro.</p>
+</div></section>
+
+<div class="wrap">
+  <!-- La boda: sin esto, buscar es a ciegas -->
+  <div class="boda">
+    <div class="campo">
+      <label for="nvCiudad" data-i18n="nv_ciudad">Dónde te casas</label>
+      <select id="nvCiudad"><option value="" data-i18n="nv_todas">Todas las ciudades</option></select>
+    </div>
+    <div class="campo">
+      <label for="nvFecha" data-i18n="nv_fecha">Fecha de la boda</label>
+      <input type="date" id="nvFecha" />
+    </div>
+    <div class="campo">
+      <label for="nvInvitados" data-i18n="nv_invitados">Invitados</label>
+      <input type="number" id="nvInvitados" min="0" max="2000" placeholder="120" />
+    </div>
+    <div class="campo si-no">
+      <input type="checkbox" id="nvNovio" />
+      <label for="nvNovio" data-i18n="nv_novio">También barbería para el novio</label>
+    </div>
+  </div>
+
+  <div class="oficios" id="nvOficios"></div>
+  <div class="lista" id="nvLista"><div class="cargando" data-i18n="cargando">Cargando…</div></div>
+
+  <!-- Bloque 20.2c -->
+  <div class="contacto" id="nvContacto">
+    <h3 data-i18n="nv_c_titulo">¿Te echamos una mano?</h3>
+    <div class="si-no">
+      <input type="checkbox" id="nvcOk" />
+      <label for="nvcOk" data-i18n="nv_c_texto">Quiero que Babyloon me escriba con ideas y profesionales para mi día.</label>
+    </div>
+    <div class="datos" id="nvcDatos">
+      <input type="text"  id="nvcNombre" autocomplete="name"  data-i18n-ph="nv_c_nombre" placeholder="Tu nombre" />
+      <input type="email" id="nvcEmail"  autocomplete="email" data-i18n-ph="nv_c_email"  placeholder="Tu correo" />
+      <button type="button" class="btn-oro" id="nvcGo" data-i18n="nv_c_boton">Avisadme</button>
+    </div>
+    <p class="legal" data-i18n="nv_c_legal">Solo para esto. Puedes pedirnos que lo borremos cuando quieras.</p>
+    <div class="dicho" id="nvcMsg" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<!-- La ficha -->
+<div class="capa" id="nvCapa" role="dialog" aria-modal="true" hidden>
+  <div class="capa-caja" style="position:relative">
+    <button type="button" class="capa-x" id="nvCerrar" aria-label="Cerrar">&times;</button>
+    <div id="nvFicha"><div class="cargando" data-i18n="cargando">Cargando…</div></div>
+  </div>
+</div>
+
+<!-- El tablero, siempre a la vista -->
+<div class="tablero" id="nvTablero" hidden><div class="wrap tablero-in">
+  <div class="cuenta" id="nvCuenta">0</div>
+  <div class="txt"><b data-i18n="nv_tu_lista">Tu lista</b>
+    <small id="nvDetalle" data-i18n="nv_lista_vacia">Aún no has guardado a nadie.</small></div>
+  <div class="caras" id="nvCaras"></div>
+  <button class="btn-oro" id="nvReservar" data-app-open data-i18n="nv_reservar">Reservar Privée en la app</button>
+</div></div>
+
+<!-- 17.A4 · P2B: con qué parámetros se ordena, y quién paga por salir
+     antes. Lo pinta `orden.js` desde `parametros_del_orden()`; si el
+     servidor no contesta, no se pinta nada inventado. -->
+<div class="wrap"><div id="bblOrden" hidden></div></div>
+
+<footer><div class="wrap pie-nav">
+  <a href="index.html" data-i18n="p_inicio">Inicio</a>
+  <a href="profesionales.html" data-i18n="pf_eyebrow">Profesionales</a>
+  <a href="boutique.html" data-i18n="nav_boutique">Boutique</a>
+  <a href="privacidad.html" data-i18n="foot_priv">Privacidad</a>
+  <span>© 2026 Babyloon</span>
+</div></footer>
+
+<script src="supabase-js-2.117.1.min.js"></script>
+<script src="conexion.js?v=1"></script>
+<script src="i18n.js?v=10"></script>
+<script src="i18n-paginas.js?v=4"></script>
+<script src="i18n-ciudad-nombres.js?v=2"></script>
+<script src="i18n-index.js?v=4"></script>
+<script src="i18n-index-it.js?v=1"></script>
+<script src="i18n-index-nl.js?v=1"></script>
+<script src="i18n-index-pl.js?v=1"></script>
+<script src="i18n-index-el.js?v=1"></script>
+<script src="i18n-index-hu.js?v=1"></script>
+<script src="i18n-index-5.js?v=2"></script>
+<script src="i18n-novias.js?v=2"></script>
+<script src="i18n-orden.js?v=3"></script>
+  <script src="i18n-baby.js?v=1"></script>
+  <script src="i18n-5-resto.js?v=1"></script>
+  <script src="i18n-auth.js?v=1"></script>
+  <script src="i18n-auth-extra.js?v=2"></script>
+  <script src="i18n-aceptacion.js?v=1"></script>
+<script src="app-link.js"></script>
+<script src="money.js?v=1"></script>
+<script>
+  const SUPABASE_URL = "https://qphatjblvojnfyghwmjy.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik";
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  window.__sbClient = sb;
+
+  /* ── Los cuatro oficios de una boda ─────────────────────────────
+     Tres para ella y uno para él, que es exactamente lo que pidió
+     Andrés y lo que falta en casi todas las webs del sector: la
+     novia también organiza al novio. */
+  const OFICIOS = [
+    ['maquillaje','nv_of_maquillaje'],
+    ['peinado',   'nv_of_peinado'],
+    ['unas',      'nv_of_unas'],
+    ['barberia',  'nv_of_barberia']
+  ];
+
+  let ROL = 'maquillaje';
+  let CIUDAD = '';
+  let SESION = null;
+  let TABLERO = { tablero:null, profesionales:[] };
+
+  const esc = s => String(s==null?'':s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  const t   = k => (window.BBL && BBL.t) ? BBL.t(k) : k;
+
+  /* ── Las ciudades salen de la base, no de una lista a mano ──
+     `ciudades_publicas()` es la misma función que alimenta la
+     portada y las 43 páginas de ciudad. Si mañana se abre Viena,
+     aparece aquí sola. */
+  async function cargarCiudades(){
+    const sel = document.getElementById('nvCiudad');
+    try{
+      const { data } = await sb.rpc('ciudades_publicas');
+      const lista = Array.isArray(data) ? data : (data && data.ciudades) || [];
+      lista.forEach(c=>{
+        const nombre = c.ciudad || c.city || c.nombre;
+        if(!nombre) return;
+        const o = document.createElement('option');
+        // El VALOR sigue siendo el nombre de la base: es lo que se guarda
+        // y con lo que se compara. Lo que se traduce es lo que se lee.
+        o.value = nombre;
+        o.textContent = (window.BBL && BBL.ciudad) ? BBL.ciudad(c.slug || nombre) : nombre;
+        sel.appendChild(o);
+      });
+    }catch(_){ /* sin ciudades, se busca en todas: no se rompe nada */ }
+  }
+
+  function pintarOficios(){
+    document.getElementById('nvOficios').innerHTML = OFICIOS.map(([k,clave])=>
+      `<button type="button" class="oficio${k===ROL?' on':''}" data-rol="${k}">${esc(t(clave))}</button>`
+    ).join('');
+  }
+
+  function guardadaEn(proId, rol){
+    return TABLERO.profesionales.some(p=>p.id===proId && p.rol===rol);
+  }
+
+  function fichaHTML(p){
+    const inicial = (p.nombre||'·').trim().charAt(0).toUpperCase();
+    const foto = p.avatar
+      ? `<img class="foto" src="${esc(p.avatar)}" alt="${esc(p.nombre)}" loading="lazy"
+           onerror="this.outerHTML='<div class=foto>${esc(inicial)}</div>'" />`
+      : `<div class="foto">${esc(inicial)}</div>`;
+    const bodas = (p.servicios_boda||[]).length;
+    const sellos = [
+      p.verificada  ? `<span class="sello ok">${esc(t('nv_verificada'))}</span>` : '',
+      p.privee      ? `<span class="sello oro">Privée</span>` : '',
+      p.certificada ? `<span class="sello oro">${esc(t('nv_certificada'))}</span>` : '',
+      (p.valoracion) ? `<span class="sello">★ ${Number(p.valoracion).toFixed(1)}</span>` : '',
+      (p.anios)     ? `<span class="sello">${p.anios} ${esc(t('nv_anios'))}</span>` : ''
+    ].filter(Boolean).join('');
+    const puesta = guardadaEn(p.id, ROL);
+    return `<article class="ficha" data-pro="${esc(p.id)}">
+      <div class="arriba">${foto}
+        <div style="min-width:0">
+          <h3>${esc(p.nombre)}</h3>
+          <div class="donde">${esc(p.ciudad||'')}</div>
+        </div>
+      </div>
+      <div class="sellos">${sellos}</div>
+      ${p.bio?`<p class="bio">${esc(p.bio)}</p>`:''}
+      ${bodas?`<div class="bodas">${esc(t('nv_servicios_boda'))} · <b>${bodas}</b></div>`:''}
+      <div class="pie">
+        <button type="button" class="guardar${puesta?' on':''}" data-guardar="${esc(p.id)}">
+          ${esc(t(puesta?'nv_guardada':'nv_guardar'))}</button>
+        <button type="button" class="ver" data-ficha="${esc(p.id)}">${esc(t('nv_ver'))}</button>
+      </div>
+    </article>`;
+  }
+
+  /* La sesión de medición que crea presencia.js. Sirve para que el
+     equipo vea UNA novia y no cuatro, y para unir lo que busca con lo
+     que rellena. No lleva ni un dato personal: es un identificador de
+     30 minutos que vive en este navegador. */
+  function sesionMedida(){
+    try{ return localStorage.getItem('bbl_ses') || null; }catch(_){ return null; }
+  }
+
+  async function buscar(){
+    const caja = document.getElementById('nvLista');
+    caja.innerHTML = `<div class="cargando">${esc(t('cargando'))}</div>`;
+    try{
+      const { data, error } = await sb.rpc('novias_profesionales',
+        { p_rol: ROL, p_ciudad: CIUDAD || null, p_limite: 40, p_sesion: sesionMedida() });
+      if(error) throw error;
+      const lista = (data && data.profesionales) || [];
+
+      /* Decir la verdad cuando la lista sale corta.
+         Desde hoy sólo se enseñan profesionales VERIFICADAS y —en
+         maquillaje y peinado— que ofrezcan servicio nupcial de
+         verdad. Eso es lo correcto para una boda, pero deja listas
+         cortas mientras se verifica gente, y una pantalla vacía sin
+         explicación parece una web rota. Así que se cuenta: cuántas
+         están en verificación aquí, y cuántas hay ya en otras
+         ciudades. */
+      const enVerif = (data && data.en_verificacion) || 0;
+      const enOtras = (data && data.en_otras_ciudades) || 0;
+      let aviso = '';
+      if(enVerif > 0)
+        aviso += `<div class="aviso">${esc(t('nv_aviso_verificando')).replace('{n}', `<b>${enVerif}</b>`)}</div>`;
+      if(!lista.length && enOtras > 0)
+        aviso += `<div class="aviso">${esc(t('nv_aviso_otras')).replace('{n}', `<b>${enOtras}</b>`)}</div>`;
+
+      if(!lista.length){
+        caja.innerHTML = aviso + `<div class="vacio"><p>${esc(t('nv_sin_resultados'))}</p></div>`;
+        return;
+      }
+      caja.innerHTML = aviso + lista.map(fichaHTML).join('');
+    }catch(_){
+      caja.innerHTML = `<div class="vacio"><p>${esc(t('nv_error'))}</p></div>`;
+    }
+  }
+
+  /* ── La ficha ─────────────────────────────────────────────────
+     Se pide a `perfil_publico`, que es la MISMA función que usa la
+     ficha pública del sitio: bio limpia de datos de contacto,
+     portafolio, servicios, opiniones y sellos. No se inventa aquí
+     una segunda versión de la ficha, porque dos fichas distintas de
+     la misma profesional acaban diciendo cosas distintas. */
+  const capa = document.getElementById('nvCapa');
+  const cajaFicha = document.getElementById('nvFicha');
+
+  function cerrarFicha(){
+    capa.classList.remove('open');
+    setTimeout(()=>{ capa.hidden = true; }, 280);
+    document.body.style.overflow = '';
+  }
+  document.getElementById('nvCerrar').addEventListener('click', cerrarFicha);
+  capa.addEventListener('click', e=>{ if(e.target === capa) cerrarFicha(); });
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'Escape' && capa.classList.contains('open')) cerrarFicha(); });
+
+  function estrellas(n){
+    if(n == null) return '';
+    return '★ ' + Number(n).toFixed(1);
+  }
+
+  async function abrirFicha(proId){
+    capa.hidden = false;
+    requestAnimationFrame(()=>capa.classList.add('open'));
+    document.body.style.overflow = 'hidden';
+    cajaFicha.innerHTML = `<div class="cargando">${esc(t('cargando'))}</div>`;
+    let f = null;
+    try{
+      const { data } = await sb.rpc('perfil_publico', { p_pro_id: proId });
+      f = data;
+    }catch(_){}
+    if(!f || f.existe === false){
+      cajaFicha.innerHTML = `<div class="vacio"><p>${esc(t('nv_error'))}</p></div>`;
+      return;
+    }
+    const inicial = (f.nombre||'·').trim().charAt(0).toUpperCase();
+    const foto = f.avatar
+      ? `<img class="fp-foto" src="${esc(f.avatar)}" alt="${esc(f.nombre)}"
+           onerror="this.outerHTML='<div class=fp-foto>${esc(inicial)}</div>'" />`
+      : `<div class="fp-foto">${esc(inicial)}</div>`;
+    const sellos = [
+      f.verificada  ? `<span class="sello ok">${esc(t('nv_verificada'))}</span>` : '',
+      f.privee      ? `<span class="sello oro">Privée</span>` : '',
+      f.certificada ? `<span class="sello oro">${esc(t('nv_certificada'))}</span>` : '',
+      f.valoracion  ? `<span class="sello">${estrellas(f.valoracion)}</span>` : '',
+      f.experiencia ? `<span class="sello">${f.experiencia} ${esc(t('nv_anios'))}</span>` : ''
+    ].filter(Boolean).join('');
+
+    const esBoda = s => /nupcial|novia|bridal|wedding|damas de honor|madres novia/i.test(s);
+    const servicios = (f.servicios||[]);
+    // Los de boda primero y marcados: es a lo que viene la novia.
+    const ordenados = servicios.slice().sort((a,b)=>(esBoda(b)?1:0)-(esBoda(a)?1:0));
+
+    const puesta = guardadaEn(proId, ROL);
+    cajaFicha.innerHTML = `
+      <div class="fp-top">${foto}
+        <div style="min-width:0">
+          <h3>${esc(f.nombre)}</h3>
+          <div class="donde">${esc(f.ciudad||'')}${f.desde!=null?` · ${esc(t('nv_desde'))} ${Money.format(f.desde, f.moneda||'EUR')}`:''}</div>
+        </div>
+      </div>
+      <div class="sellos">${sellos}</div>
+      ${f.bio?`<p class="fp-bio">${esc(f.bio)}</p>`:''}
+
+      ${ordenados.length?`<div class="fp-tit">${esc(t('nv_f_servicios'))}</div>
+        <div class="fp-serv">${ordenados.map(s=>
+          `<span class="${esBoda(s)?'boda':''}">${esc(s)}</span>`).join('')}</div>`:''}
+
+      ${(f.portafolio||[]).length?`<div class="fp-tit">${esc(t('nv_f_portafolio'))}</div>
+        <div class="fp-fotos">${f.portafolio.map(x=>
+          `<img src="${esc(x.url)}" alt="" loading="lazy" onerror="this.remove()" />`).join('')}</div>`:''}
+
+      ${(f.opiniones||[]).length?`<div class="fp-tit">${esc(t('nv_f_opiniones'))}</div>
+        ${f.opiniones.map(o=>`<div class="fp-op">${esc(o.texto||o.comment||'')}
+          <div class="quien">${esc(o.quien||o.autor||'')} ${o.estrellas?('· '+estrellas(o.estrellas)):''}</div></div>`).join('')}`:''}
+
+      <div class="fp-pie">
+        <button type="button" class="guardar${puesta?' on':''}" data-guardar="${esc(proId)}">
+          ${esc(t(puesta?'nv_guardada':'nv_guardar'))}</button>
+      </div>
+      <p class="fp-nota">${esc(t('nv_f_nota'))}</p>`;
+  }
+
+  /* ── El tablero ──────────────────────────────────────────────── */
+  function pintarTablero(){
+    const caja = document.getElementById('nvTablero');
+    const n = TABLERO.profesionales.length;
+    caja.hidden = false;
+    document.getElementById('nvCuenta').textContent = n;
+    const det = document.getElementById('nvDetalle');
+    if(!n){
+      det.textContent = t(SESION ? 'nv_lista_vacia' : 'nv_entra_para_guardar');
+    }else{
+      const porOficio = {};
+      TABLERO.profesionales.forEach(p=>{ porOficio[p.rol] = (porOficio[p.rol]||0)+1; });
+      det.textContent = OFICIOS.filter(([k])=>porOficio[k])
+        .map(([k,clave])=>`${porOficio[k]} ${t(clave).toLowerCase()}`).join(' · ');
+    }
+    document.getElementById('nvCaras').innerHTML = TABLERO.profesionales.slice(0,5).map(p=>
+      p.avatar ? `<img src="${esc(p.avatar)}" alt="${esc(p.nombre)}" />`
+               : `<span>${esc((p.nombre||'·').charAt(0).toUpperCase())}</span>`).join('');
+  }
+
+  async function cargarTablero(){
+    if(!SESION){ TABLERO = { tablero:null, profesionales:[] }; pintarTablero(); return; }
+    try{
+      const { data } = await sb.rpc('mi_tablero_novia');
+      if(data && data.ok){
+        TABLERO = { tablero:data.tablero, profesionales:data.profesionales||[] };
+        if(data.tablero){
+          if(data.tablero.ciudad){ document.getElementById('nvCiudad').value = data.tablero.ciudad; CIUDAD = data.tablero.ciudad; }
+          if(data.tablero.fecha) document.getElementById('nvFecha').value = data.tablero.fecha;
+          if(data.tablero.invitados!=null) document.getElementById('nvInvitados').value = data.tablero.invitados;
+          document.getElementById('nvNovio').checked = !!data.tablero.novio;
+        }
+      }
+    }catch(_){}
+    pintarTablero();
+  }
+
+  async function guardarBoda(){
+    const ciudad = document.getElementById('nvCiudad').value || null;
+    const fecha  = document.getElementById('nvFecha').value || null;
+    const inv    = document.getElementById('nvInvitados').value;
+    const novio  = document.getElementById('nvNovio').checked;
+    const invN   = inv===''?null:Number(inv);
+
+    /* Con cuenta: su tablero, que es suyo y lo puede volver a abrir. */
+    if(SESION){
+      try{
+        await sb.rpc('tablero_novia_guardar', { p_ciudad:ciudad, p_fecha:fecha,
+          p_invitados: invN, p_novio:novio, p_notas:null });
+      }catch(_){}
+    }
+
+    /* Con cuenta o sin ella: que el equipo sepa que hay una boda
+       buscándose, dónde y cuándo. Antes, una novia sin cuenta podía
+       mirar durante meses y para nosotros no existía.
+       Aquí NO va ningún dato personal: ciudad, fecha, invitados y si
+       incluye al novio. El correo y el permiso para escribirle se piden
+       aparte, con su casilla, y sin eso no se guarda nada suyo. */
+    if(ciudad || fecha || invN != null){
+      try{
+        await sb.rpc('novias_registrar_interes', {
+          p_ciudad: ciudad, p_fecha: fecha, p_invitados: invN, p_novio: novio,
+          p_sesion: sesionMedida(),
+          p_idioma: (window.BBL && BBL.lang) || null,
+          p_origen: (function(){ try{ return localStorage.getItem('bbl_ses_origen'); }catch(_){ return null; } })()
+        });
+      }catch(_){}
+    }
+  }
+
+  async function alternar(proId, boton, desdeFicha){
+    if(!SESION){
+      /* Sin sesión no hay dónde guardar. Antes esto la mandaba a
+         `index.html#acceder`, que es un ancla que NO EXISTE: se
+         perdía la página, los filtros y el gesto, y aterrizaba en la
+         portada sin saber por qué.
+         Ahora se abre la puerta aquí mismo y, al entrar, se guarda
+         lo que iba a guardar. No pierde el sitio. */
+      if(window.BBLAuth){
+        BBLAuth.abrir({ modo:'entrar', titulo: t('nv_entra_titulo'), sub: t('nv_entra_sub'),
+          alEntrar: async (sesion)=>{
+            SESION = sesion;
+            await cargarTablero();
+            await alternar(proId, boton);   // se completa el gesto que hizo
+            buscar();
+          }});
+      }
+      return;
+    }
+    const puesta = guardadaEn(proId, ROL);
+    boton.disabled = true;
+    try{
+      const { data } = await sb.rpc('tablero_novia_pro',
+        { p_pro_id: proId, p_rol: ROL, p_quitar: puesta });
+      if(data && data.ok){
+        await cargarTablero();
+        const ahora = guardadaEn(proId, ROL);
+        // Los dos botones son el mismo gesto: el de la tarjeta y el de
+        // la ficha abierta. Si sólo se refresca uno, la novia ve
+        // «Guardar» en un sitio y «Guardada» en el otro a la vez.
+        document.querySelectorAll(`[data-guardar="${proId}"]`).forEach(x=>{
+          x.classList.toggle('on', ahora);
+          x.textContent = t(ahora ? 'nv_guardada' : 'nv_guardar');
+        });
+      }
+    }catch(_){}
+    boton.disabled = false;
+  }
+
+  /* ── Arranque ───────────────────────────────────────────────── */
+  pintarOficios();
+  pintarTablero();
+
+  document.getElementById('nvOficios').addEventListener('click', e=>{
+    const b = e.target.closest('[data-rol]'); if(!b) return;
+    ROL = b.dataset.rol; pintarOficios(); buscar();
+  });
+  document.getElementById('nvLista').addEventListener('click', e=>{
+    const f = e.target.closest('[data-ficha]');
+    if(f){ abrirFicha(f.dataset.ficha); return; }
+    const b = e.target.closest('[data-guardar]'); if(!b) return;
+    alternar(b.dataset.guardar, b);
+  });
+  // El botón de guardar también vive dentro de la ficha.
+  cajaFicha.addEventListener('click', e=>{
+    const b = e.target.closest('[data-guardar]'); if(!b) return;
+    alternar(b.dataset.guardar, b, true);
+  });
+  document.getElementById('nvCiudad').addEventListener('change', e=>{
+    CIUDAD = e.target.value; guardarBoda(); buscar();
+  });
+  let tGuardar=null;
+  const guardarBodaPronto=()=>{ clearTimeout(tGuardar); tGuardar=setTimeout(guardarBoda, 600); };
+  ['nvFecha','nvInvitados','nvNovio'].forEach(id=>
+    document.getElementById(id).addEventListener('change', guardarBodaPronto));
+
+  // Si cambia el idioma, los oficios y los botones cambian de texto.
+  document.addEventListener('bbl:lang', ()=>{ pintarOficios(); pintarTablero(); buscar(); });
+
+  (async ()=>{
+    await cargarCiudades();
+    try{ const { data } = await sb.auth.getSession(); SESION = data && data.session; }catch(_){}
+    await cargarTablero();
+    buscar();
+  })();
+  /* ── Bloque 20.2c · el permiso ────────────────────────────────────
+     Sin la casilla marcada NO se manda nombre ni correo, y el servidor
+     además los tira si `p_acepta_contacto` viene a false. Dos puertas
+     para lo mismo, a propósito: la de aquí puede fallar por un despiste
+     al tocar la página; la del servidor no la salta nadie. */
+  (function(){
+    const chk = document.getElementById('nvcOk');
+    const caja= document.getElementById('nvcDatos');
+    const msg = document.getElementById('nvcMsg');
+    const tc  = (k,d)=>{ const v=(window.BBL&&BBL.t)?BBL.t(k):k; return v===k?d:v; };
+    if(!chk) return;
+
+    chk.addEventListener('change', ()=>{
+      caja.classList.toggle('abierto', chk.checked);
+      if(chk.checked) document.getElementById('nvcNombre').focus();
+      else { msg.textContent=''; msg.className='dicho'; }
+    });
+
+    document.getElementById('nvcGo').addEventListener('click', async ()=>{
+      const correo = document.getElementById('nvcEmail').value.trim();
+      const nombre = document.getElementById('nvcNombre').value.trim();
+      if(!chk.checked) return;
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(correo)){
+        msg.textContent = tc('nv_c_error','Revisa el correo, por favor.');
+        msg.className='dicho err'; document.getElementById('nvcEmail').focus(); return;
+      }
+      const inv = document.getElementById('nvInvitados').value;
+      try{
+        const { error } = await sb.rpc('novias_registrar_interes', {
+          p_ciudad: document.getElementById('nvCiudad').value || null,
+          p_fecha:  document.getElementById('nvFecha').value || null,
+          p_invitados: inv===''?null:Number(inv),
+          p_novio:  document.getElementById('nvNovio').checked,
+          p_acepta_contacto: true,
+          p_nombre: nombre || null,
+          p_email:  correo,
+          p_sesion: sesionMedida(),
+          p_idioma: (window.BBL && BBL.lang) || null,
+          p_origen: (function(){ try{ return localStorage.getItem('bbl_ses_origen'); }catch(_){ return null; } })()
+        });
+        if(error) throw error;
+        msg.textContent = tc('nv_c_hecho','Hecho. Te escribimos pronto con ideas para tu boda.');
+        msg.className='dicho ok';
+        caja.classList.remove('abierto'); chk.checked=false;
+      }catch(_){
+        msg.textContent = tc('nv_c_error','Revisa el correo, por favor.');
+        msg.className='dicho err';
+      }
+    });
+
+    /* Los `placeholder` no los toca el traductor automático de i18n.js,
+       que sólo mira `data-i18n`. Se hace aquí, y al cambiar de idioma. */
+    function marcadores(){
+      document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+        const k=el.getAttribute('data-i18n-ph');
+        const v=(window.BBL&&BBL.t)?BBL.t(k):null;
+        if(v && v!==k) el.placeholder=v;
+      });
+    }
+    marcadores();
+    document.addEventListener('bbl:lang', marcadores);
+  })();
+
+</script>
+<script src="cookies.js?v=2"></script>
+<script src="presencia.js?v=2"></script>
+<script src="baby.js?v=2"></script>
+<script src="lujo.js?v=1"></script>
+<script src="auth.js?v=5"></script>
+<script src="orden.js?v=3"></script>
+<script src="aceptacion.js?v=1"></script>
+</body>
+</html>
