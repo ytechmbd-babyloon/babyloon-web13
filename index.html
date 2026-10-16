@@ -1120,6 +1120,8 @@
     </div>
 
     <label class="field-check hide" id="aceptaField"><input type="checkbox" id="fAcepta" /><span id="fAceptaT"></span></label>
+    <!-- 61.91 · Lo comercial, aparte y sin marcar; su texto lo da el servidor (comercial.js). -->
+    <label class="field-check hide" id="comercialField"><input type="checkbox" id="fComercial" /><span id="fComercialT"></span></label>
     <button class="btn btn-gold" id="authSubmit">Iniciar sesión</button>
     <div class="m-msg" id="authMsg"></div>
   </div>
@@ -1149,6 +1151,7 @@
   <script src="i18n-5-resto.js?v=1"></script>
   <script src="i18n-abrimos-mas.js?v=1"></script>
   <script src="i18n-aceptacion.js?v=1"></script>
+  <script src="i18n-comercial.js?v=1"></script>
 <script src="money.js?v=1"></script>
 <script src="supabase-js-2.117.1.min.js"></script>
 <script src="conexion.js?v=1"></script>
@@ -1181,8 +1184,22 @@
     setMode(m || 'login');
     if(r){ role = r; document.querySelectorAll('.role').forEach(x=>
       x.classList.toggle('sel', x.dataset.role===r)); }
+    comercialIndex();
     overlay.classList.add('open'); document.body.style.overflow='hidden';
   }
+  // 61.91 · Lo comercial: la casilla del alta, sin marcar, con el texto que
+  // da el servidor para la puerta elegida y el idioma de la página.
+  function finIndex(){ return role==='pro' ? 'profesional' : 'cliente'; }
+  function comercialIndex(){
+    const f=document.getElementById('comercialField');
+    if(!f) return;
+    if(mode!=='register' || !window.BBLComercial){
+      if(window.BBLComercial) BBLComercial.ocultar(f); else f.classList.add('hide');
+      return;
+    }
+    BBLComercial.casilla(f, finIndex());
+  }
+  document.addEventListener('bbl:lang', ()=>{ if(overlay.classList.contains('open')) comercialIndex(); });
   function closeAuth(){ overlay.classList.remove('open'); document.body.style.overflow=''; msg.textContent=''; }
   function setMode(m){
     mode = m; msg.textContent=''; msg.className='m-msg';
@@ -1193,6 +1210,7 @@
     // 61.5 · Crear la cuenta exige la casilla: 18 años y los dos textos.
     document.getElementById('aceptaField').classList.toggle('hide', !reg);
     if (window.BBLAceptacion) document.getElementById('fAceptaT').innerHTML = BBLAceptacion.casilla();
+    comercialIndex();
     submitBtn.textContent = reg ? BBL.t('tab_register') : BBL.t('auth_enter');
     titleEl.textContent = reg ? BBL.t('m_join') : BBL.t('m_welcome');
     subEl.textContent = reg ? BBL.t('m_join_sub') : BBL.t('m_welcome_sub');
@@ -1208,6 +1226,7 @@
   document.querySelectorAll('.role').forEach(r=>r.addEventListener('click',()=>{
     role=r.dataset.role; document.querySelectorAll('.role').forEach(x=>
       x.classList.toggle('sel', x===r));
+    comercialIndex();          // 61.91 · otra puerta, otro texto
   }));
 
   /* ── ¿Tiene ficha de profesional esta cuenta? ────────────────────
@@ -1306,11 +1325,15 @@
         if(error) throw error;
         // 61.5 · ¿le falta la edad o un texto? Antes de llevarla al panel.
         if(window.BBLAceptacion && !(await BBLAceptacion.asegurar({ forzar:true }))) return;
+        // 61.91 · Si la cuenta se creó aquí mismo y se confirmó el correo: lo de su casilla.
+        if(window.BBLComercial){ try{ await BBLComercial.guardarAlta(finIndex()); }catch(_){} }
         const dest = await panelPara(sdata.session.user.id, role);
         msg.textContent=tt('au_entrando','Entrando…'); msg.classList.add('ok');
         setTimeout(()=>location.href=dest, 400);
       } else {
         const name = document.getElementById('fName').value.trim();
+        // 61.91 · Lo que diga la casilla de lo comercial, para guardarlo con la cuenta.
+        if(window.BBLComercial) BBLComercial.apuntarAlta(email, finIndex(), document.getElementById('fComercial').checked);
         const { data, error } = await sb.auth.signUp({
           email, password: pass,
           options:{ data:{ full_name:name, role } }
@@ -1319,11 +1342,13 @@
         if(data.session){                                   // sin confirmación de correo
           // La casilla se acaba de marcar: se registra sin volver a preguntar.
           if(window.BBLAceptacion && !(await BBLAceptacion.asegurar({ forzar:true, casillaYaMarcada:true }))) return;
+          if(window.BBLComercial){ try{ await BBLComercial.guardarAlta(finIndex()); }catch(_){} }
           location.href=panel; return;
         }
         msg.textContent=tt('au_confirma','Cuenta creada. Confirma tu correo y vuelve a entrar.'); msg.classList.add('ok');
       }
     }catch(err){
+      if(mode==='register' && window.BBLComercial) BBLComercial.retirarAlta();   // 61.91 · sin cuenta, no vale
       msg.textContent = traducirError(err.message); msg.classList.add('err');
     }finally{
       submitBtn.disabled=false;
@@ -1887,5 +1912,6 @@
 <script src="viaje.js?v=3"></script>
 <script src="lujo.js?v=1"></script>
 <script src="aceptacion.js?v=1"></script>
+<script src="comercial.js?v=1"></script>
 </body>
 </html>

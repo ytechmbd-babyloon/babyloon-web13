@@ -14,15 +14,15 @@ Tarda unos diez segundos. Ya está.
 ## Lo que tiene que decir
 
 ```
-✨ Read 252 files from the assets directory …\babyloon-web13
+✨ Read 254 files from the assets directory …\babyloon-web13
 🌀 Found N new or modified static assets to upload…
 ✨ Success! Uploaded N files (2.55 sec)
    Uploaded flat-thunder-70f8
    Current Version ID: …
 ```
 
-**El número que importa es el de «Read»: unos 250** (16-oct, con las 50
-páginas de ciudad). Si baja de 240, falta algo; si pasa de 300, se está
+**El número que importa es el de «Read»: unos 254** (16-oct, con las 50
+páginas de ciudad y los dos ficheros de lo comercial). Si baja de 240, falta algo; si pasa de 300, se está
 colando algo que no es web: hasta el 16-oct se publicaba `.git/` entero.
 Sólo sube los que han cambiado, así que el segundo número será
 pequeño o cero — eso es normal y es lo que hace que tarde nada.
@@ -66,6 +66,9 @@ Y a ojo:
 - `babyloon.app/madrid.html` lleva a la página de Madrid nueva.
 - La boutique enseña sus portadas y los productos del país que toca.
 - Cambia el idioma del navegador (alemán, francés) y recarga.
+- **Crear cuenta**, en la portada y en «Acceder»: debajo de la casilla de la
+  edad sale otra, **sin marcar** —«Quiero recibir promociones, cupones y
+  novedades…»—, en el idioma de la página. Con «Soy profesional», su texto.
 
 En el panel, **Marketing → Visitantes**: en un par de minutos tiene que
 aparecer al menos tu propia visita.
@@ -141,6 +144,7 @@ saber qué es cada cosa:
 | `presencia.js` | **mide el tráfico.** Sin él, marketing está ciego |
 | `cookies.js` | el banner de cookies. `presencia.js` le obedece |
 | `money.js` | convierte los precios a la moneda de quien mira |
+| `comercial.js` · `i18n-comercial.js` | lo comercial, con su consentimiento: la casilla del alta, el aviso y el bloque del perfil (16-oct) |
 | `i18n.js` · `i18n-index.js` · `i18n-academia.js` | los once idiomas |
 | `app-link.js` | enlaces a las apps, con detección de iOS/Android |
 | `_headers` · `_redirects` · `robots.txt` · `sitemap.xml` | configuración y SEO |

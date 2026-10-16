@@ -143,6 +143,10 @@
         // 61.5 · Crear la cuenta exige marcarla: 18 años y los dos textos.
         '<label class="bau-check hide" id="bauAceptaF"><input type="checkbox" id="bauAcepta" />' +
           '<span id="bauAceptaT"></span></label>' +
+        // 61.91 · Lo comercial, aparte y sin marcar: no hace falta para
+        // crear la cuenta. Su texto lo da el servidor (comercial.js).
+        '<label class="bau-check hide" id="bauComF"><input type="checkbox" id="bauCom" />' +
+          '<span id="bauComT"></span></label>' +
         '<button class="bau-go" id="bauGo" type="submit"></button>' +
         '</form>' +
         '<div class="bau-or" id="bauOr"></div>' +
@@ -171,6 +175,7 @@
       var b = e.target.closest('[data-rol]'); if (!b) return;
       estado.rol = b.dataset.rol;
       ov.querySelectorAll('.bau-role').forEach(function (x) { x.classList.toggle('sel', x === b); });
+      comercial();          // 61.91 · otra puerta, otro texto
     });
     // El formulario se envía con Enter y con el botón. Un `submit` de
     // verdad es también lo que hace que el navegador ofrezca guardar
@@ -200,7 +205,34 @@
     });
     document.getElementById('bauGoogle').addEventListener('click', google);
     document.addEventListener('bbl:lang', function () { if (ov) pintar(); });
+    // 61.91 · comercial.js llega después: entonces se pinta su casilla.
+    document.addEventListener('bbl:comercial', function () { if (ov) comercial(); });
+    cargarComercial();
     return ov;
+  }
+
+  // 61.91 · Lo comercial: la casilla del alta, con el texto que da el
+  // servidor para la puerta elegida —cliente o profesional— y el idioma
+  // de la página. comercial.js se trae la primera vez que hace falta, para
+  // no tener que tocar cada página que abre este formulario.
+  function finalidad() { return estado.rol === 'pro' ? 'profesional' : 'cliente'; }
+  function cargarComercial() {
+    if (window.BBLComercial || document.getElementById('bauComJs')) return;
+    ['i18n-comercial.js?v=1', 'comercial.js?v=1'].forEach(function (src, i) {
+      var s = document.createElement('script');
+      s.src = src; s.async = false;
+      if (i === 1) s.id = 'bauComJs';
+      document.head.appendChild(s);
+    });
+  }
+  function comercial() {
+    var f = document.getElementById('bauComF');
+    if (!f) return;
+    if (estado.modo !== 'alta' || !window.BBLComercial) {
+      if (window.BBLComercial) BBLComercial.ocultar(f); else f.classList.add('hide');
+      return;
+    }
+    BBLComercial.casilla(f, finalidad());
   }
 
   function pintar() {
@@ -253,6 +285,7 @@
         ' <a href="terminos.html" target="_blank" rel="noopener">' + escapar(t('au_terminos', 'Términos')) + '</a>' +
         ' · <a href="privacidad.html" target="_blank" rel="noopener">' + escapar(t('au_privacidad', 'Privacidad')) + '</a>';
     $('bauLegal').innerHTML = '';
+    comercial();            // 61.91 · la casilla de lo comercial, solo al crear la cuenta
   }
 
   function setModo(m) {
@@ -431,6 +464,9 @@
         await terminar(r.data.session);
       } else {
         var nombre = document.getElementById('bauName').value.trim();
+        // 61.91 · Lo que diga la casilla de lo comercial, para guardarlo con
+        // la cuenta en cuanto haya sesión. Si la casilla no se ve, nada.
+        if (window.BBLComercial) BBLComercial.apuntarAlta(email, finalidad(), document.getElementById('bauCom').checked);
         var s = await c.auth.signUp({
           email: email, password: pass,
           options: { data: { full_name: nombre, role: estado.rol === 'pro' ? 'pro' : 'client' } }
@@ -441,6 +477,7 @@
         decir(t('au_confirma', 'Cuenta creada. Confirma tu correo y vuelve a entrar.'), 'ok');
       }
     } catch (e) {
+      if (alta && window.BBLComercial) BBLComercial.retirarAlta();   // 61.91 · sin cuenta, no vale
       decir(traducir(e && e.message), 'err');
     } finally {
       go.disabled = false; pintar();
@@ -459,6 +496,8 @@
       });
       if (!sigue) return;
     }
+    // 61.91 · Lo marcado en la casilla de lo comercial al crear la cuenta.
+    if (window.BBLComercial) { try { await BBLComercial.guardarAlta(finalidad()); } catch (_) {} }
     if (estado.alEntrar) {
       decir(t('au_entrando', 'Entrando…'), 'ok');
       var fn = estado.alEntrar;

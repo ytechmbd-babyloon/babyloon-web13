@@ -467,6 +467,8 @@
         <div class="saveMsg" id="saveMsg"></div>
       </div>
       <div class="block" id="ppBlock"></div>
+      <!-- 61.91 · Promociones y novedades, con su consentimiento (comercial.js) -->
+      <div class="block" id="comBlock"></div>
     </section>
   </main>
 </div>
@@ -492,6 +494,7 @@
   <script src="i18n-cuenta.js?v=2"></script>
   <script src="i18n-cliente-panel.js?v=2"></script>
   <script src="i18n-aceptacion.js?v=1"></script>
+  <script src="i18n-comercial.js?v=1"></script>
 <script src="i18n-pasaporte.js?v=3"></script>
 <script src="pasaporte.js?v=4"></script>
 <script src="i18n-ficha2.js?v=1"></script>
@@ -1453,5 +1456,8 @@
 <script src="cookies.js?v=2"></script>
 <script src="presencia.js?v=2"></script>
 <script src="aceptacion.js?v=1"></script>
+<script src="comercial.js?v=1"></script>
+<script>/* 61.91 · Lo comercial: el bloque del perfil y, si toca, el aviso opcional. */
+  if (window.BBLComercial) BBLComercial.enPanel('cliente', document.getElementById('comBlock'));</script>
 </body>
 </html>
