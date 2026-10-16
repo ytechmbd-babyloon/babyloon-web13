@@ -21,7 +21,8 @@
 <script src="i18n-auth-extra.js?v=2"></script>
 <script src="i18n-aceptacion.js?v=1"></script>
 <script src="i18n-pasaporte.js?v=3"></script>
-<script src="pasaporte.js?v=3"></script>
+<script src="pasaporte.js?v=4"></script>
+<script src="i18n-ficha2.js?v=1"></script>
 <script src="supabase-js-2.117.1.min.js"></script>
 <style>
   :root{--fondo:#140D12;--panel:#1B1219;--gold:#C8A96A;--oro2:#E3CB95;--cream:#EDE5DA;--mauve:#A89BA3;--line:rgba(200,169,106,.22);--serif:'Cormorant Garamond',Georgia,serif;--bien:#7FB894;--mal:#E07A7A}
@@ -104,6 +105,8 @@
     document.getElementById('pie').textContent=con(T('pp_bv_pie','Babyloon guarda tu ficha para {pro}. Solo la veis tu profesional y tú.'),{pro:d.profesional||''});
     if(BAJA){ pintarBaja(d); return; }
     await BBLPasaporte.catalogo(sb);
+    // El esquema de la ficha: de ahí salen sus preferencias (masajes, aromas, estilo…)
+    try{ ESQ=await BBLPasaporte.esquema(sb); }catch(_){ ESQ=null; }
     pintarFicha(d);
   }
 
@@ -121,6 +124,7 @@
     document.getElementById('bajaNo').onclick=function(){ hacer(true); };
   }
 
+  var ESQ=null;
   function pintarFicha(d){
     var v={n:d.nombre||'',pro:d.profesional||'',c:d.ciudad||''};
     caja.innerHTML=
@@ -135,17 +139,21 @@
         '<label class="chk"><input type="checkbox" data-pf="cuero_sensible" value="1"> '+esc(T('pp_d_cuero_sensible','Cuero cabelludo sensible'))+'</label>'+
         '<div class="campo"><label>'+esc(T('pp_d_notas','Otras notas'))+'</label><input type="text" maxlength="500" data-pf="notas"></div>'+
       '</details>'+
+      (ESQ&&BBLPasaporte.formPrefs?'<details><summary>'+esc(T('pr_titulo','Tus preferencias'))+'</summary><p class="n">'+esc(T('pr_sub','Cómo te gusta que te atiendan: tus profesionales lo verán en tu ficha. Todo es opcional.'))+'</p>'+
+        '<div id="bvPrefs">'+BBLPasaporte.formPrefs(ESQ,{})+'</div></details>':'')+
       (d.pide_email?'<div class="campo" style="margin-top:18px"><label>'+esc(T('pp_nc_email','Email'))+'</label><input type="email" id="bvMail" maxlength="160" autocomplete="email"><p class="n" style="color:var(--mauve);font-size:12px;margin:6px 0 0">'+esc(T('pp_bv_email_n','Opcional. Con tu email podrás tener tu pasaporte de belleza en Babyloon.'))+'</p></div>':'')+
       '<label class="chk consent"><input type="checkbox" id="bvOk"><span>'+esc(con(T('pp_bv_consent','Doy mi consentimiento para que {pro} guarde estos datos, incluidos los de salud, para atenderme.'),v))+
         '<small>'+esc(T('pp_bv_consent_n','Puedes pedir que se borren cuando quieras.'))+' <a href="privacidad.html" target="_blank" rel="noopener">'+esc(T('pp_bv_privacidad','Privacidad'))+'</a></small></span></label>'+
       '<button class="btn oro" id="bvGuardar" disabled>'+esc(T('pp_bv_guardar','Guardar mi ficha'))+'</button><div class="msg" id="msg"></div>';
     BBLPasaporte.montar(caja, sb);
+    if(BBLPasaporte.montarPrefs) BBLPasaporte.montarPrefs(document.getElementById('bvPrefs'), sb);
     var ok=document.getElementById('bvOk'), g=document.getElementById('bvGuardar');
     ok.onchange=function(){ g.disabled=!ok.checked; };
     g.onclick=async function(){
       var datos={}, m=document.getElementById('msg');
       caja.querySelectorAll('[data-pf]').forEach(function(el){
         datos[el.dataset.pf]=el.classList.contains('pp-sel')?BBLPasaporte.valor(el):el.type==='checkbox'?(el.checked?'true':''):el.value.trim(); });
+      if(BBLPasaporte.leerPrefs){ var pr=BBLPasaporte.leerPrefs(document.getElementById('bvPrefs')); if(Object.keys(pr).length) datos.preferencias=pr; }
       var mail=document.getElementById('bvMail');
       g.disabled=true; m.className='msg'; m.textContent='';
       var r=await sb.rpc('ficha_bienvenida_guardar',{p_token:TOK,p_datos:datos,p_consiente:ok.checked,p_email:mail&&mail.value.trim()||null});

@@ -493,7 +493,9 @@
   <script src="i18n-cliente-panel.js?v=2"></script>
   <script src="i18n-aceptacion.js?v=1"></script>
 <script src="i18n-pasaporte.js?v=3"></script>
-<script src="pasaporte.js?v=3"></script>
+<script src="pasaporte.js?v=4"></script>
+<script src="i18n-ficha2.js?v=1"></script>
+<script src="formula.js?v=1"></script>
 <script src="supabase-js-2.117.1.min.js"></script>
 <script src="conexion.js?v=1"></script>
 <script>
@@ -589,6 +591,9 @@
       <h3 class="pp-t" style="font-family:var(--serif);font-weight:500;font-size:19px;margin:22px 0 10px">${esc(T('pp_tu_perfil','Tu perfil de belleza'))}</h3>
       <p style="color:var(--mauve);font-size:12.5px;margin:0 0 12px">${esc(T('pp_tu_perfil_n','Lo que nos cuentas de ti para que cada profesional acierte desde el primer día.'))}</p>
       <div class="pp-form">${PP_CAMPOS.map(g=>`<div class="pp-grupo">${esc(T(g[0],g[1]))}</div>`+g[2].map(([k,t])=>campoPerfil(k,t,dec[k])).join('')).join('')}</div>
+      <h3 class="pp-t" style="font-family:var(--serif);font-weight:500;font-size:19px;margin:22px 0 6px">${esc(T('pr_titulo','Tus preferencias'))}</h3>
+      <p style="color:var(--mauve);font-size:12.5px;margin:0 0 12px">${esc(T('pr_sub','Cómo te gusta que te atiendan: tus profesionales lo verán en tu ficha. Todo es opcional.'))}</p>
+      <div id="ppPrefs">${BBLPasaporte.formPrefs?BBLPasaporte.formPrefs(esq,dec.preferencias||{}):''}</div>
       <div style="margin-top:14px"><button class="btn btn-gold" id="ppGuardarPerfil">${esc(T('pp_guardar_perfil','Guardar mi perfil'))}</button></div>
       <div class="saveMsg" id="ppPerfMsg"></div>
       ${BBLPasaporte.html(pas,{esquema:esq,solo:['historial','fichas']})}
@@ -600,6 +605,7 @@
       <div class="saveMsg" id="ppMsg"></div>
       <div style="margin-top:12px"><button class="btn btn-ghost" id="ppImprimir">${esc(T('pp_imprimir','Imprimir o guardar en PDF'))}</button></div>`;
     BBLPasaporte.montar(box, sb);
+    if(BBLPasaporte.montarPrefs) BBLPasaporte.montarPrefs(document.getElementById('ppPrefs'), sb);
     document.getElementById('ppComp').onchange=async e=>{
       const m=document.getElementById('ppMsg'), si=e.target.checked; e.target.disabled=true;
       const w=await sb.rpc('compartir_mi_pasaporte',{p_si:si}); e.target.disabled=false;
@@ -609,6 +615,8 @@
     document.getElementById('ppGuardarPerfil').onclick=async ev=>{
       const b=ev.currentTarget, m=document.getElementById('ppPerfMsg'), datos={};
       box.querySelectorAll('[data-pf]').forEach(el=>{ datos[el.dataset.pf]=el.classList.contains('pp-sel')?BBLPasaporte.valor(el):el.type==='checkbox'?String(el.checked):el.value.trim(); });
+      // Sus preferencias (masajes, aromas, música, estilo…): el servidor sólo acepta las que puede declarar ella
+      if(BBLPasaporte.leerPrefs) datos.preferencias=BBLPasaporte.leerPrefs(document.getElementById('ppPrefs'));
       b.disabled=true; const w=await sb.rpc('guardar_mi_perfil_belleza',{p_datos:datos}); b.disabled=false;
       if(!w.data||!w.data.ok){ m.className='saveMsg err'; m.textContent=T('pp_e_guardar','No se pudo guardar.'); return; }
       await cargarPasaporte(); const m2=document.getElementById('ppPerfMsg'); m2.className='saveMsg ok'; m2.textContent=T('pp_perfil_ok','Tu perfil de belleza está guardado.');
