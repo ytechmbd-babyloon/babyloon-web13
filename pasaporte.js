@@ -12,6 +12,10 @@
    BBLPasaporte.sel(dominio, valor, {id, proponer}) → HTML de un selector del catálogo
    BBLPasaporte.montar(raiz, sb)                    → activa los selectores de esa zona
    BBLPasaporte.valor(elemento|id)                  → los códigos elegidos ("ppd,latex")
+   BBLPasaporte.formPrefs(esquema, prefs)           → formulario de SUS preferencias (campos cli del esquema)
+   BBLPasaporte.leerPrefs(raiz)                     → {disciplina: {campo: valor}} para guardar
+   v2 · Las fichas se leen con el esquema (cada opción en su idioma) y las
+   fórmulas de color por zonas se dibujan con formula.js (BBLFormula).
    Todo lo que se elige sale del catálogo: nadie escribe una alergia o una marca a su manera.
    ═══════════════════════════════════════════════════════════════════════ */
 (function () {
@@ -78,7 +82,15 @@
   .pp-prop button{border:1px solid var(--gold,#C8A96A);background:transparent;color:var(--gold,#C8A96A);border-radius:999px;padding:8px 14px;font:inherit;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}\
   .pp-prop small{flex-basis:100%;color:var(--mauve,#9A8A95);font-size:11.5px}\
   .pp-proxima{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;background:rgba(200,169,106,.12);color:var(--gold,#C8A96A);font-size:12px}\
-  .pp-priv{font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line,#555);border-radius:20px;padding:1px 8px;margin-left:6px;color:var(--mauve,#9A8A95)}';
+  .pp-priv{font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line,#555);border-radius:20px;padding:1px 8px;margin-left:6px;color:var(--mauve,#9A8A95)}\
+  .pp-prefs details{border:1px solid var(--line,rgba(200,169,106,.2));border-radius:10px;margin:0 0 10px;padding:0 14px}\
+  .pp-prefs summary{cursor:pointer;padding:12px 0;font-size:13.5px;color:var(--cream,#F2EAE0);list-style:none;display:flex;justify-content:space-between;gap:10px}\
+  .pp-prefs summary::-webkit-details-marker{display:none}\
+  .pp-prefs summary::after{content:"+";color:var(--gold,#C8A96A)}.pp-prefs details[open] summary::after{content:"–"}\
+  .pp-prefs summary small{color:var(--gold,#C8A96A);font-size:11px;margin-left:auto}\
+  .pp-prefs .pp-form{padding:0 0 14px}\
+  .pp-prefs textarea{width:100%;box-sizing:border-box;min-height:70px;background:rgba(0,0,0,.28);border:1px solid var(--line,rgba(200,169,106,.2));border-radius:6px;padding:10px 12px;color:var(--cream,#F2EAE0);font:inherit;font-size:13.5px;resize:vertical}\
+  .pp-prefs .pp-ancho{grid-column:1/-1}';
   function estilo() { if (document.getElementById('ppEstilo')) return; var s = document.createElement('style'); s.id = 'ppEstilo'; s.textContent = ESTILO; document.head.appendChild(s); }
 
   // Lo que declara la clienta, en este orden (las alergias van arriba, en las alertas)
@@ -130,12 +142,27 @@
     return String(v);
   }
   function rotulos(esquema) {
-    var r = { disc: {}, campo: {} };
+    var r = { disc: {}, campo: {}, meta: {}, F: (esquema && esquema.formula) || {} };
     ((esquema && esquema.disciplinas) || []).forEach(function (d) {
       r.disc[d.clave] = d.nombre || d.clave;
-      (d.campos || []).forEach(function (c) { r.campo[d.clave + '.' + c.c] = c.rotulo || c.c; });
+      (d.campos || []).forEach(function (c) { r.campo[d.clave + '.' + c.c] = c.rotulo || c.c; r.meta[d.clave + '.' + c.c] = c; });
     });
     return r;
+  }
+  // Un valor de la ficha, en palabras: cada opción con su rótulo en el idioma de quien lee
+  // Las unidades del esquema van en español corto (sem, d, min): se dicen en el idioma de quien lee
+  function unidad(u) { var k = { sem: 'fx_u_sem', d: 'fx_u_d', min: 'fx_u_min' }[u]; return k ? T(k, u) : (u || ''); }
+  function legibleMeta(m, v) {
+    if (v == null || v === '') return '';
+    var op = function (x) { var o = (m.o || []).filter(function (y) { return y.v === String(x); })[0]; return o ? o.txt : String(x); };
+    if (m.t === 'si_no') return (v === true || v === 'true') ? T('pp_si', 'Sí') : T('pp_no', 'No');
+    if (m.t === 'opc') return op(v) + (m.u ? ' ' + unidad(m.u) : '');
+    if (m.t === 'multi') return (Array.isArray(v) ? v : [v]).map(op).join(', ');
+    if (m.t === 'cat') return legibleDom(m.dom, v);
+    if (m.t === 'num') return String(v) + (m.u ? ' ' + unidad(m.u) : '');
+    if (m.t === 'fecha') return dia(v);
+    if (m.t === 'color' && Array.isArray(v)) return v.map(function (x) { return x.nota || x.hex; }).join(', ');
+    return null;
   }
 
   function html(p, o) {
@@ -158,6 +185,17 @@
         return '<div class="pp-dato"><small>' + esc(T('pp_d_' + x[0], x[1])) + '</small>' + esc(legible(x[0], d[x[0]])) + '</div>';
       }).join('') + '</div>';
     }
+    var pr = ver('declarado') ? ((p.declarado || {}).preferencias || {}) : {}, prH = '';
+    Object.keys(pr).forEach(function (dk) {
+      var campos = pr[dk] || {}, ks = Object.keys(campos);
+      var lin = ks.map(function (k) {
+        var m = R.meta[dk + '.' + k], v = campos[k], txt = m ? legibleMeta(m, v) : null;
+        if (txt == null) txt = valor(v);
+        return txt ? '<div class="pp-dato"><small>' + esc((o.yo && m && m.yo) || R.campo[dk + '.' + k] || k) + '</small>' + esc(txt) + '</div>' : '';
+      }).join('');
+      if (lin) prH += '<div class="pp-disc">' + esc(R.disc[dk] || dk) + '</div><div class="pp-grid">' + lin + '</div>';
+    });
+    if (prH) h += '<h3 class="pp-t">' + esc(o.yo ? T('pr_titulo', 'Tus preferencias') : T('pr_ella', 'Sus preferencias')) + '</h3>' + prH;
     var hi = p.historial || [];
     if (ver('historial') && p.proxima) h += '<p style="margin:14px 0 0"><span class="pp-proxima">' + esc(T('pp_proxima', 'Próxima cita recomendada')) + ': ' + esc(dia(p.proxima)) + '</span></p>';
     if (ver('historial')) h += '<h3 class="pp-t">' + esc(T('pp_historial', 'Historial de belleza')) + '</h3>';
@@ -165,7 +203,8 @@
       return '<div class="pp-ap"><div class="pp-cab"><b>' + esc(a.servicio || T('pp_servicio', 'Servicio')) + '</b>' +
         (a.privada ? '<span class="pp-priv">' + esc(T('pp_privada', 'Sólo para ti')) + '</span>' : '') +
         '<br>' + esc([dia(a.fecha), a.profesional, a.ciudad].filter(Boolean).join(' · ')) + '</div>' +
-        (a.formula ? '<div class="pp-formula">' + esc(a.formula) + '</div>' : '') +
+        ((a.formula_c && a.formula_c.length && window.BBLFormula) ? BBLFormula.lectura(a.formula_c, R.F)
+          : (a.formula ? '<div class="pp-formula">' + esc(a.formula) + '</div>' : '')) +
         (a.productos ? '<div class="pp-linea"><span>' + esc(T('pp_productos', 'Productos')) + ':</span> ' + esc(legibleDom('marca_producto', a.productos)) + '</div>' : '') +
         (a.procedimiento ? '<div class="pp-linea"><span>' + esc(T('pp_proced', 'Procedimiento')) + ':</span> ' + esc(a.procedimiento) + '</div>' : '') +
         (a.maquillaje ? '<div class="pp-linea"><span>' + esc(T('pp_maquillaje', 'Maquillaje')) + ':</span> ' + esc(a.maquillaje) + '</div>' : '') +
@@ -181,9 +220,15 @@
           var campos = ficha[dk] || {}, ks = Object.keys(campos).filter(function (k) { var v = campos[k]; return v != null && v !== '' && !(Array.isArray(v) && !v.length); });
           if (!ks.length) return;
           cuerpo += '<div class="pp-disc">' + esc(R.disc[dk] || dk) + '</div>' + ks.map(function (k) {
-            var v = campos[k], txt;
+            var v = campos[k], txt, m = R.meta[dk + '.' + k];
+            if (m && m.t === 'formula_color' && Array.isArray(v))
+              return '<div class="pp-linea"><span>' + esc(R.campo[dk + '.' + k] || k) + ':</span></div>' +
+                (window.BBLFormula ? BBLFormula.lectura(v, R.F) : '<div class="pp-formula">' + esc(JSON.stringify(v)) + '</div>');
             if (k === 'formula' && Array.isArray(v)) txt = v.map(function (x) { return [nombre('marca_producto', x.marca || ''), x.tono, x.partes].filter(Boolean).join(' '); }).join(' + ');
-            else txt = (CAMPO_DOM[k] && (typeof v !== 'object' || Array.isArray(v))) ? legible(k, v) : valor(v);
+            else {
+              txt = m ? legibleMeta(m, v) : null;
+              if (txt == null) txt = (CAMPO_DOM[k] && (typeof v !== 'object' || Array.isArray(v))) ? legible(k, v) : valor(v);
+            }
             return '<div class="pp-linea"><span>' + esc(R.campo[dk + '.' + k] || k) + ':</span> ' + esc(txt) + '</div>';
           }).join('');
         });
@@ -207,6 +252,60 @@
       '<div class="nota">' + esc([o.nombre, new Date().toLocaleDateString(lang())].filter(Boolean).join(' · ')) + '</div>' + cuerpo + '</body></html>');
     w.document.close(); w.focus(); setTimeout(function () { try { w.print(); } catch (_) {} }, 350);
     return true;
+  }
+
+  /* ═══ SUS PREFERENCIAS ═══════════════════════════════════════════
+     La clienta construye su pasaporte con su profesional: aquí dice cómo
+     le gusta que la atiendan (masajes, aromas, música, estilo…). Son los
+     campos que el esquema marca cli=1; el servidor sólo acepta ésos. */
+  function campoPref(dk, f, v) {
+    // f.yo: el rótulo dicho a ella («Tu estilo»); f.rotulo es el de la profesional («Su estilo»)
+    var rot = f.yo || f.rotulo || f.c;
+    var id = 'pf_' + dk + '_' + f.c, lab = '<label for="' + esc(id) + '">' + esc(rot) + (f.u ? ' (' + esc(unidad(f.u)) + ')' : '') + '</label>';
+    var a = ' data-pd="' + esc(dk) + '" data-pc="' + esc(f.c) + '" data-pt="' + esc(f.t) + '"';
+    if (f.t === 'opc') return '<div>' + lab + '<select id="' + esc(id) + '"' + a + '><option value="">—</option>' + (f.o || []).map(function (o) {
+      return '<option value="' + esc(o.v) + '"' + (String(v) === o.v ? ' selected' : '') + '>' + esc(o.txt) + '</option>'; }).join('') + '</select></div>';
+    if (f.t === 'multi') { var on = Array.isArray(v) ? v : [];
+      return '<div class="pp-ancho"><label>' + esc(rot) + '</label><div class="pp-pills"' + a + '>' + (f.o || []).map(function (o) {
+        return '<button type="button" class="pp-pill' + (on.indexOf(o.v) >= 0 ? ' on' : '') + '" data-v="' + esc(o.v) + '">' + esc(o.txt) + '</button>'; }).join('') + '</div></div>'; }
+    if (f.t === 'si_no') return '<div>' + lab + '<select id="' + esc(id) + '"' + a + '><option value="">—</option><option value="1"' + (v === true ? ' selected' : '') + '>' + esc(T('pp_si', 'Sí')) +
+      '</option><option value="0"' + (v === false ? ' selected' : '') + '>' + esc(T('pp_no', 'No')) + '</option></select></div>';
+    if (f.t === 'texto') return '<div class="pp-ancho">' + lab + '<textarea id="' + esc(id) + '" maxlength="1000"' + a + '>' + esc(v || '') + '</textarea></div>';
+    if (f.t === 'lista') return '<div class="pp-ancho">' + lab + '<input type="text" id="' + esc(id) + '" maxlength="400" placeholder="' + esc(T('pr_coma', 'Separa con comas')) + '"' + a +
+      ' value="' + esc(Array.isArray(v) ? v.join(', ') : (v || '')) + '"></div>';
+    if (f.t === 'txt') return '<div class="pp-ancho">' + lab + '<input type="text" id="' + esc(id) + '" maxlength="200"' + a + ' value="' + esc(v || '') + '"></div>';
+    if (f.t === 'cat') return '<div class="pp-ancho">' + lab + sel(f.dom, v, { multi: Number(f.m) === 1 }).replace('class="pp-sel"', 'class="pp-sel"' + a) + '</div>';
+    return '';
+  }
+  function formPrefs(esq, prefs) {
+    estilo(); prefs = prefs || {};
+    return '<div class="pp-prefs">' + ((esq && esq.disciplinas) || []).map(function (d) {
+      var cs = (d.campos || []).filter(function (f) { return Number(f.cli) === 1 && f.t !== 'color'; });
+      if (!cs.length) return '';
+      var vals = prefs[d.clave] || {}, n = Object.keys(vals).length;
+      return '<details' + (n ? ' open' : '') + '><summary>' + esc(d.nombre || d.clave) + (n ? '<small>' + n + ' ✓</small>' : '') + '</summary><div class="pp-form">' +
+        cs.map(function (f) { return campoPref(d.clave, f, vals[f.c]); }).join('') + '</div></details>';
+    }).join('') + '</div>';
+  }
+  function montarPrefs(raiz, sb) {
+    if (!raiz) return;
+    raiz.querySelectorAll('.pp-prefs .pp-pills[data-pt="multi"] .pp-pill').forEach(function (b) { b.onclick = function () { b.classList.toggle('on'); }; });
+    montar(raiz, sb);
+  }
+  function leerPrefs(raiz) {
+    var out = {};
+    if (!raiz) return out;
+    raiz.querySelectorAll('.pp-prefs [data-pd]').forEach(function (el) {
+      var dk = el.dataset.pd, c = el.dataset.pc, t = el.dataset.pt, v;
+      if (t === 'multi') { v = Array.prototype.map.call(el.querySelectorAll('.pp-pill.on'), function (b) { return b.dataset.v; }); if (!v.length) v = null; }
+      else if (t === 'si_no') v = el.value === '1' ? true : el.value === '0' ? false : null;
+      else if (t === 'lista') { v = el.value.split(',').map(function (x) { return x.trim(); }).filter(Boolean); if (!v.length) v = null; }
+      else if (t === 'cat') v = valorDe(el) || null;
+      else v = (el.value || '').trim() || null;
+      if (v == null) return;
+      (out[dk] = out[dk] || {})[c] = v;
+    });
+    return out;
   }
 
   var CACHE = {};
@@ -343,6 +442,7 @@
     pintar();
   }
 
-  window.BBLPasaporte = { html: html, imprimir: imprimir, esquema: esquema, estilo: estilo, legible: legible, legibleDom: legibleDom,
-    catalogo: catalogo, nombre: nombre, sel: sel, montar: montar, valor: valorDe, lista: listaDe, CAMPO_DOM: CAMPO_DOM };
+  window.BBLPasaporte = { unidad: unidad, html: html, imprimir: imprimir, esquema: esquema, estilo: estilo, legible: legible, legibleDom: legibleDom,
+    catalogo: catalogo, nombre: nombre, sel: sel, montar: montar, valor: valorDe, lista: listaDe, CAMPO_DOM: CAMPO_DOM,
+    formPrefs: formPrefs, montarPrefs: montarPrefs, leerPrefs: leerPrefs };
 })();

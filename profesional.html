@@ -260,6 +260,27 @@
   .ftabs button{font-family:var(--sans);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mauve);
     background:none;border:1px solid transparent;border-radius:4px;padding:7px 11px;cursor:pointer}
   .ftabs button.on{color:var(--gold);border-color:var(--line);background:rgba(200,169,106,.1)}
+  /* Pasaporte v2: secciones, «ella dice», otras disciplinas, dirección */
+  .fsec{grid-column:1/-1;font-family:var(--serif);font-weight:400;font-size:17px;color:var(--cream);margin:6px 0 2px;padding-top:10px;border-top:1px solid var(--line-soft)}
+  .grid2 .fsec:first-child{border-top:0;padding-top:0}
+  .ella{display:block;margin-top:5px;font-size:11px;color:var(--gold-lite)}
+  .fotras{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:-8px 0 16px;font-size:11px;color:var(--mauve)}
+  .fdir{margin:10px 0 0}.fdir label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+  .fdir-f{display:flex;gap:8px;align-items:flex-start}.fdir-f>*:first-child{flex:1}
+  .fdir input{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line);color:var(--cream);padding:12px 13px;border-radius:16px;font-family:var(--sans);font-size:14px}
+  .fdir input:focus{outline:none;border-color:var(--gold)}
+  @media(max-width:560px){.fdir-f{flex-direction:column;align-items:stretch}}
+  .agsv{border:1px solid var(--line);border-radius:4px;padding:10px;background:rgba(0,0,0,.18)}
+  .agsv-l{display:grid;grid-template-columns:1fr 70px 86px 26px;gap:6px;align-items:center;margin-bottom:6px}
+  .agsv-l span{font-size:13px;color:var(--cream)}.agsv-l small{display:block;font-size:10.5px;color:var(--mauve)}
+  .agsv-b{position:relative}.agsv-r{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:85;max-height:300px;overflow:auto;
+    background:var(--plum);border:1px solid var(--line);border-radius:8px;padding:4px;box-shadow:0 24px 60px -24px rgba(0,0,0,.85)}
+  .agsv-r[hidden]{display:none}.agsv-g{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);padding:8px 8px 4px}
+  .agsv-o{display:flex;justify-content:space-between;gap:10px;padding:8px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--smoke)}
+  .agsv-o:hover,.agsv-o.on{background:rgba(200,169,106,.1);color:var(--gold)}.agsv-o small{color:var(--mauve);white-space:nowrap}
+  .agsv-t{font-size:12px;color:var(--gold);margin-top:4px}
+  .agsv-x{background:none;border:0;color:var(--mauve);cursor:pointer;font-size:17px;line-height:1;padding:2px 4px}.agsv-x:hover{color:#E07A7A}
+  @media (max-width:640px){.agsv-l{grid-template-columns:1fr 58px 72px 24px}}
   .fxr{display:grid;grid-template-columns:1.4fr 1fr .6fr;gap:6px;margin-bottom:6px}
   .paleta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
   .pchip{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--smoke);
@@ -537,7 +558,11 @@
   <script src="i18n-gestor.js?v=3"></script>
   <script src="i18n-aceptacion.js?v=1"></script>
   <script src="i18n-pasaporte.js?v=3"></script>
-  <script src="pasaporte.js?v=3"></script>
+  <script src="pasaporte.js?v=4"></script>
+  <script src="i18n-ficha2.js?v=1"></script>
+  <script src="formula.js?v=1"></script>
+  <script src="direccion.js?v=3"></script>
+  <script src="i18n-direccion.js?v=1"></script>
   <script src="i18n-consejos.js?v=1"></script>
   <script src="consejos.js?v=1"></script>
   <script src="i18n-iva.js?v=1"></script>
@@ -1159,8 +1184,102 @@
     return AG.clientas;
   }
 
+  /* ═══ Pasaporte v2 · Servicios y lugar de la cita ════════════════
+     Los servicios se ELIGEN del catálogo (los suyos primero) y una cita
+     puede tener varios: la duración y el precio se suman solos y se pueden
+     cambiar línea a línea. El precio que se propone es el último que ella
+     cobró por ese servicio; si nunca lo ha cobrado, el de referencia de su
+     ciudad. Lo que no esté en el catálogo se escribe y queda como suyo.
+     El lugar sale de la dirección guardada de la clienta, se puede cambiar
+     y tiene el mismo autocompletar que la web de clientas. */
+  const AGSV={datos:null,idioma:null};
+  async function serviciosAgenda(){
+    if(AGSV.datos&&AGSV.idioma===BBL.lang) return AGSV.datos;
+    try{const r=await sb.rpc('servicios_para_agenda',{p_lang:BBL.lang});
+      AGSV.datos=(r.data&&r.data.ok)?r.data:{servicios:[],propios:[]};}catch(_){AGSV.datos={servicios:[],propios:[]};}
+    AGSV.idioma=BBL.lang; return AGSV.datos;
+  }
+  async function direccionesClientas(){
+    if(AG.dirs) return AG.dirs;
+    AG.dirs={};
+    try{const r=await sb.rpc('direcciones_de_mis_clientas'); (r.data||[]).forEach(x=>{AG.dirs[x.id]=x;});}catch(_){}
+    return AG.dirs;
+  }
+  /* El autocompletar escribe sólo la calle (para formularios con ciudad y CP aparte);
+     aquí la dirección es un solo campo, así que va entera. Sin disparar «input»: borraría las coordenadas. */
+  function dirCompleta(el,d){
+    const t=(d&&d.formatted)||[d&&d.line1,[d&&d.postal_code,d&&d.city].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+    if(el&&t) el.value=t.slice(0,300);
+  }
+  const normaliza=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  function montaServicios(box,lineas,SV,alCambiar){
+    const precio=v=>v!=null&&v!==''?eur(Number(v),Money.myCode()):'—';
+    const pinta=()=>{
+      box.innerHTML=lineas.map((l,i)=>`<div class="agsv-l" data-i="${i}">
+          <span>${esc(l.n)}${l.ultimo!=null?`<small>${esc(T('ag_ultimo','Lo último que cobraste'))}: ${esc(precio(l.ultimo))}</small>`
+            :l.ref!=null?`<small>${esc(T('ag_ref','Precio de referencia'))}: ${esc(precio(l.ref))}</small>`:''}</span>
+          <input type="number" class="agsv-min" min="0" max="1440" step="5" inputmode="numeric" value="${l.min!=null?esc(l.min):''}" aria-label="${esc(T('pg_min','min'))}">
+          <input type="number" class="agsv-pr" min="0" step="0.01" inputmode="decimal" value="${l.precio!=null?esc(l.precio):''}" aria-label="${esc(T('pg_ag_precio','Precio'))}">
+          <button type="button" class="agsv-x" aria-label="${esc(T('fx_quitar','Quitar'))}">×</button></div>`).join('')+
+        `<div class="agsv-b"><input class="agsv-q" autocomplete="off" placeholder="${esc(T('ag_buscar','Añade un servicio: escribe para buscar…'))}">
+          <div class="agsv-r" hidden></div></div><div class="agsv-t"></div>`;
+      total(); engancha();
+    };
+    const total=()=>{
+      const m=lineas.reduce((a,l)=>a+(Number(l.min)||0),0), p=lineas.reduce((a,l)=>a+(Number(l.precio)||0),0);
+      const t=box.querySelector('.agsv-t');
+      if(t) t.textContent=lineas.length?conDatos(T('ag_total','Total: {min} min · {precio}'),{min:m,precio:eur(p,Money.myCode())}):'';
+      alCambiar(m,lineas.some(l=>l.precio!=null&&l.precio!=='')?Math.round(p*100)/100:null);
+    };
+    const opcion=(o,i)=>`<div class="agsv-o" data-k="${i}"><span>${esc(o.nombre)}</span><small>${o.min?esc(o.min)+' '+esc(T('fx_u_min','min')):''}${o.ultimo!=null||o.ref!=null?' · '+esc(precio(o.ultimo!=null?o.ultimo:o.ref)):''}</small></div>`;
+    const engancha=()=>{
+      box.querySelectorAll('.agsv-l').forEach(r=>{
+        const l=lineas[Number(r.dataset.i)];
+        r.querySelector('.agsv-min').oninput=e=>{l.min=e.target.value===''?null:Number(e.target.value);total();};
+        r.querySelector('.agsv-pr').oninput=e=>{l.precio=e.target.value===''?null:Number(e.target.value);total();};
+        r.querySelector('.agsv-x').onclick=()=>{lineas.splice(Number(r.dataset.i),1);pinta();};
+      });
+      const q=box.querySelector('.agsv-q'), res=box.querySelector('.agsv-r');
+      let ops=[];
+      const elige=o=>{
+        lineas.push(o.c?{c:o.c,n:o.nombre,min:o.min??null,precio:o.ultimo??o.ref??null,ultimo:o.ultimo,ref:o.ref}
+                       :{c:null,n:o.nombre,min:o.min??null,precio:o.ultimo??null,ultimo:o.ultimo});
+        pinta(); box.querySelector('.agsv-q')?.focus();
+      };
+      const busca=()=>{
+        const t=normaliza(q.value.trim()); ops=[]; let h='';
+        const sv=SV.servicios||[], pr=SV.propios||[];
+        if(!t){
+          const mios=sv.filter(x=>x.mio);
+          if(mios.length){h+=`<div class="agsv-g">${esc(T('ag_tuyos','Tus servicios'))}</div>`;mios.forEach(o=>{h+=opcion(o,ops.length);ops.push(o);});}
+          if(pr.length){h+=`<div class="agsv-g">${esc(T('ag_propios','Escritos por ti'))}</div>`;pr.forEach(o=>{h+=opcion(o,ops.length);ops.push(o);});}
+          let cat=null; sv.filter(x=>!x.mio).forEach(o=>{ if(o.cat!==cat){cat=o.cat;h+=`<div class="agsv-g">${esc(cat)}</div>`;} h+=opcion(o,ops.length);ops.push(o); });
+        }else{
+          const ok=o=>normaliza(o.nombre).includes(t)||normaliza(o.cat).includes(t);
+          pr.filter(ok).forEach(o=>{h+=opcion(o,ops.length);ops.push(o);});
+          sv.filter(ok).slice(0,40).forEach(o=>{h+=opcion(o,ops.length);ops.push(o);});
+          h+=`<div class="agsv-o" data-k="nuevo"><span>${esc(conDatos(T('ag_otro','+ Añadir «{t}» como servicio propio'),{t:q.value.trim()}))}</span></div>`;
+        }
+        res.innerHTML=h; res.hidden=false;
+        res.querySelectorAll('.agsv-o').forEach(d=>d.onmousedown=e=>{e.preventDefault();
+          if(d.dataset.k==='nuevo') elige({c:null,nombre:q.value.trim().slice(0,120)}); else elige(ops[Number(d.dataset.k)]);});
+      };
+      q.onfocus=busca; q.oninput=busca;
+      q.onblur=()=>setTimeout(()=>{res.hidden=true;},120);
+      q.onkeydown=e=>{
+        if(e.key==='Escape'){res.hidden=true;return;}
+        if(e.key==='Enter'){e.preventDefault(); const t=q.value.trim(); if(ops.length&&t) elige(ops[0]); else if(t) elige({c:null,nombre:t.slice(0,120)});}
+      };
+    };
+    pinta();
+    return ()=>lineas.map(l=>({c:l.c||null,n:l.n,min:l.min!=null?Number(l.min):null,precio:l.precio!=null?Number(l.precio):null}));
+  }
+
   async function editorCita(c,fecha){
     const cl=await cargaClientas();
+    const deBab0=c&&c.es_de_babyloon;
+    const [SV,DIRS,DET]=await Promise.all([serviciosAgenda(),direccionesClientas(),
+      (c&&!deBab0)?sb.rpc('detalle_de_cita',{p_id:c.id}).then(r=>r.data&&r.data.ok?r.data:null,()=>null):Promise.resolve(null)]);
     const nueva=!c;
     const ini=c?new Date(c.inicio):new Date((fecha||hoy0()).getTime()+10*36e5);
     const av=new Set(c?(c.avisos||[]):[1440,120]);
@@ -1177,8 +1296,11 @@
           ${cl.map(x=>`<option value="${esc(x.id)}"${c&&c.clienta&&c.clienta.id===x.id?' selected':''}>${esc(x.nombre||'—')}</option>`).join('')}
           ${nueva?`<option value="__nueva">${esc(T('pp_nueva_op','+ Nueva clienta…'))}</option>`:''}</select></div>
         <div class="field full" id="cNuevaBox" style="display:none">${formNuevaClienta('cn')}</div>
+        ${deBab?'':`<div class="field full" id="cServBox"><label>${esc(T('ag_servicios','Servicios'))}</label><div class="agsv" id="cServ"></div></div>`}
         <div class="field full"><label>${esc(T('pg_ag_titulo','Qué es'))}</label><input id="cTit" maxlength="120" value="${esc(c?(c.titulo||''):'')}" placeholder="${esc(T('pg_ag_titulo_ej','Balayage · Comida · Día libre'))}"${deBab?' disabled':''}></div>
-        <div class="field full"><label>${esc(T('pg_ag_lugar','Dónde'))}</label><input id="cLugar" maxlength="300" value="${esc(c?(c.lugar||''):'')}"${deBab?' disabled':''}></div>
+        <div class="field full"><label>${esc(T('pg_ag_lugar','Dónde'))}</label><input id="cLugar" maxlength="300" autocomplete="off" value="${esc(c?(c.lugar||''):'')}"${deBab?' disabled':''}>
+          <small class="priv" id="cLugarNota"></small>
+          <label class="chk" id="cDirGBox" style="display:none;margin-top:6px"><input type="checkbox" id="cDirG"> ${esc(T('ag_dir_guardar','Guardar como dirección de la clienta'))}</label></div>
         <div class="field"><label>${esc(T('pg_ag_precio','Precio'))}</label><input type="number" id="cPrecio" step="0.01" value="${c&&c.precio!=null?c.precio:''}"${deBab||(c&&c.cobrada)?' disabled':''}></div>
         <div class="field"><label>${esc(T('pg_ag_pago','Método de pago'))}</label><select id="cPago"${deBab||(c&&c.cobrada)?' disabled':''}>
           <option value="">${esc(T('pg_ag_pago_sel','—'))}</option>
@@ -1208,6 +1330,47 @@
       </div>
       <div class="saveMsg" id="cMsg"></div>`;
     abreModal(cuerpo);
+    /* Servicios: los de la cita (si ya tiene) o ninguno; al tocarlos se ajustan duración y precio */
+    let leerServicios=null;
+    const sbox=document.getElementById('cServ');
+    if(sbox){
+      const ini=((DET&&DET.servicios)||[]).map(x=>{
+        const o=(SV.servicios||[]).find(y=>y.c&&y.c===x.c);
+        return {c:x.c||null,n:x.n,min:x.min??null,precio:x.precio??null,ultimo:o?o.ultimo:undefined,ref:o?o.ref:undefined};});
+      let primera=true;
+      leerServicios=montaServicios(sbox,ini,SV,(min,pr)=>{
+        if(primera&&ini.length){primera=false;return;}  // al abrir, se respeta lo que ya tenía la cita
+        primera=false;
+        if(min>0) document.getElementById('cDur').value=min;
+        const cp=document.getElementById('cPrecio'); if(cp&&!cp.disabled&&pr!=null) cp.value=pr;
+      });
+    }
+    /* Lugar: la dirección guardada de la clienta, editable, con autocompletar */
+    let coord=DET&&DET.lat!=null?{lat:DET.lat,lng:DET.lng}:null, auto=null;
+    const lugar=document.getElementById('cLugar'), dg=document.getElementById('cDirGBox');
+    const cliSel=()=>{const v=(document.getElementById('cCli')||{}).value||'';return v&&v!=='__nueva'?v:'';};
+    const pintaGuardar=()=>{
+      if(!dg||!lugar) return;
+      const id=cliSel(), guardada=(DIRS[id]&&DIRS[id].direccion)||'', v=lugar.value.trim();
+      const mostrar=!!(id&&v&&v!==guardada);
+      dg.style.display=mostrar?'':'none';
+      if(mostrar&&!guardada) document.getElementById('cDirG').checked=true;
+      const nota=document.getElementById('cLugarNota');
+      if(nota) nota.textContent=id&&guardada&&v===guardada?T('ag_dir_cli','Su dirección guardada'):'';
+    };
+    const ponDireccion=()=>{
+      const id=cliSel(); if(!lugar||lugar.disabled) return;
+      const d=DIRS[id];
+      if(d&&d.direccion&&(!lugar.value.trim()||lugar.value===auto)){ lugar.value=d.direccion; auto=d.direccion; coord=d.lat!=null?{lat:d.lat,lng:d.lng}:null; }
+      pintaGuardar();
+    };
+    if(lugar&&!lugar.disabled){
+      if(window.BBL&&BBL.direccion) BBL.direccion({sb,input:lugar,alElegir:d=>{dirCompleta(lugar,d);coord={lat:d.lat??null,lng:d.lng??null};setTimeout(pintaGuardar,0);}});
+      lugar.addEventListener('input',()=>{coord=null;pintaGuardar();});
+    }
+    const scli=document.getElementById('cCli');
+    if(scli) scli.addEventListener('change',ponDireccion);
+    if(nueva) ponDireccion(); else pintaGuardar();
     const rep=document.getElementById('cRep');
     if(rep) rep.onchange=()=>{document.getElementById('cHastaBox').style.display=rep.value?'block':'none';};
     document.querySelectorAll('#cAvisos .chip').forEach(b=>b.onclick=()=>b.classList.toggle('on'));
@@ -1226,6 +1389,9 @@
         if(!nc.ok){ g.disabled=false; msg.textContent=nc.error==='email_no_valido'?T('pp_e_email','El email no es válido.'):T('pp_e_guardar','No se pudo guardar.'); msg.className='saveMsg bad'; return; }
         const s=document.getElementById('cCli'); s.insertAdjacentHTML('beforeend',`<option value="${esc(nc.id)}">${esc(nc.nombre)}</option>`); s.value=nc.id;
         AG.clientas=null;
+        // Si se le ha puesto dirección y la cita no tiene lugar, la cita es en su casa
+        const lg0=document.getElementById('cLugar'), nd=(document.getElementById('cnDir')?.value||'').trim();
+        if(lg0&&!lg0.disabled&&!lg0.value.trim()&&nd){ lg0.value=nd; const c0=DIRALTA.cn||{}; coord=c0.lat!=null?{lat:c0.lat,lng:c0.lng}:null; }
       }
       if(nueva){
         r=await sb.rpc('crear_cita',{p_inicio:cuando().toISOString(),p_minutos:dur,
@@ -1241,6 +1407,23 @@
       }else{
         r=await guardarCitaExistente(c, dur, cuando().toISOString());
         if(!r.error&&r.data&&r.data.ok) await sb.rpc('avisos_de_la_cita',{p_id:c.id,p_avisos:avisos()});
+      }
+      if(!r.error&&r.data&&r.data.ok===true){
+        // Servicios y coordenadas del lugar (a toda la serie si se repite)
+        const ids=nueva?(r.data.ids||[]):[c.id];
+        if(ids.length&&(leerServicios||coord)){
+          const sv=leerServicios?leerServicios():null;
+          const lg=document.getElementById('cLugar');
+          await sb.rpc('completar_cita',{p_ids:ids,p_servicios:sv,p_lugar:null,
+            p_lat:coord&&lg&&lg.value.trim()?coord.lat:null,p_lng:coord&&lg&&lg.value.trim()?coord.lng:null});
+          AGSV.datos=null;
+        }
+        // La dirección se guarda en su ficha si se ha pedido
+        const cid=document.getElementById('cCli')?.value, lg=document.getElementById('cLugar');
+        if(document.getElementById('cDirG')?.checked&&document.getElementById('cDirGBox')?.style.display!=='none'&&cid&&cid!=='__nueva'&&lg&&lg.value.trim()){
+          await sb.rpc('guardar_direccion_clienta',{p_id:cid,p_direccion:lg.value.trim(),p_lat:coord?coord.lat:null,p_lng:coord?coord.lng:null});
+          AG.dirs=null;
+        }
       }
       g.disabled=false;
       if(r.error||!r.data||r.data.ok!==true){msg.textContent=errorDeCita(r.data);msg.className='saveMsg bad';return;}
@@ -1314,7 +1497,7 @@
       };
     };
     const sc=document.getElementById('cCli');
-    if(sc) sc.onchange=()=>{ const nb=document.getElementById('cNuevaBox'); if(nb){ nb.style.display=sc.value==='__nueva'?'':'none'; BBLPasaporte.montar(nb,sb); } };
+    if(sc) sc.addEventListener('change',()=>{ const nb=document.getElementById('cNuevaBox'); if(nb){ nb.style.display=sc.value==='__nueva'?'':'none'; BBLPasaporte.montar(nb,sb); montaDirAlta('cn'); } });
     const fi=document.getElementById('cFicha');
     if(fi) fi.onclick=()=>abreFicha(c.clienta.id);
     const pp=document.getElementById('cPasaporte');
@@ -1431,12 +1614,26 @@
       <div class="field"><label>${esc(T('pp_nc_tel','Teléfono'))}</label><input id="${p}Tel" type="tel" maxlength="30" placeholder="+34 …"></div>
       <div class="field"><label>${esc(T('pp_nc_email','Email'))}</label><input id="${p}Mail" type="email" maxlength="160"></div>
       <div class="field full"><label>${esc(T('pp_nc_alergias','Alergias (si las tiene)'))}</label>${BBLPasaporte.sel('alergeno','',{id:p+'Ale'})}</div>
+      <div class="field full"><label>${esc(T('fi_dir','Dirección de la clienta'))}</label><input id="${p}Dir" maxlength="300" autocomplete="off" placeholder="${esc(T('fi_dir_ph','Calle, número, piso, ciudad'))}"></div>
       <small class="priv" style="grid-column:1/-1">${esc(T('pp_nc_nota','Con su email, en cuanto se registre en Babyloon recibirá su pasaporte de belleza con todo lo que le apuntes. Y si ya tiene cuenta, lo recibe ahora.'))}</small></div>`;
+  }
+  /* La dirección del alta, con el mismo autocompletar que la web de clientas */
+  const DIRALTA={};
+  function montaDirAlta(p){
+    const i=document.getElementById(p+'Dir'); if(!i||i.dataset.dirAlta) return;
+    i.dataset.dirAlta='1'; DIRALTA[p]={};
+    if(window.BBL&&BBL.direccion) BBL.direccion({sb,input:i,alElegir:d=>{dirCompleta(i,d);DIRALTA[p]={lat:d.lat??null,lng:d.lng??null};}});
+    i.addEventListener('input',()=>{DIRALTA[p]={};});
   }
   async function altaClienta(p){
     const v=id=>(document.getElementById(p+id)?.value||'').trim(), nom=v('Nom');
     if(!nom) return null;
     const r=await sb.rpc('crear_clienta',{p_nombre:nom,p_telefono:v('Tel')||null,p_email:v('Mail')||null,p_alergias:BBLPasaporte.valor(p+'Ale')||null});
+    if(r.data&&r.data.ok&&r.data.id&&v('Dir')){
+      const c=DIRALTA[p]||{};
+      await sb.rpc('guardar_direccion_clienta',{p_id:r.data.id,p_direccion:v('Dir'),p_lat:c.lat??null,p_lng:c.lng??null});
+      AG.dirs=null;
+    }
     return r.data?Object.assign({nombre:nom},r.data):{ok:false};
   }
   /* La invitación es la ficha de bienvenida: un enlace (30 días) donde la clienta elige
@@ -1546,7 +1743,7 @@
   async function abreFicha(clientId){
     const [esq,r]=await Promise.all([esquemaFicha(),sb.rpc('ficha_de_clienta',{p_client_id:clientId})]);
     if(!esq||r.error||!r.data||r.data.ok!==true){abreModal(`<p>${esc(T('ct_errdatos2','No se pudieron cargar los datos.'))}</p>`);return;}
-    FICHA={id:clientId,datos:r.data,grupo:null,fotos:[]};
+    FICHA={id:clientId,datos:r.data,grupo:null,fotos:[],extra:new Set(),dirCoord:null};
     pintaFicha();
   }
 
@@ -1554,12 +1751,19 @@
      hecho a esta clienta, aunque hoy no las ofrezca —el historial no se
      borra porque cambie de servicios—, y las que ya tienen algo escrito.
      Enseñar las nueve a todo el mundo sería un formulario de 82 campos. */
+  /* Pasaporte v2 · Si en su perfil no ha marcado ningún servicio, se le
+     enseñan todas: esconderlas era dejar la ficha en «General» y «Gustos».
+     Las demás se abren con «Otras disciplinas», y también las que la
+     clienta ha rellenado en sus preferencias. */
   function gruposFicha(){
-    const d=FICHA.datos, ficha=d.ficha||{};
+    const d=FICHA.datos, ficha=d.ficha||{}, pref=d.preferencias||{};
     const mias=new Set([...(d.disciplinas||[]),...(d.hechas||[])]);
-    return (FICHA_ESQ.disciplinas||[]).filter(g=>g.siempre
+    const todas=!(d.disciplinas||[]).length;
+    const extra=FICHA.extra||new Set();
+    return (FICHA_ESQ.disciplinas||[]).filter(g=>todas||g.siempre||extra.has(g.clave)
       || (g.categorias||[]).some(c=>mias.has(c))
-      || (ficha[g.clave]&&Object.keys(ficha[g.clave]).length));
+      || (ficha[g.clave]&&Object.keys(ficha[g.clave]).length)
+      || (pref[g.clave]&&Object.keys(pref[g.clave]).length));
   }
 
   function pintaFicha(){
@@ -1577,8 +1781,14 @@
         ${cl.es_de_babyloon?`<span class="tag gold">${esc(T('pg_de_babyloon','Babyloon'))}</span>`:''}</h3>
       <p class="sub">${esc(T('pp_fi_aviso','Esta ficha forma parte del pasaporte de belleza de la clienta: la ve ella y, si lo permite, sus otras profesionales. Nunca se publica. En el cuaderno puedes dejar notas sólo para ti.'))}</p>
       ${heredado}
+      <div class="fdir"><label for="fiDir">${esc(T('fi_dir','Dirección de la clienta'))}</label>
+        <div class="fdir-f"><input id="fiDir" maxlength="300" autocomplete="off" placeholder="${esc(T('fi_dir_ph','Calle, número, piso, ciudad'))}" value="${esc((d.direccion&&d.direccion.texto)||'')}">
+        <button type="button" class="btn btn-line mini" id="fiDirG">${esc(T('fi_dir_guardar','Guardar dirección'))}</button></div>
+        <div class="saveMsg" id="fiDirMsg"></div></div>
       <div class="ftabs">${gr.map(x=>`<button data-g="${esc(x.clave)}"${x.clave===FICHA.grupo?' class="on"':''}>${esc(x.nombre)}</button>`).join('')}
         <button data-g="_cuaderno"${FICHA.grupo==='_cuaderno'?' class="on"':''}>${esc(T('pg_fi_cuaderno','Cuaderno'))}</button></div>
+      ${(()=>{const oc=(FICHA_ESQ.disciplinas||[]).filter(x=>!gr.some(y=>y.clave===x.clave));
+        return oc.length?`<div class="fotras"><span>${esc(T('fi_otras','Otras disciplinas'))}:</span>${oc.map(x=>`<button type="button" class="chip" data-disc="${esc(x.clave)}">+ ${esc(x.nombre)}</button>`).join('')}</div>`:'';})()}
       <div id="fiCuerpo">${FICHA.grupo==='_cuaderno'?pintaCuaderno():(g?campos(g,ficha[g.clave]||{}):'')}</div>
       <div class="macc">
         ${FICHA.grupo!=='_cuaderno'?`<button class="btn btn-gold" id="fiGuardar">${esc(T('ct_guardar','Guardar cambios'))}</button>`:''}
@@ -1586,16 +1796,48 @@
     document.querySelectorAll('.ftabs button').forEach(b=>b.onclick=()=>{
       if(FICHA.grupo!=='_cuaderno') recoge();
       FICHA.grupo=b.dataset.g; pintaFicha();});
+    document.querySelectorAll('.fotras [data-disc]').forEach(b=>b.onclick=()=>{
+      if(FICHA.grupo!=='_cuaderno') recoge();
+      FICHA.extra.add(b.dataset.disc); FICHA.grupo=b.dataset.disc; pintaFicha();});
+    enganchaDireccion();
     const gb=document.getElementById('fiGuardar');
     if(gb) gb.onclick=guardaFicha;
     if(FICHA.grupo==='_cuaderno'){ enganchaCuaderno(); BBLPasaporte.montar(document.getElementById('fiCuerpo'),sb); }
     else enganchaCampos();
   }
 
+  /* Lo que la clienta dice de sí misma, en palabras */
+  const uni=u=>(window.BBLPasaporte&&BBLPasaporte.unidad)?BBLPasaporte.unidad(u):u;
+  function legibleCampo(f,x){
+    if(x==null||x==='') return '';
+    if(f.t==='si_no') return x===true?T('ct_si','Sí'):T('ct_no','No');
+    const op=v=>{const o=(f.o||[]).find(o=>o.v===String(v));return o?o.txt:String(v);};
+    if(f.t==='opc') return op(x)+(f.u?' '+uni(f.u):'');
+    if(f.t==='multi') return (Array.isArray(x)?x:[x]).map(op).join(', ');
+    if(f.t==='cat') return window.BBLPasaporte?String(x).split(',').map(c=>BBLPasaporte.nombre(f.dom,c)).join(', '):String(x);
+    if(Array.isArray(x)) return x.map(y=>typeof y==='object'?(y.nota||y.hex||''):y).join(', ');
+    return String(x);
+  }
   function campos(g,v){
+    const pref=((FICHA.datos&&FICHA.datos.preferencias)||{})[g.clave]||{};
+    let sec=null;
     return '<div class="grid2">'+g.campos.map(f=>{
-      const id='f_'+f.c, r=esc(f.rotulo), u=f.u?` <span class="uni">${esc(f.u)}</span>`:'';
       const val=v[f.c];
+      // Los campos antiguos que se sustituyeron sólo aparecen si tienen algo
+      if(f.oc && (val==null||val===''||(Array.isArray(val)&&!val.length))) return '';
+      let cab='';
+      if(f.s && f.s!==sec){ sec=f.s; cab=`<h4 class="fsec">${esc(f.srot||f.s)}</h4>`; }
+      const ella=legibleCampo(f,pref[f.c]);
+      const h=campoFicha(f,val);
+      return cab+(ella&&h?h.replace(/<\/div>$/,`<small class="ella">${esc(T('fi_ella','Ella dice'))}: ${esc(ella)}</small></div>`):h);
+    }).join('')+'</div>';
+  }
+  function campoFicha(f,val){
+    {
+      const id='f_'+f.c, r=esc(f.rotulo), u=f.u?` <span class="uni">${esc(uni(f.u))}</span>`:'';
+      if(f.t==='cat' && window.BBLPasaporte) return fld(r,BBLPasaporte.sel(f.dom,val,{id,multi:Number(f.m)===1}),true);
+      if(f.t==='formula_color' && window.BBLFormula)
+        return fld(r,`<div id="fxc">${BBLFormula.html(Array.isArray(val)?val:[],FICHA_ESQ.formula||{})}</div>`,true);
       // Alergias y marcas: del catálogo único de belleza (nadie las escribe a su manera)
       const dom=window.BBLPasaporte&&BBLPasaporte.CAMPO_DOM[f.c];
       if(dom&&(f.t==='txt'||f.t==='texto'||f.t==='lista'))
@@ -1617,7 +1859,7 @@
           <div class="palAdd"><input type="color" id="palHex" value="#c8a96a"><input id="palNota" maxlength="60" placeholder="${esc(T('pg_fi_color_nota','Para qué es'))}">
           <button type="button" class="btn btn-line mini" id="palMas">+ ${esc(T('pg_fi_mas','Añadir'))}</button></div>`,true);}
       return '';
-    }).join('')+'</div>';
+    }
   }
   const fld=(l,c,full)=>`<div class="field${full?' full':''}"><label>${l}</label>${c}</div>`;
   const filaFormula=x=>`<div class="fxr">${BBLPasaporte.sel('marca_producto',x.marca||'',{multi:false,ph:T('ft_marca_ph','Marca')}).replace('class="pp-sel"','class="pp-sel fxm"')}
@@ -1627,6 +1869,8 @@
       <i style="background:${esc(x.hex)}"></i>${esc(x.nota||x.hex)}<b>×</b></span>`;
 
   function enganchaCampos(){
+    const fxc=document.getElementById('fxc');
+    if(fxc&&window.BBLFormula){ BBLFormula.preparar(fxc,FICHA_ESQ.formula||{}); BBLFormula.montar(fxc,sb); }
     document.querySelectorAll('[data-multi] .chip').forEach(b=>b.onclick=()=>b.classList.toggle('on'));
     const mas=document.getElementById('fxMas');
     if(mas) mas.onclick=()=>{document.getElementById('fx').insertAdjacentHTML('beforeend',filaFormula({})); BBLPasaporte.montar(document.getElementById('fx'),sb);};
@@ -1648,7 +1892,15 @@
   function recoge(){
     const g=(FICHA_ESQ.disciplinas||[]).find(x=>x.clave===FICHA.grupo); if(!g) return;
     const out={};
+    // Lo que no está en pantalla (un campo antiguo escondido) se conserva tal cual
+    const prev=((FICHA.datos&&FICHA.datos.ficha)||{})[FICHA.grupo]||{};
     g.campos.forEach(f=>{
+      const enPantalla=f.t==='formula_color'?document.getElementById('fxc'):f.t==='formula'?document.getElementById('fx')
+        :f.t==='multi'?document.querySelector('[data-multi="'+f.c+'"]'):f.t==='color'?document.getElementById('pal'):document.getElementById('f_'+f.c);
+      if(!enPantalla){ if(prev[f.c]!=null) out[f.c]=prev[f.c]; return; }
+      if(f.t==='formula_color'){
+        const v=window.BBLFormula?BBLFormula.leer(enPantalla):[];
+        if(v.length) out[f.c]=v; return;}
       const el=document.getElementById('f_'+f.c);
       if(f.t==='multi'){
         const c=document.querySelector('[data-multi="'+f.c+'"]'); if(!c) return;
@@ -1694,7 +1946,11 @@
       <div class="grid2">
         <div class="field"><label>${esc(T('pg_fi_fecha','Día'))}</label><input type="date" id="apFecha" value="${kDia(hoy0())}"></div>
         <div class="field"><label>${esc(T('pg_fi_servicio','Qué le hiciste'))}</label><input id="apServ" maxlength="200"></div>
-        <div class="field full"><label>${esc(T('ft_formula','Fórmula'))}</label><input id="apForm" maxlength="300"></div>
+        <div class="field full"><label>${esc(T('fx_titulo','Fórmula de color'))}</label>
+          <div id="apFx">${window.BBLFormula?BBLFormula.html([],FICHA_ESQ.formula||{}):''}</div>
+          <button type="button" class="btn btn-line mini" id="apFxRep">${esc(T('fx_repetir','Repetir la última fórmula'))}</button>
+          <small class="priv" id="apFxMsg"></small></div>
+        <div class="field full"><label>${esc(T('fi_form_notas','Notas de la fórmula (texto libre)'))}</label><input id="apForm" maxlength="300"></div>
         <div class="field full"><label>${esc(T('pg_fi_productos','Productos usados'))}</label>${BBLPasaporte.sel('marca_producto','',{id:'apProd'})}</div>
         <div class="field full"><label>${esc(T('pg_fi_resultado','Cómo quedó'))}</label><textarea id="apRes" rows="2"></textarea></div>
         <div class="field full"><label>${esc(T('pg_fi_fotos','Fotos de antes y después'))}</label>
@@ -1713,6 +1969,7 @@
       <div class="saveMsg" id="apMsg"></div></div>
       ${h.length?h.map(x=>`<div class="item"><div class="main">
         <h4>${esc(x.servicio||T('pg_fi_apunte','Apunte'))} <span class="tag mut">${esc(fdate(x.fecha))}</span></h4>
+        ${(x.formula_c||[]).length&&window.BBLFormula?BBLFormula.lectura(x.formula_c,FICHA_ESQ.formula||{}):''}
         <div class="sub">${[x.formula,x.productos,x.resultado].filter(Boolean).map(esc).join(' · ')}</div>
         ${(x.fotos||[]).length?`<div class="minis" data-fotos="${esc((x.fotos||[]).join('|'))}"></div>`:''}
         </div><div class="right"><button class="btn btn-line mini bad" data-borra="${esc(x.id)}">${esc(T('pg_ag_borrar','Borrar'))}</button></div></div>`).join('')
@@ -1722,6 +1979,18 @@
   function enganchaCuaderno(){
     const f=document.getElementById('apFotos'), minis=document.getElementById('apMinis'), m=document.getElementById('apMsg');
     FICHA.fotos=[];
+    const apFx=document.getElementById('apFx');
+    if(apFx&&window.BBLFormula){ BBLFormula.preparar(apFx,FICHA_ESQ.formula||{}); BBLFormula.montar(apFx,sb); }
+    const rep=document.getElementById('apFxRep');
+    if(rep) rep.onclick=()=>{
+      /* La última: la de la visita más reciente que la tenga; si no, la de la ficha */
+      const ult=(FICHA.datos.cuaderno||[]).find(x=>(x.formula_c||[]).length);
+      const fi=((FICHA.datos.ficha||{}).cabello||{}).formulas;
+      const l=ult?ult.formula_c:(fi&&fi.length?fi:null);
+      const msg=document.getElementById('apFxMsg');
+      if(!l){ msg.textContent=T('fx_sin_ant','No hay ninguna fórmula anterior.'); return; }
+      msg.textContent=''; BBLFormula.poner(apFx,l,FICHA_ESQ.formula||{},sb);
+    };
     if(f) f.onchange=async()=>{
       for(const file of [...f.files].slice(0,8)){
         const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
@@ -1742,10 +2011,13 @@
     const g=document.getElementById('apGuardar');
     if(g) g.onclick=async()=>{
       g.disabled=true;
+      const fxv=window.BBLFormula?BBLFormula.leer(document.getElementById('apFx')):[];
+      // El texto de la fórmula sigue guardándose (lo leen las apps); si sólo hay zonas, se resume
+      const fxTxt=document.getElementById('apForm').value||(fxv.length?BBLFormula.texto(fxv,FICHA_ESQ.formula||{}).slice(0,3900):'');
       const r=await sb.rpc('apuntar_en_el_cuaderno',{p_client_id:FICHA.id,
         p_fecha:document.getElementById('apFecha').value||null,
         p_servicio:document.getElementById('apServ').value||null,
-        p_formula:document.getElementById('apForm').value||null,
+        p_formula:fxTxt||null,
         p_productos:BBLPasaporte.valor('apProd')||null,
         p_procedimiento:null,p_resultado:document.getElementById('apRes').value||null,
         p_fotos:FICHA.fotos,p_precio:null,p_compartir:!!document.getElementById('apCompartir')?.checked});
@@ -1755,12 +2027,30 @@
           ?T('pg_fi_vacio','Un apunte sin servicio, sin resultado y sin fotos no dice nada.')
           :T('ct_errguardar','No se pudo guardar.');
         m.className='saveMsg bad';return;}
+      if(r.data.id && fxv.length) await sb.rpc('guardar_formula_apunte',{p_id:r.data.id,p_formula:fxv});
       const cu=BBLPasaporte.valor('apCuid'), se=document.getElementById('apProx').value;
       if(r.data.id && (cu||se)) await sb.rpc('guardar_cuidados_apunte',{p_id:r.data.id,p_cuidados:cu||null,p_semanas:se?Number(se):null});
       abreFicha(FICHA.id);
     };
     document.querySelectorAll('[data-borra]').forEach(b=>b.onclick=async()=>{
       await sb.rpc('borrar_apunte',{p_id:b.dataset.borra}); abreFicha(FICHA.id);});
+  }
+
+  /* Pasaporte v2 · La dirección de la clienta: la usa la agenda por defecto */
+  function enganchaDireccion(){
+    const i=document.getElementById('fiDir'), b=document.getElementById('fiDirG'), m=document.getElementById('fiDirMsg');
+    if(!i||!b) return;
+    if(window.BBL&&BBL.direccion) BBL.direccion({sb,input:i,alElegir:d=>{dirCompleta(i,d);FICHA.dirCoord={lat:d.lat??null,lng:d.lng??null};}});
+    i.addEventListener('input',()=>{FICHA.dirCoord=null;});
+    b.onclick=async()=>{
+      b.disabled=true; m.textContent='';
+      const c=FICHA.dirCoord||{};
+      const r=await sb.rpc('guardar_direccion_clienta',{p_id:FICHA.id,p_direccion:i.value.trim()||null,p_lat:c.lat??null,p_lng:c.lng??null});
+      b.disabled=false;
+      if(r.error||!r.data||r.data.ok!==true){m.textContent=T('ct_errguardar','No se pudo guardar.');m.className='saveMsg bad';return;}
+      FICHA.datos.direccion={texto:i.value.trim(),lat:c.lat,lng:c.lng}; AG.dirs=null;
+      m.textContent=T('fi_dir_ok','Dirección guardada.'); m.className='saveMsg ok';
+    };
   }
 
   /* El almacén es privado: hay que pedir un enlace firmado para cada
@@ -1821,7 +2111,7 @@
     box.querySelectorAll('[data-bienv]').forEach(b=>b.onclick=()=>enviarBienvenida(cl.find(x=>x.id===b.dataset.bienv)||{id:b.dataset.bienv}));
     sb.rpc('mis_clientas_traidas').then(t=>{ const n=t.data&&t.data.ok?Number(t.data.total)||0:0, h=document.getElementById('clTraidas');
       if(h&&n) h.textContent=conDatos(n===1?T('pp_traidas1','Has traído 1 clienta a Babyloon.'):T('pp_traidas','Has traído {n} clientas a Babyloon.'),{n}); });
-    document.getElementById('clNueva').onclick=()=>{ const n=document.getElementById('clNuevaBox'); n.style.display=n.style.display==='none'?'':'none'; BBLPasaporte.montar(n,sb); document.getElementById('clNom')?.focus(); };
+    document.getElementById('clNueva').onclick=()=>{ const n=document.getElementById('clNuevaBox'); n.style.display=n.style.display==='none'?'':'none'; BBLPasaporte.montar(n,sb); montaDirAlta('cl'); document.getElementById('clNom')?.focus(); };
     document.getElementById('clCrear').onclick=async ev=>{
       const b=ev.currentTarget, m=document.getElementById('clMsg'); b.disabled=true;
       const r=await altaClienta('cl'); b.disabled=false;
