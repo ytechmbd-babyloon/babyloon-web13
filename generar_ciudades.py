@@ -20,12 +20,21 @@ CÓMO SE USA
 
          select jsonb_build_object(
            'generado', to_char(now(),'YYYY-MM-DD'),
-           'ciudades', (select jsonb_agg(ciudad_publica(x->>'slug')
-                                  order by x->>'slug')
-                          from jsonb_array_elements(ciudades_publicas()) x)
+           'ciudades', (select jsonb_agg(cp || jsonb_build_object(
+                                  'productos_boutique',
+                                  (select count(*) from boutique_products bp
+                                    where bp.is_active and bp.image_url is not null
+                                      and bp.paises_de_venta @> array[cp->>'pais_iso']))
+                                  order by cp->>'slug')
+                          from jsonb_array_elements(ciudades_publicas()) x,
+                               lateral (select ciudad_publica(x->>'slug') as cp) l)
          )::text;
 
        Guardar el resultado como `ciudades.json`.
+
+       `productos_boutique` es lo mismo que enseña `boutique.html` con
+       «Envío a» ese país (activos, con foto y vendibles allí): si es 0,
+       la página no promete boutique (61.89, más abajo).
 
     2) python3 generar_ciudades.py ciudades.json <carpeta-de-la-web>
 
@@ -42,6 +51,30 @@ CÓMO SE USA
 
     Necesita, en esta misma carpeta, `plantilla_estilos.txt` y
     `plantilla_header.txt`.
+
+    Escribe las páginas, `sitemap.xml` y `paginas-de-ciudad.js`.
+
+LAS CIUDADES QUE TIENEN PÁGINA (61.89)
+    `paginas-de-ciudad.js` es la lista de las ciudades con página, y la
+    portada enseña solo esas. Una ciudad recién añadida en el panel está
+    en la base desde ese momento, pero su página no existe hasta que se
+    genera y se publica la web: antes, la portada la enseñaba con un
+    enlace que no llevaba a ninguna parte. Ahora aparece en la portada
+    cuando su página está publicada, ni antes ni después.
+
+    Si ese fichero no llegara, la portada enseña todas, como antes: se
+    degrada, no se rompe. Si llegara uno viejo, faltan las últimas: llega
+    tarde, pero nunca a una página que no existe.
+
+LA BOUTIQUE, SOLO DONDE VENDE (61.89)
+    «Boutique con envío a Ámsterdam» era falso: la boutique vende en ocho
+    países y los Países Bajos no son uno de ellos. Y lo mismo en Dubái,
+    Bogotá, Tokio y otras quince, y lo habría sido en Toronto, Vancouver
+    y Dublín. Ahora el bloque de la boutique —y el «Ver boutique» de una
+    ciudad abierta— salen solo si hay productos que se vendan en ese
+    país. Si el volcado no trae
+    `productos_boutique` (una consulta vieja), salen como antes y el
+    generador lo avisa.
 
 LOS DIECISÉIS IDIOMAS (bloque 22.4)
     Hasta hoy estas páginas no tenían NI UNA frase traducible. Elegías
@@ -90,6 +123,10 @@ SIMBOLO = {
     "EUR": "€", "USD": "$", "GBP": "£", "JPY": "¥", "CHF": "CHF",
     "AED": "AED", "MXN": "$", "COP": "$", "ARS": "$", "BRL": "R$",
     "HUF": "Ft", "PLN": "zł", "SEK": "kr",
+    # 61.89 · Toronto y Vancouver. «C$» y no «$» pelado: en una web con
+    # nueve ciudades de EE. UU., un «$» canadiense se lee como dólar
+    # estadounidense.
+    "CAD": "C$",
 }
 
 
@@ -177,19 +214,23 @@ SCRIPT_HUECOS = """
     try {
       var p = String(C.fecha).split('-');
       return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2]))
-        .toLocaleDateString(idioma(), { year: 'numeric', month: 'long', day: 'numeric' });
+        .toLocaleDateString(idioma(), { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
     } catch (_) { return C.fecha; }
   }
 
   /* 60.6 · El mes de apertura. Se dice MES Y AÑO, no día: lo que se
      promete es «enero de 2027», y un día exacto que luego se mueve es
-     una promesa rota escrita en una página estática. */
+     una promesa rota escrita en una página estática.
+     61.89 · Y en UTC, las dos fechas. `Date.UTC` es la medianoche EN UTC,
+     y sin `timeZone: 'UTC'` el navegador la escribe en su hora: al oeste
+     de Greenwich, el día anterior. Quien miraba Chicago desde Chicago leía
+     «Babyloon abre en Chicago en diciembre de 2026». */
   function aperturaLocal() {
     if (!C.abre) return '';
     try {
       var p = String(C.abre).split('-');
       return new Date(Date.UTC(+p[0], +p[1] - 1, 1))
-        .toLocaleDateString(idioma(), { year: 'numeric', month: 'long' });
+        .toLocaleDateString(idioma(), { year: 'numeric', month: 'long', timeZone: 'UTC' });
     } catch (_) { return String(C.abre); }
   }
 
@@ -205,7 +246,12 @@ SCRIPT_HUECOS = """
      `i18n-ciudad-nombres.js`. Si ese fichero no llegara, `BBL.ciudad`
      no existe y se queda el nombre en español: se degrada, no se rompe. */
   function ciudad() {
-    return (window.BBL && BBL.ciudad) ? BBL.ciudad(C.slug || C.ciudad) : C.ciudad;
+    if (!(window.BBL && BBL.ciudad)) return C.ciudad;
+    /* 61.89 · `BBL.ciudad` devuelve lo que le des si no la conoce, y aquí
+       se le da el slug: una ciudad nueva sin su nombre en el diccionario
+       salía «a domicilio en dallas», en minúsculas. Entonces, el de la base. */
+    var n = BBL.ciudad(C.slug || C.ciudad);
+    return (n && n !== C.slug) ? n : C.ciudad;
   }
 
   function rellena() {
@@ -283,6 +329,11 @@ def pagina(c, estilos, header, cuando):
             f"{ciudad}. {c['servicios']} servicios con precio cerrado desde {desde}, "
             f"con identidad verificada que van a ti.")
 
+    # 61.89 · La boutique, solo donde vende. Sin el dato (volcado viejo),
+    # como antes.
+    pb = c.get("productos_boutique")
+    hay_boutique = pb is None or int(pb) > 0
+
     cats = c.get("categorias") or []
     filas = "\n".join(
         f'<tr><td data-i18n="cat_{clave(x["categoria"])}">{esc(x["categoria"])}</td>'
@@ -310,8 +361,8 @@ def pagina(c, estilos, header, cuando):
     if est == "abierta":
         cta = ('<a href="index.html#app" class="btn btn-gold" data-app-open '
                'data-i18n="cd_cta_app">Pedir en la app</a>'
-               '<a href="boutique.html" class="btn btn-ghost" '
-               'data-i18n="cd_cta_boutique">Ver boutique</a>')
+               + ('<a href="boutique.html" class="btn btn-ghost" '
+                  'data-i18n="cd_cta_boutique">Ver boutique</a>' if hay_boutique else ''))
         estado = (f'<p class="estado" data-i18n-v="cd_estado_si">'
                   f'Babyloon ya trabaja en {esc(ciudad)}.</p>')
     elif est == "enero_2027" and c.get("abre_el"):
@@ -372,6 +423,14 @@ def pagina(c, estilos, header, cuando):
     jsonld = jsonld.replace(',"geo":null', "")
 
     estilos_c = estilos.replace("</style>", EXTRA_CSS + "</style>")
+
+    boutique = (f'''<section class="blk shopblk"><div class="wrap">
+<h2 data-i18n-v="cd_bq_h">Boutique con envío a {esc(ciudad)}</h2>
+<p data-i18n-v="cd_bq_p">Productos de belleza seleccionados, con entrega en {esc(ciudad)}.</p>
+<a href="boutique.html" class="btn btn-gold" data-i18n="cd_cta_boutique">Ver boutique</a>
+</div></section>
+
+''' if hay_boutique else "")
 
     datos_js = json.dumps({
         # El SLUG viaja también: es la clave con la que se busca el nombre
@@ -443,13 +502,7 @@ def pagina(c, estilos, header, cuando):
 </div>
 </div></section>
 
-<section class="blk shopblk"><div class="wrap">
-<h2 data-i18n-v="cd_bq_h">Boutique con envío a {esc(ciudad)}</h2>
-<p data-i18n-v="cd_bq_p">Productos de belleza seleccionados, con entrega en {esc(ciudad)}.</p>
-<a href="boutique.html" class="btn btn-gold" data-i18n="cd_cta_boutique">Ver boutique</a>
-</div></section>
-
-<section class="blk"><div class="wrap">
+{boutique}<section class="blk"><div class="wrap">
 <h2 data-i18n="cd_otras">Otras ciudades</h2>
 <div class="otras">__OTRAS__</div>
 </div></section>
@@ -462,13 +515,22 @@ def pagina(c, estilos, header, cuando):
 <script src="conexion.js?v=1"></script>
 <script src="i18n.js?v=10"></script>
 <script src="i18n-ciudad.js?v=2"></script>
-<script src="i18n-ciudad-nombres.js?v=2"></script>
+<script src="i18n-ciudad-nombres.js?v=3"></script>
 <script src="i18n-baby.js?v=1"></script>
 <script src="baby.js?v=1"></script>
 {script}
 </body>
 </html>
 """
+
+
+def paginas_js(ciudades):
+    """61.89 · La lista de las ciudades que tienen página, para la portada."""
+    slugs = json.dumps([c["slug"] for c in ciudades], ensure_ascii=False)
+    return ("/* paginas-de-ciudad.js · lo escribe generar_ciudades.py: no se edita a mano.\n"
+            "   Las ciudades que tienen página. La portada enseña solo estas, para\n"
+            "   que ningún enlace lleve a una página que todavía no se ha publicado. */\n"
+            f"window.BBL_PAGINAS_DE_CIUDAD = {slugs};\n")
 
 
 def sitemap(ciudades, cuando):
@@ -534,7 +596,10 @@ def main():
     open(os.path.join(destino, "sitemap.xml"), "w", encoding="utf-8").write(
         sitemap(ciudades, cuando))
 
-    print(f"{len(ciudades)} páginas de ciudad + sitemap.xml en {destino}")
+    open(os.path.join(destino, "paginas-de-ciudad.js"), "w", encoding="utf-8").write(
+        paginas_js(ciudades))
+
+    print(f"{len(ciudades)} páginas de ciudad + sitemap.xml + paginas-de-ciudad.js en {destino}")
     # 60.6 · El recuento por estado, que es lo que decide qué dice cada
     # página. Las absorbidas no salen de `ciudades_publicas`, así que si
     # el total no cuadra con el catálogo es que falta alguna decisión.
@@ -547,11 +612,19 @@ def main():
                "enero_2027": "«abre en <mes>» · Quiero trabajar aquí",
                }.get(e, "«todavía no ha abierto; vamos a abrir muchas más» · Avísame cuando abra")
         print(f"  {por[e]:>3} {e:<14} {que}")
+    sin_dato = [c["ciudad"] for c in ciudades if c.get("productos_boutique") is None]
+    if sin_dato:
+        print(f"  ATENCIÓN · el volcado no trae `productos_boutique` en {len(sin_dato)} "
+              f"ciudades: salen con el bloque de la boutique, venda o no allí. "
+              f"La consulta buena está arriba, en CÓMO SE USA.")
+    sin_bq = [c["ciudad"] for c in ciudades if c.get("productos_boutique") == 0]
+    if sin_bq:
+        print(f"  {len(sin_bq):>3} sin boutique (no se vende en su país): {', '.join(sin_bq)}")
     mudas = [c["ciudad"] for c in ciudades
              if (c.get("estado") == "enero_2027" and not c.get("abre_el"))]
     if mudas:
         print(f"  ATENCIÓN · {len(mudas)} ciudades prometen apertura SIN FECHA "
-              f"y saldrán como «sin fecha de apertura»: {', '.join(mudas)}")
+              f"y saldrán como «todavía no ha abierto»: {', '.join(mudas)}")
 
 
 if __name__ == "__main__":

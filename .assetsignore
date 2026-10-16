@@ -21,8 +21,9 @@ LEEME.md
 # desincronizado. Publicarlo serían 235 KB que nadie descarga.
 i18n-empleo.js
 
-# El generador de las 43 páginas de ciudad, y sus plantillas. Es código
-# nuestro, no es web: estaban subiéndose y se leían desde fuera.
+# El generador de las páginas de ciudad (50 desde el 16-oct), y sus
+# plantillas. Es código nuestro, no es web: estaban subiéndose y se leían
+# desde fuera.
 generar_ciudades.py
 plantilla_estilos.txt
 plantilla_header.txt
@@ -34,3 +35,11 @@ plantilla_header.txt
 # hay que recortar de otra manera.
 img/ciudad-marbella.jpg
 img/ciudad-nueva-york.jpg
+# ── 61.89 · Lo que nunca es web: el repositorio, las herramientas y la CLI ──
+# Hasta el 16-oct se publicaban babyloon.app/.git/ entero —el historial, y con
+# él lo que este mismo fichero deja fuera—, /.mcp.json y /supabase/.temp/. Sin
+# contraseñas ni claves dentro, pero no es de nadie de fuera.
+.git/
+.claude/
+.mcp.json
+supabase/

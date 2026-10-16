@@ -14,15 +14,17 @@ Tarda unos diez segundos. Ya está.
 ## Lo que tiene que decir
 
 ```
-✨ Read 85 files from the assets directory …\babyloon-web13
+✨ Read 252 files from the assets directory …\babyloon-web13
 🌀 Found N new or modified static assets to upload…
 ✨ Success! Uploaded N files (2.55 sec)
    Uploaded flat-thunder-70f8
    Current Version ID: …
 ```
 
-**El número que importa es el de «Read»: unos 85.** Si baja de 80, falta
-algo. Sólo sube los que han cambiado, así que el segundo número será
+**El número que importa es el de «Read»: unos 250** (16-oct, con las 50
+páginas de ciudad). Si baja de 240, falta algo; si pasa de 300, se está
+colando algo que no es web: hasta el 16-oct se publicaba `.git/` entero.
+Sólo sube los que han cambiado, así que el segundo número será
 pequeño o cero — eso es normal y es lo que hace que tarde nada.
 
 Si dice `No targets deployed`, **no pasa nada**: es un aviso sobre las
@@ -98,7 +100,7 @@ hacer: `wrangler.toml` apunta a la carpeta y sube lo que haya dentro.
 | | |
 |---|---|
 | `…\BABYLOON\wrangler.toml` | **Fuera** de `babyloon-web13`, a propósito: dentro se publicaría en `babyloon.app/wrangler.toml` con el id de cuenta a la vista |
-| `…\babyloon-web13\.assetsignore` | Deja fuera este archivo y `LEEME.md`, que son notas internas |
+| `…\babyloon-web13\.assetsignore` | Deja fuera las notas internas (este archivo y `LEEME.md`), el generador de las páginas de ciudad y sus plantillas y, desde el 16-oct, lo que no es web: `.git/`, `.claude/`, `.mcp.json` y `supabase/` |
 
 El `wrangler.toml` **no lleva ninguna clave `route`**. Es deliberado: así
 las rutas y el dominio los gobierna el panel de Cloudflare y un
@@ -128,7 +130,8 @@ saber qué es cada cosa:
 | | |
 |---|---|
 | `index.html` | portada. Las ciudades y su recuento los lee de la base |
-| `ciudad-*.html` | 43 páginas de ciudad, generadas con `web/generar_ciudades.py` del proyecto |
+| `ciudad-*.html` | 50 páginas de ciudad, generadas con `generar_ciudades.py`, que está en esta carpeta y no se publica |
+| `paginas-de-ciudad.js` | la lista de las ciudades que tienen página: la portada solo enseña esas. La escribe el generador |
 | `madrid/malaga/miami.html` | sólo red de seguridad: manda el `_redirects` |
 | `boutique.html` · `checkout.html` | tienda y pago |
 | `cliente.html` · `profesional.html` · `profesionales.html` | cuentas y escaparate |

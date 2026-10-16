@@ -123,7 +123,7 @@
 </tbody>
 </table>
 </div>
-<p class="nota" data-i18n-v="cd_nota">Precios orientativos en EUR, medidos para Santorini y actualizados el 2026-09-30. El importe exacto lo fija el servidor al reservar, según el servicio, la hora y el desplazamiento.</p>
+<p class="nota" data-i18n-v="cd_nota">Precios orientativos en EUR, medidos para Santorini y actualizados el 2026-10-16. El importe exacto lo fija el servidor al reservar, según el servicio, la hora y el desplazamiento.</p>
 </div></section>
 
 <section class="blk"><div class="wrap">
@@ -135,15 +135,9 @@
 </div>
 </div></section>
 
-<section class="blk shopblk"><div class="wrap">
-<h2 data-i18n-v="cd_bq_h">Boutique con envío a Santorini</h2>
-<p data-i18n-v="cd_bq_p">Productos de belleza seleccionados, con entrega en Santorini.</p>
-<a href="boutique.html" class="btn btn-gold" data-i18n="cd_cta_boutique">Ver boutique</a>
-</div></section>
-
 <section class="blk"><div class="wrap">
 <h2 data-i18n="cd_otras">Otras ciudades</h2>
-<div class="otras"><a href="ciudad-abu-dabi.html" data-i18n="cd_n_abu-dabi">Abu Dabi</a><a href="ciudad-amsterdam.html" data-i18n="cd_n_amsterdam">Ámsterdam</a><a href="ciudad-barcelona.html" data-i18n="cd_n_barcelona">Barcelona</a><a href="ciudad-berlin.html" data-i18n="cd_n_berlin">Berlín</a><a href="ciudad-bilbao.html" data-i18n="cd_n_bilbao">Bilbao</a><a href="ciudad-bogota.html" data-i18n="cd_n_bogota">Bogotá</a><a href="ciudad-budapest.html" data-i18n="cd_n_budapest">Budapest</a><a href="ciudad-buenos-aires.html" data-i18n="cd_n_buenos-aires">Buenos Aires</a><a href="ciudad-cancun.html" data-i18n="cd_n_cancun">Cancún</a><a href="ciudad-cartagena.html" data-i18n="cd_n_cartagena">Cartagena</a><a href="ciudad-chicago.html" data-i18n="cd_n_chicago">Chicago</a><a href="ciudad-ciudad-de-mexico.html" data-i18n="cd_n_ciudad-de-mexico">Ciudad de México</a><a href="ciudad-dubai.html" data-i18n="cd_n_dubai">Dubai</a><a href="ciudad-estocolmo.html" data-i18n="cd_n_estocolmo">Estocolmo</a></div>
+<div class="otras"><a href="ciudad-abu-dabi.html" data-i18n="cd_n_abu-dabi">Abu Dabi</a><a href="ciudad-amsterdam.html" data-i18n="cd_n_amsterdam">Ámsterdam</a><a href="ciudad-austin.html" data-i18n="cd_n_austin">Austin</a><a href="ciudad-barcelona.html" data-i18n="cd_n_barcelona">Barcelona</a><a href="ciudad-berlin.html" data-i18n="cd_n_berlin">Berlín</a><a href="ciudad-bilbao.html" data-i18n="cd_n_bilbao">Bilbao</a><a href="ciudad-bogota.html" data-i18n="cd_n_bogota">Bogotá</a><a href="ciudad-budapest.html" data-i18n="cd_n_budapest">Budapest</a><a href="ciudad-buenos-aires.html" data-i18n="cd_n_buenos-aires">Buenos Aires</a><a href="ciudad-cancun.html" data-i18n="cd_n_cancun">Cancún</a><a href="ciudad-cartagena.html" data-i18n="cd_n_cartagena">Cartagena</a><a href="ciudad-chicago.html" data-i18n="cd_n_chicago">Chicago</a><a href="ciudad-ciudad-de-mexico.html" data-i18n="cd_n_ciudad-de-mexico">Ciudad de México</a><a href="ciudad-dallas.html" data-i18n="cd_n_dallas">Dallas</a></div>
 </div></section>
 </main>
 <footer><div class="wrap">Babyloon · <span data-cd-nombre>Santorini</span> — <a href="index.html" data-i18n="cd_pie_inicio">Inicio</a> · <a href="lista-espera.html" data-i18n="cd_pie_trabaja">Trabajar en Babyloon</a> · © 2026</div></footer>
@@ -154,7 +148,7 @@
 <script src="conexion.js?v=1"></script>
 <script src="i18n.js?v=10"></script>
 <script src="i18n-ciudad.js?v=2"></script>
-<script src="i18n-ciudad-nombres.js?v=2"></script>
+<script src="i18n-ciudad-nombres.js?v=3"></script>
 <script src="i18n-baby.js?v=1"></script>
 <script src="baby.js?v=1"></script>
 
@@ -174,7 +168,7 @@
    formato ajeno se lee mal y, con día y mes por debajo de 13, se lee
    AL REVÉS. */
 (function () {
-  var C = {"ciudad": "Santorini", "slug": "santorini", "n": 75, "moneda": "EUR", "iso": "GR", "pais": "Grecia", "fecha": "2026-09-30", "abre": null};
+  var C = {"ciudad": "Santorini", "slug": "santorini", "n": 75, "moneda": "EUR", "iso": "GR", "pais": "Grecia", "fecha": "2026-10-16", "abre": null};
 
   function idioma() {
     return (window.BBL && BBL.lang) || document.documentElement.lang || 'es';
@@ -184,19 +178,23 @@
     try {
       var p = String(C.fecha).split('-');
       return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2]))
-        .toLocaleDateString(idioma(), { year: 'numeric', month: 'long', day: 'numeric' });
+        .toLocaleDateString(idioma(), { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
     } catch (_) { return C.fecha; }
   }
 
   /* 60.6 · El mes de apertura. Se dice MES Y AÑO, no día: lo que se
      promete es «enero de 2027», y un día exacto que luego se mueve es
-     una promesa rota escrita en una página estática. */
+     una promesa rota escrita en una página estática.
+     61.89 · Y en UTC, las dos fechas. `Date.UTC` es la medianoche EN UTC,
+     y sin `timeZone: 'UTC'` el navegador la escribe en su hora: al oeste
+     de Greenwich, el día anterior. Quien miraba Chicago desde Chicago leía
+     «Babyloon abre en Chicago en diciembre de 2026». */
   function aperturaLocal() {
     if (!C.abre) return '';
     try {
       var p = String(C.abre).split('-');
       return new Date(Date.UTC(+p[0], +p[1] - 1, 1))
-        .toLocaleDateString(idioma(), { year: 'numeric', month: 'long' });
+        .toLocaleDateString(idioma(), { year: 'numeric', month: 'long', timeZone: 'UTC' });
     } catch (_) { return String(C.abre); }
   }
 
@@ -212,7 +210,12 @@
      `i18n-ciudad-nombres.js`. Si ese fichero no llegara, `BBL.ciudad`
      no existe y se queda el nombre en español: se degrada, no se rompe. */
   function ciudad() {
-    return (window.BBL && BBL.ciudad) ? BBL.ciudad(C.slug || C.ciudad) : C.ciudad;
+    if (!(window.BBL && BBL.ciudad)) return C.ciudad;
+    /* 61.89 · `BBL.ciudad` devuelve lo que le des si no la conoce, y aquí
+       se le da el slug: una ciudad nueva sin su nombre en el diccionario
+       salía «a domicilio en dallas», en minúsculas. Entonces, el de la base. */
+    var n = BBL.ciudad(C.slug || C.ciudad);
+    return (n && n !== C.slug) ? n : C.ciudad;
   }
 
   function rellena() {

@@ -1,0 +1,4 @@
+/* paginas-de-ciudad.js · lo escribe generar_ciudades.py: no se edita a mano.
+   Las ciudades que tienen página. La portada enseña solo estas, para
+   que ningún enlace lleve a una página que todavía no se ha publicado. */
+window.BBL_PAGINAS_DE_CIUDAD = ["abu-dabi", "amsterdam", "austin", "barcelona", "berlin", "bilbao", "bogota", "budapest", "buenos-aires", "cancun", "cartagena", "chicago", "ciudad-de-mexico", "dallas", "dubai", "dublin", "estocolmo", "ginebra", "guadalajara", "ibiza", "lisboa", "londres", "los-angeles", "madrid", "malaga", "manchester", "marbella", "medellin", "miami", "milan", "monterrey", "munich", "nueva-york", "oporto", "orlando", "palma", "paris", "rio-de-janeiro", "roma", "san-francisco", "santorini", "sao-paulo", "sevilla", "tampa", "tokio", "toronto", "valencia", "vancouver", "varsovia", "zurich"];
