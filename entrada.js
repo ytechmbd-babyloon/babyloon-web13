@@ -1,24 +1,31 @@
 /* ═══════════════════════════════════════════════════════════════
-   Babyloon · La entrada — «portal sensorial»
+   Babyloon · La entrada
    ───────────────────────────────────────────────────────────────
-   Andrés (26-nov), sobre la propuesta «portal sensorial»: niebla
-   nocturna, polvo de oro, un horizonte orbital y la doble O hecha de
-   filamentos de seda que ondulan y reaccionan al cursor o al dedo.
-   Se entra con «Entrar», manteniendo pulsada la doble O, deslizando
-   hacia arriba o con la rueda del ratón.
+   Andrés (26-nov): «me gusta, pero hay que adaptarlo más a lo que es
+   Babyloon: fuente, colores, diseño, minimalista y elegante, no tan
+   disruptivo, con un toque de innovación… quiero que Babyloon esté
+   presente todo el tiempo».
 
-   DECISIONES (sobre la propuesta original)
-   · La doble O es la de la marca: dos óvalos que se tocan en el
-     centro, como el logo, no dos círculos solapados.
-   · Las ciudades del rótulo inferior son las del plan de apertura.
-   · Tipografías y dorado de la web (Cormorant Garamond y Jost).
+   Qué es: el logo de doble O se dibuja en dorado sobre la noche de la
+   marca (ciruela y tinta), con una niebla muy suave, polvo de oro y un
+   horizonte fino. El toque de innovación vive DENTRO del logo: una luz
+   lo recorre sin parar, el dorado responde al cursor y, si se mantiene
+   pulsado, el oro va llenando el trazo hasta entrar.
+
+   DECISIONES
+   · El logo es el SVG oficial y no se deforma nunca: Babyloon se
+     reconoce en todo momento. Arriba, la firma de la marca.
+   · Colores y tipografías de la web (tinta #0D0B0F, ciruela, dorado
+     #C8A96A / #F3E0BC; Cormorant Garamond y Jost).
+   · Se entra con «Entrar», manteniendo pulsada la doble O, deslizando
+     hacia arriba o con la rueda.
    · Una vez por visita (sessionStorage). Quien llega con un ancla
      (#acceso, #app…) o desde otra página de la web no la ve.
    · Se carga justo después de <body>: no se ve la página antes.
-   · La web sigue debajo, entera: Google la lee igual.
-   · «Saltar», Intro y Escape cierran. Quien prefiere que nada se
-     mueva ve el portal quieto.
-   · El aviso de cookies queda por encima, a propósito.
+     La web sigue debajo, entera: Google la lee igual.
+   · «Saltar», Intro y Escape cierran. Con «reducir movimiento», quieta.
+   · El aviso de cookies queda por encima, a propósito; «Hablar con
+     Baby» se oculta mientras la entrada está abierta.
    ═══════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -35,24 +42,24 @@
   var lang = 'es';
   try { lang = localStorage.getItem('bbl_lang') || ''; } catch (_) {}
   if (!lang) lang = ((navigator.languages && navigator.languages[0]) || navigator.language || 'es').slice(0, 2);
-  //        entrar, saltar, estado, pista (ratón), pista (táctil)
+  //        entrar, saltar, pista (ratón), pista (táctil)
   var TXT = {
-    es: ['Entrar', 'Saltar', 'Concierge global · 24/7', 'Mueve el cursor o mantén pulsada la doble O para entrar', 'Mantén pulsada la doble O o desliza hacia arriba'],
-    en: ['Enter', 'Skip', 'Global concierge · 24/7', 'Move the cursor or press and hold the double O to enter', 'Press and hold the double O or swipe up'],
-    pt: ['Entrar', 'Saltar', 'Concierge global · 24/7', 'Move o cursor ou mantém premido o duplo O para entrar', 'Mantém premido o duplo O ou desliza para cima'],
-    fr: ['Entrer', 'Passer', 'Concierge mondial · 24/7', 'Bougez le curseur ou maintenez le double O pour entrer', 'Maintenez le double O ou glissez vers le haut'],
-    de: ['Eintreten', 'Überspringen', 'Globaler Concierge · 24/7', 'Bewegen Sie den Cursor oder halten Sie das Doppel-O gedrückt', 'Doppel-O gedrückt halten oder nach oben wischen'],
-    it: ['Entra', 'Salta', 'Concierge globale · 24/7', 'Muovi il cursore o tieni premuta la doppia O per entrare', 'Tieni premuta la doppia O o scorri verso l’alto'],
-    nl: ['Binnengaan', 'Overslaan', 'Wereldwijde concierge · 24/7', 'Beweeg de cursor of houd de dubbele O ingedrukt', 'Houd de dubbele O ingedrukt of veeg omhoog'],
-    sv: ['Gå in', 'Hoppa över', 'Global concierge · 24/7', 'Rör markören eller håll in dubbel-O för att gå in', 'Håll in dubbel-O eller svep uppåt'],
-    pl: ['Wejdź', 'Pomiń', 'Globalny concierge · 24/7', 'Porusz kursorem lub przytrzymaj podwójne O, aby wejść', 'Przytrzymaj podwójne O lub przesuń w górę'],
-    el: ['Είσοδος', 'Παράλειψη', 'Παγκόσμιος concierge · 24/7', 'Κινήστε τον κέρσορα ή κρατήστε πατημένο το διπλό O', 'Κρατήστε πατημένο το διπλό O ή σύρετε προς τα πάνω'],
-    hu: ['Belépés', 'Kihagyás', 'Globális concierge · 24/7', 'Mozgasd a kurzort, vagy tartsd lenyomva a dupla O-t', 'Tartsd lenyomva a dupla O-t, vagy húzd felfelé'],
-    ru: ['Войти', 'Пропустить', 'Глобальный консьерж · 24/7', 'Двигайте курсор или удерживайте двойное O, чтобы войти', 'Удерживайте двойное O или проведите вверх'],
-    ar: ['دخول', 'تخطي', 'كونسيرج عالمي · 24/7', 'حرّك المؤشر أو اضغط مطولاً على الحرفين O للدخول', 'اضغط مطولاً على الحرفين O أو اسحب للأعلى'],
-    zh: ['进入', '跳过', '全球礼宾 · 24/7', '移动光标或长按双 O 进入', '长按双 O 或向上滑动'],
-    ja: ['入る', 'スキップ', 'グローバル・コンシェルジュ · 24/7', 'カーソルを動かすか、ダブルOを長押しして入る', 'ダブルOを長押しするか、上にスワイプ'],
-    ko: ['입장', '건너뛰기', '글로벌 컨시어지 · 24/7', '커서를 움직이거나 더블 O를 길게 눌러 입장', '더블 O를 길게 누르거나 위로 밀기']
+    es: ['Entrar', 'Saltar', 'Mantén pulsada la doble O para entrar', 'Mantén pulsada la doble O o desliza hacia arriba'],
+    en: ['Enter', 'Skip', 'Press and hold the double O to enter', 'Press and hold the double O or swipe up'],
+    pt: ['Entrar', 'Saltar', 'Mantém premido o duplo O para entrar', 'Mantém premido o duplo O ou desliza para cima'],
+    fr: ['Entrer', 'Passer', 'Maintenez le double O pour entrer', 'Maintenez le double O ou glissez vers le haut'],
+    de: ['Eintreten', 'Überspringen', 'Halten Sie das Doppel-O gedrückt', 'Doppel-O gedrückt halten oder nach oben wischen'],
+    it: ['Entra', 'Salta', 'Tieni premuta la doppia O per entrare', 'Tieni premuta la doppia O o scorri verso l’alto'],
+    nl: ['Binnengaan', 'Overslaan', 'Houd de dubbele O ingedrukt om binnen te gaan', 'Houd de dubbele O ingedrukt of veeg omhoog'],
+    sv: ['Gå in', 'Hoppa över', 'Håll in dubbel-O för att gå in', 'Håll in dubbel-O eller svep uppåt'],
+    pl: ['Wejdź', 'Pomiń', 'Przytrzymaj podwójne O, aby wejść', 'Przytrzymaj podwójne O lub przesuń w górę'],
+    el: ['Είσοδος', 'Παράλειψη', 'Κρατήστε πατημένο το διπλό O για είσοδο', 'Κρατήστε πατημένο το διπλό O ή σύρετε προς τα πάνω'],
+    hu: ['Belépés', 'Kihagyás', 'Tartsd lenyomva a dupla O-t a belépéshez', 'Tartsd lenyomva a dupla O-t, vagy húzd felfelé'],
+    ru: ['Войти', 'Пропустить', 'Удерживайте двойное O, чтобы войти', 'Удерживайте двойное O или проведите вверх'],
+    ar: ['دخول', 'تخطي', 'اضغط مطولاً على الحرفين O للدخول', 'اضغط مطولاً على الحرفين O أو اسحب للأعلى'],
+    zh: ['进入', '跳过', '长按双 O 进入', '长按双 O 或向上滑动'],
+    ja: ['入る', 'スキップ', 'ダブルOを長押しして入る', 'ダブルOを長押しするか、上にスワイプ'],
+    ko: ['입장', '건너뛰기', '더블 O를 길게 눌러 입장', '더블 O를 길게 누르거나 위로 밀기']
   };
   var tx = TXT[lang] || TXT.en;
 
@@ -63,80 +70,108 @@
     ['Barcelona', "41°23'N 02°10'E"], ['Málaga', "36°43'N 04°25'W"],
     ['Miami', "25°45'N 80°11'W"], ['Ibiza', "38°54'N 01°26'E"]
   ];
+  var LOGO = 'M60 30C60 16 48 8 34 8C18 8 8 18 8 30C8 42 18 52 34 52C48 52 60 44 60 30C60 16 72 8 86 8C102 8 112 18 112 30C112 42 102 52 86 52C72 52 60 44 60 30Z';
 
   /* ── el vestido ── */
   var css = document.createElement('style');
   css.textContent = [
     '#bblEntrada{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;justify-content:space-between;',
       'align-items:center;overflow:hidden;font-family:Jost,system-ui,sans-serif;',
-      'background:radial-gradient(circle at 50% 42%,#160B14 0%,#08070B 72%);',
-      'transition:opacity 1.15s cubic-bezier(.22,1,.36,1),visibility 1.15s ease}',
+      'background:radial-gradient(120% 90% at 50% 40%,#1b1419 0%,#0D0B0F 62%);',
+      'transition:opacity 1.2s cubic-bezier(.22,1,.36,1),visibility 1.2s ease}',
     '#bblEntrada.fuera{opacity:0;visibility:hidden;pointer-events:none}',
-    '#bblEntrada canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;touch-action:none}',
-    '#bblEntrada .be-grano{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:.026;',
+    '#bblEntrada canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1}',
+    '#bblEntrada .be-grano{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:.02;',
       'background-image:url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")}',
+
+    /* arriba: la firma de la marca y «saltar» */
     '#bblEntrada .be-arriba{position:relative;z-index:10;width:100%;max-width:1380px;padding:24px 28px;',
-      'display:flex;align-items:center;justify-content:space-between}',
-    '#bblEntrada .be-estado{display:inline-flex;align-items:center;gap:9px;font-size:10px;letter-spacing:.26em;',
-      'text-transform:uppercase;color:rgba(246,243,238,.42)}',
-    '#bblEntrada .be-punto{width:6px;height:6px;border-radius:50%;background:#DFC28D;box-shadow:0 0 10px #DFC28D;',
-      'animation:bePunto 2.8s infinite ease-in-out}',
-    '@keyframes bePunto{0%,100%{opacity:.45}50%{opacity:1}}',
-    '#bblEntrada .be-saltar{background:transparent;border:0;color:rgba(246,243,238,.64);font-family:inherit;',
-      'font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;padding:10px 14px;cursor:pointer;',
-      'transition:color .35s,transform .35s}',
-    '#bblEntrada .be-saltar:hover{color:#DFC28D;transform:translateX(2px)}',
+      'display:flex;align-items:center;justify-content:space-between;opacity:0;transition:opacity 1.2s ease .4s}',
+    '#bblEntrada.lista .be-arriba{opacity:1}',
+    '#bblEntrada .be-firma{display:inline-flex;align-items:center;gap:10px;font-family:"Cormorant Garamond",serif;',
+      'font-size:19px;letter-spacing:.02em;color:#F9F5EE}',
+    '#bblEntrada .be-firma svg{width:34px;height:17px}',
+    '#bblEntrada .be-saltar{background:transparent;border:0;color:#8C7482;font-family:inherit;font-size:11px;',
+      'letter-spacing:.28em;text-transform:uppercase;padding:10px 14px;cursor:pointer;transition:color .35s}',
+    '#bblEntrada .be-saltar:hover{color:#F3E0BC}',
+
+    /* centro: el logo protagonista, la palabra, el lema y entrar */
     '#bblEntrada .be-centro{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;',
-      'text-align:center;padding:0 24px;margin-top:175px;pointer-events:none;',
-      'transition:transform 1s cubic-bezier(.22,1,.36,1),opacity .85s ease}',
-    '#bblEntrada.abre .be-centro{transform:translateY(18px) scale(.96);opacity:0}',
-    '#bblEntrada .be-wm{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(3.1rem,7vw,4.9rem);font-weight:300;',
-      'letter-spacing:.03em;color:#F6F3EE;line-height:1;margin:0 0 12px;text-shadow:0 10px 35px rgba(0,0,0,.85)}',
-    '#bblEntrada .be-lema{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:clamp(1.18rem,2.4vw,1.55rem);',
-      'font-weight:300;color:#DFC28D;letter-spacing:.02em;margin:0 0 30px}',
-    '#bblEntrada .be-btn{pointer-events:auto;position:relative;background:rgba(8,7,11,.52);',
-      '-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(223,194,141,.55);',
-      'color:#F6F3EE;font-family:inherit;font-size:11px;font-weight:400;letter-spacing:.32em;text-transform:uppercase;',
-      'padding:15px 44px;border-radius:9999px;cursor:pointer;overflow:hidden;transition:all .45s cubic-bezier(.22,1,.36,1);',
-      'box-shadow:0 12px 35px rgba(0,0,0,.75),inset 0 0 20px rgba(223,194,141,.06)}',
+      'text-align:center;padding:0 24px;transition:transform 1.1s cubic-bezier(.22,1,.36,1),opacity .9s ease}',
+    '#bblEntrada.abre .be-centro{transform:scale(1.06);opacity:0}',
+    '#bblEntrada .be-logo{position:relative;width:min(300px,62vw);aspect-ratio:2/1;cursor:pointer;',
+      'touch-action:none;-webkit-tap-highlight-color:transparent;transition:transform .9s cubic-bezier(.22,1,.36,1)}',
+    '#bblEntrada .be-logo svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}',
+    '#bblEntrada .be-trazo{fill:none;stroke:url(#beOro);stroke-width:2.2;stroke-linecap:round;',
+      'filter:drop-shadow(0 0 var(--brillo,8px) rgba(243,224,188,.38))}',
+    '#bblEntrada .be-eco{fill:none;stroke:#C8A96A;stroke-width:.6;opacity:0;transform-origin:60px 30px}',
+    '#bblEntrada.lista .be-eco{animation:beEco 6s ease-in-out infinite}',
+    '#bblEntrada.lista .be-eco.e2{animation-delay:3s}',
+    '@keyframes beEco{0%{opacity:0;transform:scale(1)}25%{opacity:.28}100%{opacity:0;transform:scale(1.22)}}',
+    '#bblEntrada .be-carga{fill:none;stroke:#F3E0BC;stroke-width:3;stroke-linecap:round;opacity:.95;',
+      'filter:drop-shadow(0 0 6px rgba(243,224,188,.8))}',
+    '#bblEntrada .be-wm{font-family:"Cormorant Garamond",Georgia,serif;font-weight:300;color:#F9F5EE;',
+      'font-size:clamp(46px,8vw,92px);letter-spacing:.06em;line-height:1;margin-top:26px;opacity:0;transform:translateY(14px);',
+      'transition:opacity 1.2s ease,transform 1.2s ease,letter-spacing 2.4s ease}',
+    '#bblEntrada .be-lema{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;color:#C8A96A;',
+      'font-size:clamp(20px,2.6vw,29px);margin-top:12px;opacity:0;transition:opacity 1.2s ease .3s}',
+    '#bblEntrada .be-btn{margin-top:42px;position:relative;overflow:hidden;border:1px solid rgba(200,169,106,.7);',
+      'background:transparent;color:#F3E0BC;padding:15px 46px;border-radius:999px;font-family:inherit;font-size:13px;',
+      'font-weight:500;letter-spacing:.36em;text-transform:uppercase;cursor:pointer;opacity:0;',
+      'transition:opacity 1s ease .7s,background .35s,color .35s,border-color .35s}',
     '#bblEntrada .be-btn::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;',
-      'background:linear-gradient(90deg,transparent,rgba(223,194,141,.22),transparent);transition:left .75s cubic-bezier(.22,1,.36,1)}',
-    '#bblEntrada .be-btn:hover{border-color:#DFC28D;color:#DFC28D;box-shadow:0 0 32px rgba(223,194,141,.25);transform:translateY(-1px)}',
+      'background:linear-gradient(90deg,transparent,rgba(243,224,188,.18),transparent);transition:left .8s cubic-bezier(.22,1,.36,1)}',
+    '#bblEntrada .be-btn:hover{background:#C8A96A;color:#0D0B0F;border-color:#C8A96A}',
     '#bblEntrada .be-btn:hover::before{left:100%}',
-    '#bblEntrada .be-btn:active{transform:scale(.97)}',
+    '#bblEntrada.lista .be-wm{opacity:1;transform:none;letter-spacing:.02em}',
+    '#bblEntrada.lista .be-lema,#bblEntrada.lista .be-btn{opacity:1}',
+
+    /* abajo: las ciudades y la pista */
     '#bblEntrada .be-abajo{position:relative;z-index:10;width:100%;max-width:1380px;padding:20px 28px 26px;',
-      'display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none}',
-    '#bblEntrada .be-ciudad{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#DFC28D;min-height:16px;',
-      'transition:opacity .6s ease,transform .6s ease;text-align:center}',
+      'display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;opacity:0;transition:opacity 1.2s ease 1s}',
+    '#bblEntrada.lista .be-abajo{opacity:1}',
+    '#bblEntrada .be-ciudad{font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:#C8A96A;min-height:16px;',
+      'transition:opacity .6s ease,transform .6s ease}',
     '#bblEntrada .be-ciudad.cambia{opacity:0;transform:translateY(4px)}',
-    '#bblEntrada .be-pista{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(246,243,238,.42);text-align:center}',
+    '#bblEntrada .be-pista{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#6B5766;text-align:center}',
+
     'html.be-abierta,html.be-abierta body{overflow:hidden}',
     'html.be-abierta #bbl-baby-btn{opacity:0;pointer-events:none}',
-    '@media (max-width:640px){#bblEntrada .be-arriba{padding:18px 20px}#bblEntrada .be-centro{margin-top:140px}',
-      '#bblEntrada .be-btn{padding:14px 36px}}',
-    '@media (prefers-reduced-motion: reduce){#bblEntrada,#bblEntrada .be-centro,#bblEntrada .be-btn{transition:none}',
-      '#bblEntrada .be-punto{animation:none}}'
+    '@media (max-width:640px){#bblEntrada .be-arriba{padding:18px 20px}#bblEntrada .be-btn{padding:14px 38px}}',
+    '@media (prefers-reduced-motion: reduce){#bblEntrada,#bblEntrada *{transition:none!important;animation:none!important}}'
   ].join('');
   document.head.appendChild(css);
 
   /* ── el hueso ── */
+  var grad = '<defs><linearGradient id="beOro" x1="0" y1="0" x2="1" y2="1">' +
+    '<stop offset="0" stop-color="#8E723F"/><stop offset=".42" stop-color="#F3E0BC"/>' +
+    '<stop offset=".72" stop-color="#C9A96E"/><stop offset="1" stop-color="#9C8050"/></linearGradient></defs>';
   var el = document.createElement('section');
   el.id = 'bblEntrada';
   el.setAttribute('role', 'dialog');
   el.setAttribute('aria-label', 'Babyloon');
   el.innerHTML =
     '<canvas aria-hidden="true"></canvas><div class="be-grano" aria-hidden="true"></div>' +
-    '<div class="be-arriba"><div class="be-estado"><span class="be-punto"></span><span>' + tx[2] + '</span></div>' +
+    '<div class="be-arriba">' +
+      '<div class="be-firma"><svg viewBox="0 0 120 60" aria-hidden="true"><path d="' + LOGO + '" fill="none" stroke="url(#beOro)" stroke-width="5" stroke-linecap="round"/></svg>Babyloon</div>' +
       '<button type="button" class="be-saltar" data-be-saltar>' + tx[1] + '</button></div>' +
-    '<div class="be-centro"><div class="be-wm">Babyloon</div>' +
-      '<p class="be-lema" id="beLema">La belleza, donde tú estés.</p>' +
-      '<button type="button" class="be-btn" data-be-entrar>' + tx[0] + '</button></div>' +
-    '<div class="be-abajo"><div class="be-ciudad" id="beCiudad">' + CIUDADES[0][0] + ' · ' + CIUDADES[0][1] + '</div>' +
-      '<span class="be-pista">' + (tactil ? tx[4] : tx[3]) + '</span></div>';
+    '<div class="be-centro">' +
+      '<div class="be-logo" id="beLogo" aria-hidden="true"><svg viewBox="0 0 120 60">' + grad +
+        '<path class="be-eco" d="' + LOGO + '"/><path class="be-eco e2" d="' + LOGO + '"/>' +
+        '<path class="be-trazo" id="beTrazo" d="' + LOGO + '"/>' +
+        '<path class="be-carga" id="beCarga" d="' + LOGO + '"/>' +
+        '<circle id="beLuz" r="1.9" fill="#FFF8EA" style="filter:drop-shadow(0 0 4px #F3E0BC)" opacity="0"/>' +
+      '</svg></div>' +
+      '<div class="be-wm">Babyloon</div>' +
+      '<div class="be-lema" id="beLema">La belleza, donde tú estés.</div>' +
+      '<button type="button" class="be-btn" data-be-entrar>' + tx[0] + '</button>' +
+    '</div>' +
+    '<div class="be-abajo"><div class="be-ciudad" id="beCiudad">' + CIUDADES[0][0].toUpperCase() + ' · ' + CIUDADES[0][1] + '</div>' +
+      '<span class="be-pista">' + (tactil ? tx[3] : tx[2]) + '</span></div>';
   document.body.insertBefore(el, document.body.firstChild);
   document.documentElement.classList.add('be-abierta');
 
-  /* ── el lema en el idioma de la web, cuando el diccionario esté ── */
+  /* ── el lema en el idioma de la web ── */
   function lema() {
     try {
       if (!window.BBL || !BBL.t) return;
@@ -147,8 +182,19 @@
   document.addEventListener('DOMContentLoaded', lema);
   document.addEventListener('bbl:lang', lema);
 
+  /* ── el logo: trazo, luz que lo recorre y oro que lo llena ── */
+  var trazo = document.getElementById('beTrazo'), carga = document.getElementById('beCarga');
+  var luz = document.getElementById('beLuz'), logo = document.getElementById('beLogo');
+  var L = 330;
+  try { L = trazo.getTotalLength() || L; } catch (_) {}
+  trazo.style.strokeDasharray = L; carga.style.strokeDasharray = L;
+  carga.style.strokeDashoffset = L;
+  var t0 = performance.now(), DIBUJO = 2600;
+  if (quieto) trazo.style.strokeDashoffset = 0; else trazo.style.strokeDashoffset = L;
+
   /* ── estado ── */
-  var activo = true, abriendo = false, progresoAbre = 0, pulsacion = 0, pulsando = false;
+  var activo = true, abriendo = false, pulsacion = 0, pulsando = false;
+  setTimeout(function () { el.classList.add('lista'); }, quieto ? 0 : 1900);
 
   /* ── el rótulo de ciudades ── */
   var iCiudad = 0, rotulo = document.getElementById('beCiudad');
@@ -162,50 +208,71 @@
     }, 550);
   }, 3400);
 
-  /* ── el lienzo ── */
+  /* ── el fondo: niebla muy suave, polvo de oro y un horizonte fino ── */
   var cv = el.querySelector('canvas'), ctx = cv.getContext('2d');
-  var w = 0, h = 0, dpr = 1;
-  var px = .5, py = .42, objX = .5, objY = .42, hayPuntero = false;
-
-  // niebla: un sprite pintado una vez, reutilizado (60 fps)
+  var w = 0, h = 0, dpr = 1, px = .5, py = .45, objX = .5, objY = .45;
   var niebla = document.createElement('canvas');
   niebla.width = niebla.height = 256;
   var nc = niebla.getContext('2d'), ng = nc.createRadialGradient(128, 128, 12, 128, 128, 128);
-  ng.addColorStop(0, 'rgba(42,20,38,.34)'); ng.addColorStop(.45, 'rgba(22,11,20,.18)');
-  ng.addColorStop(.78, 'rgba(158,126,67,.05)'); ng.addColorStop(1, 'rgba(8,7,11,0)');
+  ng.addColorStop(0, 'rgba(36,24,32,.30)'); ng.addColorStop(.5, 'rgba(36,24,32,.12)');
+  ng.addColorStop(.8, 'rgba(200,169,106,.025)'); ng.addColorStop(1, 'rgba(13,11,15,0)');
   nc.fillStyle = ng; nc.fillRect(0, 0, 256, 256);
-
   var nubes = [], polvo = [], i;
-  for (i = 0; i < 14; i++) nubes.push({ x: Math.random(), y: .25 + Math.random() * .65, s: 1.4 + Math.random() * 2.1,
-    vx: (Math.random() - .5) * .018, vy: -.004 - Math.random() * .008, f: i * .9 });
-  for (i = 0; i < 75; i++) polvo.push({ x: Math.random(), y: Math.random(), r: .6 + Math.random() * 1.5,
-    vy: -.012 - Math.random() * .022, vx: (Math.random() - .5) * .01, a: .18 + Math.random() * .55, t: Math.random() * 6.283 });
+  for (i = 0; i < 8; i++) nubes.push({ x: Math.random(), y: .2 + Math.random() * .7, s: 1.4 + Math.random() * 1.8,
+    vx: (Math.random() - .5) * .012, f: i * 1.3 });
+  for (i = 0; i < 48; i++) polvo.push({ x: Math.random(), y: Math.random(), r: .5 + Math.random() * 1.2,
+    vy: -.008 - Math.random() * .016, a: .12 + Math.random() * .4, t: Math.random() * 6.283 });
 
   function medir() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     w = innerWidth; h = innerHeight;
     cv.width = w * dpr; cv.height = h * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    if (quieto) pintar(0, 0);
   }
-  addEventListener('resize', medir, { passive: true });
+  addEventListener('resize', function () { medir(); if (quieto) fondo(0, 0); }, { passive: true });
 
-  function centroO() { return { x: w * .5, y: w < 640 ? h * .34 : h * .355 }; }
+  function fondo(tiempo, dt) {
+    ctx.clearRect(0, 0, w, h);
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    nubes.forEach(function (n) {
+      n.x += n.vx * dt; if (n.x < -.2) n.x = 1.2; if (n.x > 1.2) n.x = -.2;
+      var x = (n.x + (px - .5) * .04) * w, y = (n.y + Math.sin(tiempo * .3 + n.f) * .025) * h;
+      var s = Math.max(w, h) * .4 * n.s;
+      ctx.drawImage(niebla, x - s / 2, y - s / 2, s, s);
+    });
+    ctx.restore();
+    polvo.forEach(function (p) {
+      p.y += p.vy * dt; if (p.y < 0) { p.y = 1; p.x = Math.random(); }
+      var a = p.a * (.55 + .45 * Math.sin(tiempo * 1.8 + p.t));
+      ctx.fillStyle = 'rgba(243,224,188,' + (a * .6) + ')';
+      ctx.beginPath(); ctx.arc(p.x * w, p.y * h, p.r, 0, 6.283); ctx.fill();
+    });
+    var hr = Math.max(w * .95, 720), hy = h * .9 + hr;
+    ctx.beginPath(); ctx.arc(w * .5, hy, hr, Math.PI * 1.34, Math.PI * 1.66);
+    ctx.strokeStyle = 'rgba(200,169,106,.16)'; ctx.lineWidth = .8; ctx.stroke();
+    var pa = Math.PI * 1.36 + ((tiempo * .05) % .28);
+    var pX = w * .5 + Math.cos(pa) * hr, pY = hy + Math.sin(pa) * hr;
+    var pg = ctx.createRadialGradient(pX, pY, 0, pX, pY, 14);
+    pg.addColorStop(0, 'rgba(243,224,188,.6)'); pg.addColorStop(1, 'rgba(243,224,188,0)');
+    ctx.fillStyle = pg; ctx.beginPath(); ctx.arc(pX, pY, 14, 0, 6.283); ctx.fill();
+  }
 
   /* ── tocar, mantener, deslizar ── */
-  function apuntar(x, y) { objX = x / Math.max(1, w); objY = y / Math.max(1, h); hayPuntero = true; }
-  cv.addEventListener('pointermove', function (e) { apuntar(e.clientX, e.clientY); });
-  cv.addEventListener('pointerdown', function (e) {
-    apuntar(e.clientX, e.clientY);
-    var c = centroO();
-    if (Math.hypot(e.clientX - c.x, e.clientY - c.y) < 165) pulsando = true;
+  addEventListener('pointermove', function (e) {
+    if (!activo) return;
+    objX = e.clientX / Math.max(1, w); objY = e.clientY / Math.max(1, h);
+  }, { passive: true });
+  logo.addEventListener('pointerdown', function (e) {
+    pulsando = true;
+    try { logo.setPointerCapture(e.pointerId); } catch (_) {}
   });
   addEventListener('pointerup', function () { pulsando = false; });
   addEventListener('pointercancel', function () { pulsando = false; });
   var y0 = 0;
   el.addEventListener('touchstart', function (e) { if (e.touches.length) y0 = e.touches[0].clientY; }, { passive: true });
   el.addEventListener('touchmove', function (e) {
-    if (activo && !abriendo && e.touches.length && (y0 - e.touches[0].clientY) > 55) entrar(false);
+    if (activo && !abriendo && !pulsando && e.touches.length && (y0 - e.touches[0].clientY) > 55) entrar(false);
   }, { passive: true });
   el.addEventListener('wheel', function (e) { if (activo && !abriendo && e.deltaY > 28) entrar(false); }, { passive: true });
 
@@ -216,14 +283,14 @@
     document.documentElement.classList.remove('be-abierta');
     try { sessionStorage.setItem('bbl_entrada', '1'); } catch (_) {}
     if (reloj) clearInterval(reloj);
-    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 1300);
+    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 1400);
   }
   function entrar(ya) {
     if (!activo || abriendo) return;
     if (ya || quieto) { cerrar(); return; }
     abriendo = true;
     el.classList.add('abre');
-    setTimeout(cerrar, 980);
+    setTimeout(cerrar, 900);
   }
   el.addEventListener('click', function (e) {
     var t = e.target.closest && e.target.closest('[data-be-entrar],[data-be-saltar]');
@@ -233,99 +300,50 @@
     if (activo && (e.key === 'Enter' || e.key === 'Escape')) entrar(e.key === 'Escape');
   });
 
-  /* ── pintar un fotograma ── */
-  function pintar(tiempo, dt) {
-    px += (objX - px) * .08; py += (objY - py) * .08;
-    if (pulsando && !abriendo) { pulsacion = Math.min(1, pulsacion + dt * 1.45); if (pulsacion >= 1) entrar(false); }
-    else if (!abriendo) pulsacion = Math.max(0, pulsacion - dt * 1.8);
-    if (abriendo) progresoAbre = Math.min(1, progresoAbre + dt * 1.15);
-    var desv = 1 - progresoAbre;
+  /* ── un fotograma ── */
+  function cuadro(ahora, dt) {
+    var tiempo = ahora * .001;
+    px += (objX - px) * .06; py += (objY - py) * .06;
+    fondo(tiempo, dt);
 
-    ctx.clearRect(0, 0, w, h);
+    // 1 · el logo se dibuja
+    var d = Math.min(1, (ahora - t0) / DIBUJO);
+    var e = d < .5 ? 4 * d * d * d : 1 - Math.pow(-2 * d + 2, 3) / 2;
+    trazo.style.strokeDashoffset = L * (1 - e);
 
-    // 1 · niebla nocturna
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    ctx.globalAlpha = Math.max(0, 1 - progresoAbre * .9);
-    nubes.forEach(function (n) {
-      n.x += n.vx * dt; n.y += n.vy * dt;
-      if (n.x < -.2) n.x = 1.2; if (n.x > 1.2) n.x = -.2; if (n.y < .05) n.y = .95;
-      var x = (n.x + (px - .5) * .06) * w, y = (n.y + Math.sin(tiempo * .4 + n.f) * .03) * h;
-      var s = Math.max(w, h) * .42 * n.s;
-      ctx.drawImage(niebla, x - s / 2, y - s / 2, s, s);
-    });
-    ctx.restore();
+    // 2 · el dorado responde al cursor (un leve giro de luz, sin deformar)
+    var dx = px - .5, dy = py - .45;
+    logo.style.transform = 'translate(' + (dx * 10).toFixed(2) + 'px,' + (dy * 8).toFixed(2) + 'px)';
+    var cerca = Math.max(0, 1 - Math.hypot(dx, dy) * 2.2);
+    trazo.style.setProperty('--brillo', (8 + cerca * 10 + pulsacion * 14).toFixed(1) + 'px');
 
-    // 2 · polvo de oro
-    polvo.forEach(function (p) {
-      p.y += p.vy * dt; p.x += p.vx * dt;
-      if (p.y < 0) { p.y = 1; p.x = Math.random(); }
-      var a = p.a * (.55 + .45 * Math.sin(tiempo * 2.2 + p.t)) * desv;
-      ctx.fillStyle = 'rgba(223,194,141,' + a + ')';
-      ctx.beginPath(); ctx.arc(p.x * w, p.y * h, p.r, 0, 6.283); ctx.fill();
-    });
+    // 3 · una luz recorre el logo sin parar
+    if (d >= 1) {
+      var pos = ((tiempo * .14) % 1) * L, p = trazo.getPointAtLength(pos);
+      luz.setAttribute('cx', p.x); luz.setAttribute('cy', p.y);
+      luz.setAttribute('opacity', (.55 + .45 * Math.sin(tiempo * 2.4)).toFixed(2));
+    }
 
-    // 3 · horizonte orbital con un pulso que lo recorre
-    var hr = Math.max(w * .95, 720), hy = h * .88 + hr;
-    ctx.beginPath(); ctx.arc(w * .5, hy, hr, Math.PI * 1.32, Math.PI * 1.68);
-    ctx.strokeStyle = 'rgba(223,194,141,' + (.24 * desv) + ')'; ctx.lineWidth = .85; ctx.stroke();
-    var pa = Math.PI * 1.35 + ((tiempo * .06) % .3);
-    var pX = w * .5 + Math.cos(pa) * hr, pY = hy + Math.sin(pa) * hr;
-    var pg = ctx.createRadialGradient(pX, pY, 0, pX, pY, 18);
-    pg.addColorStop(0, 'rgba(223,194,141,' + (.85 * desv) + ')'); pg.addColorStop(1, 'rgba(223,194,141,0)');
-    ctx.fillStyle = pg; ctx.beginPath(); ctx.arc(pX, pY, 18, 0, 6.283); ctx.fill();
-
-    // 4 · la doble O de Babyloon, en filamentos de seda
-    var c = centroO();
-    var esc = 1 + Math.pow(progresoAbre, 2.2) * 8.5 + pulsacion * .22;
-    var R = (w < 640 ? 46 : 62) * esc;      // radio horizontal de cada óvalo
-    var RY = R * .846;                       // proporción del logo (22/26)
-    var alfaO = Math.max(0, 1 - Math.pow(progresoAbre, 1.6));
-
-    var nucleo = ctx.createRadialGradient(c.x, c.y, 2, c.x, c.y, R * 1.65);
-    nucleo.addColorStop(0, 'rgba(223,194,141,' + ((.18 + pulsacion * .25) * alfaO) + ')');
-    nucleo.addColorStop(.55, 'rgba(26,13,22,' + (.22 * alfaO) + ')');
-    nucleo.addColorStop(1, 'rgba(8,7,11,0)');
-    ctx.fillStyle = nucleo; ctx.beginPath(); ctx.arc(c.x, c.y, R * 1.65, 0, 6.283); ctx.fill();
-
-    var mx = px * w, my = py * h;
-    var amp = w < 640 ? .6 : 1;   // en móvil la O es más pequeña: ondas más suaves
-    [{ cx: c.x - R, dir: 1 }, { cx: c.x + R, dir: -1 }].forEach(function (o, k) {
-      for (var s = 0; s < 6; s++) {
-        var principal = s === 0;
-        var alfa = (principal ? .92 : (.14 + (1 - s / 6) * .22)) * alfaO;
-        ctx.beginPath();
-        for (var j = 0; j <= 120; j++) {
-          var th = (j / 120) * Math.PI * 2, co = Math.cos(th), si = Math.sin(th);
-          var o1 = Math.sin(th * 5 + tiempo * 1.9 * o.dir + s * 1.1) * (1.8 + s * .65) * amp;
-          var o2 = Math.cos(th * 3 - tiempo * 1.3 + k) * (1.2 + pulsacion * 4.5) * amp;
-          var rx = o.cx + co * R, ry = c.y + si * RY;
-          var fuerza = hayPuntero ? Math.max(0, 1 - Math.hypot(rx - mx, ry - my) / 150) * 7.5 : 0;
-          var d = (principal ? o1 * .32 : o1 + o2) + fuerza * Math.sin(th * 4 + tiempo * 4);
-          var x = o.cx + co * (R + d), y = c.y + si * (RY + d * .846);
-          if (j === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-        }
-        ctx.closePath();
-        ctx.strokeStyle = 'rgba(223,194,141,' + alfa + ')';
-        ctx.lineWidth = principal ? 1.55 : .75;
-        ctx.stroke();
-      }
-      // una chispa orbitando cada óvalo
-      var ang = tiempo * 1.15 * o.dir + k * Math.PI;
-      ctx.beginPath(); ctx.arc(o.cx + Math.cos(ang) * R, c.y + Math.sin(ang) * RY, 2.2, 0, 6.283);
-      ctx.fillStyle = 'rgba(246,243,238,' + (.9 * alfaO) + ')';
-      ctx.shadowColor = '#DFC28D'; ctx.shadowBlur = 10; ctx.fill(); ctx.shadowBlur = 0;
-    });
+    // 4 · mantener pulsado: el oro llena el trazo hasta entrar
+    if (pulsando && !abriendo && d >= 1) {
+      pulsacion = Math.min(1, pulsacion + dt * .9);
+      if (pulsacion >= 1) entrar(false);
+    } else if (!abriendo) pulsacion = Math.max(0, pulsacion - dt * 1.6);
+    carga.style.strokeDashoffset = L * (1 - pulsacion);
   }
 
   medir();
-  if (quieto) { pintar(0, 0); return; }
+  if (quieto) {
+    fondo(0, 0);
+    try { var p0 = trazo.getPointAtLength(0); luz.setAttribute('cx', p0.x); luz.setAttribute('cy', p0.y); } catch (_) {}
+    return;
+  }
   var antes = 0;
   function bucle(ahora) {
     if (!activo) return;
     var dt = Math.min(.05, (ahora - antes) / 1000 || .016);
     antes = ahora;
-    if (!document.hidden) pintar(ahora * .001, dt);
+    if (!document.hidden) cuadro(ahora, dt);
     requestAnimationFrame(bucle);
   }
   requestAnimationFrame(bucle);
