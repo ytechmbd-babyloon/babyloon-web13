@@ -1,0 +1,3 @@
+# Los trozos de los APK no van al repositorio: se generan con partir.js
+*
+!.gitignore

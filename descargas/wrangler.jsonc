@@ -1,0 +1,22 @@
+// Descargas de las apps en https://descargas.babyloon.app (26-nov-2026)
+// Gratis y sin tarjeta: Cloudflare no admite archivos de más de 25 MB en la
+// web, así que cada APK se guarda en trozos y este Worker los entrega
+// juntos, como un único archivo.
+//
+// Publicar (desde esta carpeta):
+//   1. node partir.js RUTA\babyloon.apk RUTA\babyloon-pro.apk
+//   2. npx wrangler deploy
+// Es un proyecto aparte de la web (flat-thunder-70f8): no la toca.
+{
+  "name": "babyloon-descargas",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "routes": [
+    { "pattern": "descargas.babyloon.app", "custom_domain": true }
+  ]
+}

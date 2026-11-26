@@ -48,3 +48,7 @@ supabase/
 # El script que escribe cabeceras, datos estructurados, robots, sitemap y
 # llms.txt. Es herramienta, no web.
 seo/
+
+# ── Descargas · 26-nov-2026 ─────────────────────────────────────────────
+# Proyecto aparte (descargas.babyloon.app), con su propio wrangler.jsonc.
+descargas/
