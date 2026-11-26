@@ -149,7 +149,9 @@
   }
   let saved=null; try{saved=localStorage.getItem('bbl_lang');}catch(_){}
   let needsGeo=false, lang;
-  if(saved && DICT[saved]) lang=saved;                 // 1) elección explícita del usuario
+  let qp=null; try{qp=new URLSearchParams(location.search).get('lang');}catch(_){}
+  if(qp && DICT[qp]) lang=qp;                          // 0) ?lang=xx (enlaces hreflang, SEO)
+  else if(saved && DICT[saved]) lang=saved;            // 1) elección explícita del usuario
   else { const dl=deviceLang();                         // 2) idioma del dispositivo
     if(dl) lang=dl; else { lang='en'; needsGeo=true; } } // 3) sin match → inglés + refinar por ubicación
   async function refineByCountry(){

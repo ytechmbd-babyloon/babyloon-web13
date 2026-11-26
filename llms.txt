@@ -1,0 +1,63 @@
+# Babyloon
+
+> Babyloon es un marketplace de belleza y bienestar de lujo a domicilio y en destino. Une a clientas exigentes con profesionales verificados de peluquería, maquillaje, uñas, barbería, estética, masajes y novias, allí donde estén: en casa, en el hotel, en una villa o en un evento. Lema: «La belleza, donde tú estés».
+
+## Qué es
+- Naturaleza: plataforma digital de doble cara (marketplace) con app para clientas (Babyloon), app para profesionales (Babyloon Pro) y web (https://babyloon.app) en 16 idiomas.
+- Cómo funciona: la clienta pide un servicio en modalidad AHORA, HOY o PRIVÉE; los profesionales verificados cercanos pujan con su oferta (subasta inversa); la clienta elige y paga, y el pago queda retenido por Stripe hasta que se presta el servicio. Cada servicio tiene garantía.
+- Fundador y CEO: Andrés Arias.
+
+## Unidades de negocio
+- **Belleza a domicilio y en destino.** Peluquería, maquillaje, uñas, barbería, estética y masajes en casa, en el hotel, en la villa o en el evento. Se pide en modalidad AHORA, HOY o PRIVÉE y profesionales verificados pujan por el servicio.
+- **Reservas Privée: bodas y eventos.** Novias, invitados y eventos con depósito al reservar y equipo de profesionales para el día señalado.
+- **Boutique.** Productos de belleza seleccionados para clientas y para profesionales, con envío a domicilio.
+- **Academia y clases en vivo.** Cursos en vídeo, masterclasses en directo y rutinas de autocuidado creadas por profesionales de la belleza.
+- **Membresías.** Cliente Privée para clientas (descuentos, monedero con cashback, prioridad y regalos) y Privée Pro y Élite para profesionales (comisión reducida y herramientas de gestión y marketing).
+- **Tarjetas regalo.** Saldo Babyloon para regalar servicios, productos de la boutique y membresías.
+- **Modo Viaje.** La clienta encuentra en su destino a profesionales con la misma formación y técnicas que su profesional de siempre, y la profesional puede trabajar mientras viaja.
+- **Babyloon para empresas.** Equipos completos de belleza para wedding planners, productoras de cine y televisión y empresas de eventos (próximamente).
+
+## Funciones y beneficios para clientas
+- Pide en minutos (AHORA), a una hora concreta (HOY) o para una fecha y evento (PRIVÉE).
+- Subasta inversa: profesionales cercanos y verificados envían su oferta y eliges por precio, perfil y Babyloon Score.
+- Identidad y certificados verificados con inteligencia artificial y revisión humana.
+- Pago retenido por Stripe hasta que se presta el servicio y garantía en cada servicio.
+- Seguimiento en el mapa del trayecto del profesional hacia la reserva.
+- Pasaporte de belleza: tus fórmulas, alergias y preferencias viajan contigo.
+- Modo Viaje para encontrar profesional en tu destino.
+- Baby, asistente con inteligencia artificial, en la app y en la web.
+- Boutique, tarjetas regalo, rutinas de autocuidado y membresía Cliente Privée con cashback.
+
+## Funciones y beneficios para profesionales
+- Solicitudes de clientes cercanos y ofertas con tu propio precio.
+- Agenda que reúne las reservas de Babyloon y las citas conseguidas por tu cuenta.
+- Gestor financiero: facturas descargables, gastos escaneados y borradores fiscales.
+- Cobro protegido con Stripe Connect y monedero.
+- Portafolio, reseñas y Babyloon Score para destacar.
+- Academia para vender cursos y masterclasses.
+- Modo Viaje para trabajar durante tus viajes.
+- Laboratorio de marketing con inteligencia artificial para reels, historias y publicaciones (en desarrollo).
+- Membresías Privée Pro y Élite con comisión reducida.
+
+## Lanzamiento por etapas
+- Profesionales: registro abierto en todo el mundo desde febrero de 2027.
+- Reservas, por ciudades:
+- Etapa 1 · 2027: Marbella, Madrid, Palma, Lisboa, Barcelona, Málaga, Miami, Ibiza.
+- Etapa 2 · 2028: Sevilla, Valencia, Chicago, Londres, Oporto, Algarve, Bilbao, Dublín.
+- Etapa 3 · desde 2029: Berlín, Múnich, Nueva York y más ciudades.
+
+## Escalabilidad
+- Modelo digital y multiciudad: cada ciudad abre cuando alcanza suficiente densidad de profesionales, con precios y moneda locales.
+- Una sola plataforma para varios países: 16 idiomas, varias monedas e impuestos por país.
+- Varias fuentes de ingreso sobre la misma base de usuarios: comisión por servicio, membresías, boutique, academia, tarjetas regalo y servicios para empresas.
+
+## Enlaces
+- Web: https://babyloon.app/
+- Cómo funciona: https://babyloon.app/como-funciona.html
+- Para profesionales: https://babyloon.app/para-profesionales.html
+- Novias y eventos: https://babyloon.app/novias.html
+- Boutique: https://babyloon.app/boutique.html
+- Academia: https://babyloon.app/academia.html
+- Clases en vivo: https://babyloon.app/masterclass.html
+- Tarjeta regalo: https://babyloon.app/regalo.html
+- Contacto: https://babyloon.app/contacto.html

@@ -148,4 +148,5 @@ saber qué es cada cosa:
 | `i18n.js` · `i18n-index.js` · `i18n-academia.js` | los once idiomas |
 | `app-link.js` | enlaces a las apps, con detección de iOS/Android |
 | `_headers` · `_redirects` · `robots.txt` · `sitemap.xml` | configuración y SEO |
+| `llms.txt` · `seo/aplicar_seo.py` | SEO de lanzamiento (26-nov): `seo/aplicar_seo.py` escribe la cabecera de la portada, los datos estructurados, `robots.txt`, `sitemap.xml` y `llms.txt`. Si se regeneran las ciudades, ejecutarlo **después** de `generar_ciudades.py`. `seo/` no se publica |
 | `favicon.svg` · `og-image.png` · `img/` | imágenes |

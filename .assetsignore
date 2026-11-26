@@ -43,3 +43,8 @@ img/ciudad-nueva-york.jpg
 .claude/
 .mcp.json
 supabase/
+
+# ── SEO · 26-nov-2026 ──────────────────────────────────────────────────
+# El script que escribe cabeceras, datos estructurados, robots, sitemap y
+# llms.txt. Es herramienta, no web.
+seo/
