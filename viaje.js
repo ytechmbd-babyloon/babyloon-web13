@@ -101,6 +101,30 @@
       '#modoViaje .mv-flecha{padding:0 24px 4px;transform:rotate(90deg);width:28px}',
       '#modoViaje .mv-res{grid-template-columns:1fr}',
       '#modoViaje .mv-dos{grid-template-columns:1fr;gap:22px}',
+    '}',
+
+    /* 26-nov · el globo en 3D (globo.js). Todo cuelga de .con-globo:
+       si el globo no carga, la sección queda exactamente como estaba. */
+    '#modoViaje .mv-globo{display:none}',
+    '#modoViaje.con-globo .mv-lienzo{display:none}',
+    '#modoViaje.con-globo .mv-dentro{max-width:1320px;display:grid;',
+      'grid-template-columns:minmax(0,5fr) minmax(0,6fr);',
+      'grid-template-areas:"cab globo" "ruta globo" "res globo" "dos dos";',
+      'column-gap:clamp(24px,4vw,64px);align-items:start}',
+    '#modoViaje.con-globo .mv-cab{grid-area:cab;max-width:none}',
+    '#modoViaje.con-globo h2{font-size:clamp(46px,6.4vw,96px);line-height:.98}',
+    '#modoViaje.con-globo .mv-ruta{grid-area:ruta}',
+    '#modoViaje.con-globo .mv-res{grid-area:res}',
+    '#modoViaje.con-globo .mv-dos{grid-area:dos}',
+    '#modoViaje.con-globo .mv-globo{display:block;grid-area:globo;position:relative;align-self:center;',
+      'height:clamp(440px,46vw,660px)}',
+    '#modoViaje .mv-globo canvas{position:absolute;inset:0;width:100%;height:100%;display:block;',
+      'cursor:grab;touch-action:pan-y}',
+    '#modoViaje .mv-globo canvas:active{cursor:grabbing}',
+    '@media(max-width:900px){',
+      '#modoViaje.con-globo .mv-dentro{grid-template-columns:1fr;',
+        'grid-template-areas:"cab" "globo" "ruta" "res" "dos"}',
+      '#modoViaje.con-globo .mv-globo{height:min(96vw,480px);margin:6px -28px 0}',
     '}'
   ].join('');
   document.head.appendChild(css);
@@ -127,6 +151,7 @@
         '</div>' +
       '</div>' +
       '<div class="mv-res" id="mvRes" hidden aria-live="polite"></div>' +
+      '<div class="mv-globo" aria-hidden="true"><canvas id="mvGlobo"></canvas></div>' +
       '<div class="mv-dos">' +
         '<div class="mv-cara">' +
           '<h3 data-i18n="mv_cli_t">Si eres cliente</h3>' +
@@ -163,6 +188,7 @@
   var lienzo = document.getElementById('mvLienzo');
   var ctx = lienzo.getContext('2d');
   var CIUDADES = [], DE = null, A = null, t0 = 0;
+  var GLOBO = null;          // el globo 3D, si ha cargado (globo.js)
 
   // Equirectangular, encogida: el mundo entero deja los polos
   // vacíos y aquí sólo estorban. Se recorta a la banda habitada.
@@ -183,6 +209,7 @@
   }
 
   function dibujar(ts) {
+    if (GLOBO) return;       // con el globo 3D, el plano se retira
     var m = medir(), an = m.an, al = m.al;
     ctx.clearRect(0, 0, an, al);
     if (!t0) t0 = ts || 0;
@@ -300,7 +327,47 @@
     A  = CIUDADES.filter(function (c) { return c.slug === a;  })[0] || null;
     if (DE) DE._t = t0 ? (performance.now() - t0) / 1000 : 0;
     pintarResultado();
+    if (GLOBO && DE && A && DE.slug !== A.slug) GLOBO.ruta(DE, A);
     if (quieto) dibujar(0);
+  }
+
+  /* ── el globo 3D ─────────────────────────────────────────── */
+  function alGlobo() {
+    if (!GLOBO) return;
+    GLOBO.ciudades(CIUDADES.map(function (c) {
+      return { lat: Number(c.lat), lng: Number(c.lng), vivo: abre(c) && Number(c.profesionales) > 0 };
+    }));
+    if (DE && A && DE.slug !== A.slug) GLOBO.ruta(DE, A);
+  }
+
+  // Mientras nadie toque nada, el globo enseña viajes de verdad, uno
+  // tras otro. En cuanto alguien elige ciudad o gira el globo, para.
+  var tocado = false, iViaje = 0;
+  var VIAJES = [['marbella', 'dubai'], ['madrid', 'miami'], ['londres', 'ibiza'],
+                ['lisboa', 'nueva-york'], ['barcelona', 'palma'], ['dublin', 'marbella']];
+  function siguienteViaje() {
+    if (tocado || !GLOBO || quieto || document.hidden) return;
+    var hay = function (s) { return CIUDADES.some(function (c) { return c.slug === s; }); };
+    var lista = VIAJES.filter(function (v) { return hay(v[0]) && hay(v[1]); });
+    if (lista.length < 2) return;
+    var r = raiz.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;   // sólo si se ve
+    var v = lista[(iViaje++) % lista.length];
+    document.getElementById('mvDe').value = v[0];
+    document.getElementById('mvA').value = v[1];
+    elegir();
+  }
+
+  function montarGlobo() {
+    if (!window.BBLGlobo) return;
+    raiz.classList.add('con-globo');
+    window.BBLGlobo.montar(document.getElementById('mvGlobo'), { quieto: quieto }).then(function (g) {
+      if (!g) { raiz.classList.remove('con-globo'); return; }   // sigue el plano
+      GLOBO = g;
+      g.alTocar = function () { tocado = true; };
+      alGlobo();
+      setInterval(siguienteViaje, 8000);
+    });
   }
 
   function rellenar() {
@@ -320,14 +387,23 @@
     if (d) sDe.value = d;
     if (h) sA.value = h;
 
-    sDe.addEventListener('change', elegir);
-    sA.addEventListener('change', elegir);
+    sDe.addEventListener('change', function () { tocado = true; elegir(); });
+    sA.addEventListener('change', function () { tocado = true; elegir(); });
     elegir();
+    alGlobo();
   }
 
   function arrancar() {
     if (!quieto) requestAnimationFrame(dibujar); else dibujar(0);
     addEventListener('resize', function () { if (quieto) dibujar(0); }, { passive: true });
+
+    // El globo (y three.js) se pide cuando la sección se acerca.
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (en) {
+        if (en[0].isIntersecting) { io.disconnect(); montarGlobo(); }
+      }, { rootMargin: '400px' });
+      io.observe(raiz);
+    } else montarGlobo();
 
     var sb = window.__sbClient;
     if (!sb) return;                       // sin cliente, queda el texto
