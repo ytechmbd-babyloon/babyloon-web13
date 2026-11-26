@@ -156,9 +156,26 @@
     var marcaA = chispa(.18), marcaB = chispa(.001); marcaA.visible = marcaB.visible = false;
     mundo.add(marcaA, marcaB);
     var objetivo = { x: .3, y: 0 };
+    // 26-nov · «viaje»: a pantalla completa la cámara sigue a la doble O
+    // de la ciudad de origen a la de destino (se aleja a mitad de trayecto).
+    var viajeModo = false, durRuta = 2.6, zBase = 4.6, alLlegar = null, llegado = true, muerto = false;
 
-    function ruta(de, a) {
+    function mirarA(dir, bajar) {
+      var lat = Math.asin(Math.max(-1, Math.min(1, dir.y))) / DEG;
+      var lng = Math.atan2(dir.z, -dir.x) / DEG - 180;
+      objetivo.y = -(lng + 90) * DEG;
+      objetivo.x = Math.max(-.6, Math.min(1, (lat - bajar) * DEG));
+      while (objetivo.y - mundo.rotation.y > Math.PI) objetivo.y -= 2 * Math.PI;
+      while (objetivo.y - mundo.rotation.y < -Math.PI) objetivo.y += 2 * Math.PI;
+    }
+
+    function ruta(de, a, op) {
       if (!de || !a) return;
+      op = op || {};
+      viajeModo = !!op.viaje;
+      durRuta = op.duracion || 2.6;
+      alLlegar = op.alLlegar || null;
+      llegado = false;
       if (tubo) { mundo.remove(tubo); tubo.geometry.dispose(); }
       if (estela) { mundo.remove(estela); estela.geometry.dispose(); }
       var A = vec(de.lat, de.lng).normalize(), B = vec(a.lat, a.lng).normalize();
@@ -176,6 +193,14 @@
       marcaA.position.copy(vec(de.lat, de.lng, R * 1.012)); marcaB.position.copy(vec(a.lat, a.lng, R * 1.012));
       marcaA.visible = marcaB.visible = viajero.visible = halo.visible = true;
       tRuta = quieto ? 1 : 0;
+      if (viajeModo && !quieto) {
+        // empieza mirando el origen, de cerca
+        mirarA(A, 6);
+        mundo.rotation.y = objetivo.y; inclina.rotation.x = objetivo.x;
+        camera.position.z = zBase * .6;
+        pedir();
+        return;
+      }
       var mid = A.clone().add(B).normalize();
       if (mid.lengthSq() < 1e-6) mid = A.clone();
       var lat = Math.asin(mid.y) / DEG, lng = Math.atan2(mid.z, -mid.x) / DEG - 180;
@@ -192,7 +217,8 @@
       if (!w || !h) return;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
-      camera.position.z = w / h < 1 ? 4.6 / Math.max(.62, w / h) * .92 : 4.6;
+      zBase = w / h < 1 ? 4.6 / Math.max(.62, w / h) * .92 : 4.6;
+      if (!viajeModo) camera.position.z = zBase;
       camera.updateProjectionMatrix(); pedir();
     }
     addEventListener('resize', ajustar, { passive: true }); ajustar();
@@ -222,17 +248,18 @@
     mundo.rotation.y = objetivo.y; inclina.rotation.x = objetivo.x;
     function cuadro() {
       enMarcha = false;
+      if (muerto) return;
       var dt = Math.min(.05, reloj.getDelta()), t = reloj.elapsedTime;
       matTierra.uniforms.t.value = quieto ? 0 : t;
-      var k = quieto ? 1 : 1 - Math.pow(.0016, dt);
+      var k = quieto ? 1 : 1 - Math.pow(viajeModo ? .02 : .0016, dt);
       mundo.rotation.y += (objetivo.y - mundo.rotation.y) * k;
       inclina.rotation.x += (objetivo.x - inclina.rotation.x) * k;
-      if (!arrastra && !quieto) objetivo.y += dt * .012;
+      if (!arrastra && !quieto && !(viajeModo && !llegado)) objetivo.y += dt * .012;
       for (var i = 0; i < luces.length; i++) {
         var s = luces[i]; s.scale.setScalar(s.userData.base * (quieto ? 1 : 1 + .35 * Math.sin(t * 2 + s.userData.fase)));
       }
       if (curva) {
-        tRuta = Math.min(1, tRuta + dt / 2.6);
+        tRuta = Math.min(1, tRuta + dt / durRuta);
         var e = tRuta < .5 ? 4 * tRuta * tRuta * tRuta : 1 - Math.pow(-2 * tRuta + 2, 3) / 2;
         var n = Math.floor(e * SEGS) * RAD * 6;
         tubo.geometry.setDrawRange(0, n); estela.geometry.setDrawRange(0, n);
@@ -241,13 +268,34 @@
         halo.material.opacity = quieto ? .7 : .55 + .25 * Math.sin(t * 4);
         marcaB.scale.setScalar(e > .97 ? .18 * (quieto ? 1 : 1 + .25 * Math.sin(t * 3)) : .001);
         marcaA.scale.setScalar(.18 * (quieto ? 1 : 1 + .15 * Math.sin(t * 3 + 1)));
+        if (viajeModo) {
+          if (!llegado) {
+            // la cámara sigue a la doble O y se aleja a mitad de camino
+            mirarA(P.clone().normalize(), 6);
+            camera.position.z = zBase * (.6 + .42 * Math.sin(Math.PI * e));
+          } else {
+            camera.position.z += (zBase * .72 - camera.position.z) * k;
+          }
+        }
+        if (tRuta >= 1 && !llegado) {
+          llegado = true;
+          if (alLlegar) { try { alLlegar(); } catch (_) {} }
+        }
       }
       renderer.render(scene, camera);
       if (visible && !quieto) pedir();
     }
     pedir();
 
-    var api = { ciudades: function (l) { ciudades(l); pedir(); }, ruta: ruta, alTocar: null };
+    var api = {
+      ciudades: function (l) { ciudades(l); pedir(); }, ruta: ruta, alTocar: null,
+      // libera la tarjeta gráfica (el globo a pantalla completa se crea y se destruye)
+      destruir: function () {
+        muerto = true;
+        removeEventListener('resize', ajustar);
+        try { renderer.dispose(); renderer.forceContextLoss(); } catch (_) {}
+      }
+    };
     return api;
   }
 

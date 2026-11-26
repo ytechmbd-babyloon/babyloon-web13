@@ -79,16 +79,16 @@
       'font-size:19px;opacity:.75}',
 
     /* lo que hay al otro lado */
-    '#modoViaje .mv-res{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:26px;',
+    '#modoViaje .mv-res,.mv-viaje .mv-res{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:26px;',
       'max-width:680px;background:var(--line,rgba(200,169,106,.16));',
       'border:1px solid var(--line,rgba(200,169,106,.16));border-radius:24px;overflow:hidden}',
-    '#modoViaje .mv-celda{background:rgba(13,11,15,.72);padding:22px 24px}',
-    '#modoViaje .mv-celda .mv-donde{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;',
+    '#modoViaje .mv-celda,.mv-viaje .mv-celda{background:rgba(13,11,15,.72);padding:22px 24px}',
+    '#modoViaje .mv-celda .mv-donde,.mv-viaje .mv-celda .mv-donde{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;',
       'color:var(--mauve-dim,#6B5766)}',
-    '#modoViaje .mv-celda .mv-ciudad{font-family:var(--serif,serif);font-size:26px;font-weight:400;',
+    '#modoViaje .mv-celda .mv-ciudad,.mv-viaje .mv-celda .mv-ciudad{font-family:var(--serif,serif);font-size:26px;font-weight:400;',
       'margin:5px 0 10px;color:var(--cream,#F9F5EE)}',
-    '#modoViaje .mv-celda .mv-dato{font-size:14px;color:var(--smoke,#E8E0D5);line-height:1.65}',
-    '#modoViaje .mv-celda .mv-dato b{color:var(--gold,#C8A96A);font-weight:500}',
+    '#modoViaje .mv-celda .mv-dato,.mv-viaje .mv-celda .mv-dato{font-size:14px;color:var(--smoke,#E8E0D5);line-height:1.65}',
+    '#modoViaje .mv-celda .mv-dato b,.mv-viaje .mv-celda .mv-dato b{color:var(--gold,#C8A96A);font-weight:500}',
 
     /* las dos caras de la misma moneda */
     '#modoViaje .mv-dos{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:38px;max-width:820px}',
@@ -121,6 +121,33 @@
     '#modoViaje .mv-globo canvas{position:absolute;inset:0;width:100%;height:100%;display:block;',
       'cursor:grab;touch-action:pan-y}',
     '#modoViaje .mv-globo canvas:active{cursor:grabbing}',
+
+    /* 26-nov · el viaje a pantalla completa */
+    '.mv-viaje{position:fixed;inset:0;z-index:9000;background:radial-gradient(120% 90% at 50% 45%,#1b1419 0%,#0D0B0F 65%);',
+      'opacity:0;transition:opacity .7s cubic-bezier(.22,1,.36,1)}',
+    '.mv-viaje.dentro{opacity:1}',
+    '.mv-viaje canvas{position:absolute;inset:0;width:100%;height:100%;display:block}',
+    '.mv-viaje .mvv-arriba{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;justify-content:space-between;',
+      'align-items:flex-start;padding:clamp(18px,3vw,34px) clamp(18px,4vw,48px);pointer-events:none}',
+    '.mv-viaje .mvv-ruta{font-family:var(--serif,serif);font-weight:300;color:var(--cream,#F9F5EE);',
+      'font-size:clamp(28px,4.4vw,58px);line-height:1.05;margin-top:10px}',
+    '.mv-viaje .mvv-ruta span{color:var(--gold,#C8A96A);font-style:italic;padding:0 .25em}',
+    '.mv-viaje .mvv-cerrar{pointer-events:auto;width:46px;height:46px;border-radius:50%;border:1px solid rgba(200,169,106,.45);',
+      'background:rgba(13,11,15,.55);color:var(--gold-lite,#F3E0BC);font-size:22px;line-height:1;cursor:pointer;',
+      'transition:background .3s,color .3s}',
+    '.mv-viaje .mvv-cerrar:hover{background:var(--gold,#C8A96A);color:#0D0B0F}',
+    '.mv-viaje .mvv-llegada{position:absolute;left:50%;bottom:clamp(18px,5vh,48px);z-index:2;',
+      'transform:translate(-50%,16px);opacity:0;transition:opacity .8s ease,transform .8s cubic-bezier(.22,1,.36,1);',
+      'width:min(680px,calc(100% - 32px))}',
+    '.mv-viaje.llego .mvv-llegada{opacity:1;transform:translate(-50%,0)}',
+    '.mv-viaje .mvv-llegada .mv-res{margin-top:0;max-width:none;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}',
+    '.mv-viaje .mvv-volver{display:block;margin:14px auto 0;border:1px solid rgba(200,169,106,.6);background:transparent;',
+      'color:var(--gold-lite,#F3E0BC);padding:12px 34px;border-radius:999px;font-family:var(--sans,sans-serif);',
+      'font-size:12px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:background .3s,color .3s}',
+    '.mv-viaje .mvv-volver:hover{background:var(--gold,#C8A96A);color:#0D0B0F}',
+    'html.mvv-abierto,html.mvv-abierto body{overflow:hidden}',
+    'html.mvv-abierto #bbl-baby-btn{opacity:0;pointer-events:none}',
+    '@media(max-width:760px){.mv-viaje .mvv-llegada .mv-res{grid-template-columns:1fr 1fr}}',
     '@media(max-width:900px){',
       '#modoViaje.con-globo .mv-dentro{grid-template-columns:1fr;',
         'grid-template-areas:"cab" "globo" "ruta" "res" "dos"}',
@@ -358,6 +385,61 @@
     elegir();
   }
 
+  /* ── el viaje a pantalla completa ───────────────────────────
+     Al elegir origen y destino (la persona, no el carrusel), el mundo
+     ocupa toda la pantalla y la doble O vuela de una ciudad a la otra.
+     Al llegar aparece lo que hay al otro lado. Se cierra con ×, con
+     «Volver» o con Escape, y el globo se destruye al cerrar. */
+  var VIAJE = null;
+  function cerrarViaje() {
+    if (!VIAJE) return;
+    var v = VIAJE; VIAJE = null;
+    v.el.classList.remove('dentro');
+    document.documentElement.classList.remove('mvv-abierto');
+    removeEventListener('keydown', v.tecla);
+    setTimeout(function () {
+      if (v.globo) v.globo.destruir();
+      if (v.el.parentNode) v.el.parentNode.removeChild(v.el);
+    }, 700);
+  }
+  function abrirViaje() {
+    if (!GLOBO || !DE || !A || DE.slug === A.slug || !window.BBLGlobo) return;
+    if (VIAJE) cerrarViaje();
+    var el = document.createElement('div');
+    el.className = 'mv-viaje';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-label', T('mv_eyebrow', 'Modo Viaje'));
+    el.innerHTML =
+      '<canvas aria-hidden="true"></canvas>' +
+      '<div class="mvv-arriba"><div><p class="eyebrow">' + esc(T('mv_eyebrow', 'Modo Viaje')) + '</p>' +
+        '<div class="mvv-ruta">' + esc(DE.ciudad) + '<span>→</span>' + esc(A.ciudad) + '</div></div>' +
+        '<button class="mvv-cerrar" type="button" aria-label="' + esc(T('cerrar', 'Cerrar')) + '">×</button></div>' +
+      '<div class="mvv-llegada" aria-live="polite"><div class="mv-res">' +
+        celda(DE, 'mv_sales', 'Sales de') + celda(A, 'mv_llegas', 'Llegas a') + '</div>' +
+        '<button class="mvv-volver" type="button">← ' + esc(T('mv_eyebrow', 'Modo Viaje')) + '</button></div>';
+    document.body.appendChild(el);
+    document.documentElement.classList.add('mvv-abierto');
+    var v = { el: el, globo: null, tecla: function (e) { if (e.key === 'Escape') cerrarViaje(); } };
+    VIAJE = v;
+    addEventListener('keydown', v.tecla);
+    el.querySelector('.mvv-cerrar').addEventListener('click', cerrarViaje);
+    el.querySelector('.mvv-volver').addEventListener('click', cerrarViaje);
+    requestAnimationFrame(function () { el.classList.add('dentro'); });
+    var de = DE, a = A;
+    window.BBLGlobo.montar(el.querySelector('canvas'), { quieto: quieto }).then(function (g) {
+      if (!g || VIAJE !== v) { if (g) g.destruir(); if (!g) cerrarViaje(); return; }
+      v.globo = g;
+      g.ciudades(CIUDADES.map(function (c) {
+        return { lat: Number(c.lat), lng: Number(c.lng), vivo: abre(c) && Number(c.profesionales) > 0 };
+      }));
+      setTimeout(function () {
+        if (VIAJE !== v) return;
+        g.ruta(de, a, { viaje: true, duracion: 5.5, alLlegar: function () { el.classList.add('llego'); } });
+        if (quieto) el.classList.add('llego');
+      }, 450);
+    });
+  }
+
   function montarGlobo() {
     if (!window.BBLGlobo) return;
     raiz.classList.add('con-globo');
@@ -387,8 +469,9 @@
     if (d) sDe.value = d;
     if (h) sA.value = h;
 
+    // el viaje se lanza al elegir el destino (el origen se suele elegir antes)
     sDe.addEventListener('change', function () { tocado = true; elegir(); });
-    sA.addEventListener('change', function () { tocado = true; elegir(); });
+    sA.addEventListener('change', function () { tocado = true; elegir(); abrirViaje(); });
     elegir();
     alGlobo();
   }
