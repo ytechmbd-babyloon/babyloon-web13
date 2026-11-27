@@ -2,6 +2,8 @@
    Junta los trozos de cada APK y los entrega como un solo archivo.
    /babyloon.apk      → app de clientas
    /babyloon-pro.apk  → Babyloon Pro
+   /version.json      → última versión de cada app (lo leen las apps para
+                        avisar de una actualización; 27-nov-2026)
    Cualquier otra dirección → babyloon.app/#app */
 const APKS = new Set(["babyloon.apk", "babyloon-pro.apk"]);
 
@@ -9,6 +11,9 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const nombre = url.pathname.replace(/^\/+/, "");
+    if (nombre === "version.json" && ["GET", "HEAD"].includes(request.method)) {
+      return versiones(url.origin + "/", env);
+    }
     if (!APKS.has(nombre) || !["GET", "HEAD"].includes(request.method)) {
       return Response.redirect("https://babyloon.app/#app", 302);
     }
@@ -46,3 +51,30 @@ export default {
     return new Response(readable, { headers: cabeceras });
   },
 };
+
+// { cliente: { build, minimo, apk }, pro: { … } } a partir de los índices
+// que escribe partir.js. Sin build (APK subido antes del 27-nov) → build 0:
+// las apps no avisan de nada.
+async function versiones(base, env) {
+  const salida = {};
+  for (const [app, apk] of [["cliente", "babyloon.apk"], ["pro", "babyloon-pro.apk"]]) {
+    try {
+      const r = await env.ASSETS.fetch(new Request(base + apk + ".json"));
+      if (!r.ok) continue;
+      const i = await r.json();
+      salida[app] = {
+        build: Number(i.build) || 0,
+        minimo: Number(i.minimo) || 0,
+        apk: "https://descargas.babyloon.app/" + apk,
+      };
+    } catch { /* sin índice: esa app no avisa */ }
+  }
+  return new Response(JSON.stringify(salida), {
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-cache",
+      "Access-Control-Allow-Origin": "*",
+      "X-Robots-Tag": "noindex",
+    },
+  });
+}

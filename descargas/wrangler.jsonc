@@ -4,7 +4,8 @@
 // juntos, como un único archivo.
 //
 // Publicar (desde esta carpeta):
-//   1. node partir.js RUTA\babyloon.apk RUTA\babyloon-pro.apk
+//   1. node partir.js --build N RUTA\babyloon.apk RUTA\babyloon-pro.apk
+//      (N = el número detrás del «+» en version: del pubspec.yaml)
 //   2. npx wrangler deploy
 // Es un proyecto aparte de la web (flat-thunder-70f8): no la toca.
 {
