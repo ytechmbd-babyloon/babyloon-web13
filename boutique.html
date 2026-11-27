@@ -1334,7 +1334,14 @@ const ex=cart.find(i=>i.id===p.id);
     await Promise.all([loadFX(), _moneda]);
     renderCart();
     try{ const {data:{session}}=await sb.auth.getSession(); if(session){ const {data:pro}=await sb.from('professionals').select('id').eq('user_id',session.user.id).maybeSingle(); IS_PRO=!!pro; } }catch(_){}
-    load(true); loadWish(); });
+    load(true); loadWish();
+    // 27-nov · ?p=<id>: llega desde la página del producto (Google,
+    // Shopping, redes, afiliados): se abre su ficha, lista para comprar.
+    try{ const pid=new URLSearchParams(location.search).get('p');
+      if(pid && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(pid)){
+        const {data:prod}=await sb.from('boutique_products').select('id,name,name_en,name_de,name_fr,name_pt,brand,category,price,original_price,currency,image_url,images,in_stock,is_featured,is_luxury,description_es,description_en,description_de,description_fr,description_pt,description_sv,description_ja,description_ar,description_zh,description_ko,description_ru').eq('id',pid).eq('is_active',true).maybeSingle();
+        if(prod){ cache[prod.id]=prod; openProduct(prod); } } }catch(_){}
+  });
 </script>
 <script src="cookies.js?v=2"></script>
 <script src="presencia.js?v=2"></script>

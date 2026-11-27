@@ -21,6 +21,8 @@
    imágenes, los estilos y los scripts van directos, sin pasar por aquí.
    ═══════════════════════════════════════════════════════════════════════ */
 
+import { boutique, fijarFuente } from './boutique.js';
+
 const SUPABASE = 'https://qphatjblvojnfyghwmjy.supabase.co';
 // Clave pública (rol anon), la misma que llevan las páginas de la web.
 const CLAVE_PUBLICA = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwaGF0amJsdm9qbmZ5Z2h3bWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTUyNTksImV4cCI6MjA5NDMzMTI1OX0.fd_maoPBLGKAGHqOcsmcAKWbTl_a0962TpV57f7u0ik';
@@ -33,6 +35,21 @@ export default {
     if (request.method !== 'GET' && request.method !== 'HEAD') return env.ASSETS.fetch(request);
 
     const ruta = url.pathname;
+
+    // 27-nov · La boutique, visible para Google (páginas de producto y de
+    // categoría, su sitemap y los feeds de Shopping). Ver boutique.js.
+    if (ruta.startsWith('/boutique/p/') || ruta.startsWith('/boutique/c/') || ruta === '/sitemap-boutique.xml' || ruta.startsWith('/feeds/merchant-')) {
+      try {
+        fijarFuente(env && env.BOUTIQUE_FUENTE);
+        const seo = await publicado(env, ctx);
+        if (!seo || !seo.datos.boutique || seo.datos.boutique.activa !== false) {
+          const r = await boutique(request, url, ctx, CLAVE_PUBLICA, seo ? seo.datos.idiomas : null);
+          if (r) return r;
+        }
+      } catch (e) { console.error('seo · boutique', ruta, e); }
+      return env.ASSETS.fetch(request);
+    }
+
     if (ruta === '/robots.txt' || ruta === '/sitemap.xml' || ruta === '/llms.txt') {
       const seo = await publicado(env, ctx);
       if (!seo) return env.ASSETS.fetch(request);
@@ -236,7 +253,9 @@ function robots(d) {
     for (const a of g.agentes) L.push(`User-agent: ${a}`);
     L.push(g.permitir ? 'Allow: /' : 'Disallow: /', '');
   }
-  L.push(`Sitemap: ${d.base}/sitemap.xml`, '');
+  L.push(`Sitemap: ${d.base}/sitemap.xml`);
+  if (!d.boutique || d.boutique.activa !== false) L.push(`Sitemap: ${d.base}/sitemap-boutique.xml`);
+  L.push('');
   return L.join('\n');
 }
 
