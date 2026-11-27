@@ -82,6 +82,12 @@ const productos = (ctx, k) => leer(ctx, 'productos.json',
   `/rest/v1/boutique_products?select=${COLS}&is_active=eq.true&image_url=not.is.null&order=is_luxury.desc.nullslast,is_featured.desc.nullslast,rank.asc.nullslast`, k);
 const tipos = (ctx, k) => leer(ctx, 'tipos.json', '/rest/v1/exchange_rates?select=quote,rate&base=eq.EUR', k);
 const categorias = (ctx, k) => leer(ctx, 'categorias.json', '/rest/v1/rpc/categorias_boutique', k);
+// El envío de cada producto a un país, en su moneda, con la misma cuenta que
+// cobra el carrito (envios_boutique → _envio_por_proveedor). No dice quién es
+// el proveedor. Si la función aún no existe, el feed sale sin <g:shipping> y
+// Merchant Center usa lo configurado en su cuenta.
+const envios = (ctx, k, pais, moneda) => leer(ctx, `envios-${pais}.json`,
+  `/rest/v1/rpc/envios_boutique?p_pais=${pais}&p_moneda=${moneda}`, k);
 
 /* ── El precio: la misma cuenta que money.js ──────────────────────────── */
 const BUFFER_PCT = 3;
@@ -332,13 +338,21 @@ async function sitemapBoutique(ctx, k) {
     + filas.join('\n') + '\n</urlset>\n', { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=1800' } });
 }
 
+function envioXml(e, pais, moneda) {
+  if (!e || e.envio == null || e.moneda !== moneda) return '';
+  const t = Number.isInteger(e.dias_min) && Number.isInteger(e.dias_max)
+    ? `<g:min_transit_time>${e.dias_min}</g:min_transit_time><g:max_transit_time>${e.dias_max}</g:max_transit_time>` : '';
+  return `<g:shipping><g:country>${pais}</g:country><g:price>${Number(e.envio).toFixed(2)} ${moneda}</g:price>${t}</g:shipping>`;
+}
+
 /* ── Feed para Google Merchant Center / Bing / Meta / Pinterest ────────── */
 async function feed(ctx, k, pais) {
   if (!PAISES[pais]) return null;
-  const [ps, fxf, cats] = await Promise.all([productos(ctx, k), tipos(ctx, k), categorias(ctx, k)]);
+  const { moneda, lang } = PAISES[pais];
+  const [ps, fxf, cats, env] = await Promise.all([productos(ctx, k), tipos(ctx, k), categorias(ctx, k), envios(ctx, k, pais, moneda)]);
   if (!Array.isArray(ps)) return null;
   const fx = mapaFx(fxf);
-  const { moneda, lang } = PAISES[pais];
+  const envioDe = new Map(Array.isArray(env) ? env.map((e) => [e.id, e]) : []);
   const items = [];
   for (const p of ps) {
     if (!vendeEn(p, pais)) continue;
@@ -353,7 +367,8 @@ async function feed(ctx, k, pais) {
       + `<g:image_link>${xmlEsc(imgs[0])}</g:image_link>${imgs.slice(1).map((i) => `<g:additional_image_link>${xmlEsc(i)}</g:additional_image_link>`).join('')}`
       + `<g:availability>${p.in_stock === false ? 'out_of_stock' : 'in_stock'}</g:availability>${precio}`
       + `<g:brand>${xmlEsc(p.brand || 'Babyloon Selection')}</g:brand><g:condition>new</g:condition><g:identifier_exists>no</g:identifier_exists>`
-      + `<g:google_product_category>469</g:google_product_category><g:product_type>${xmlEsc(nombreCategoria(cats, p.category, lang))}</g:product_type></item>`);
+      + `<g:google_product_category>469</g:google_product_category><g:product_type>${xmlEsc(nombreCategoria(cats, p.category, lang))}</g:product_type>`
+      + envioXml(envioDe.get(p.id), pais, moneda) + '</item>');
   }
   return new Response(`<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
