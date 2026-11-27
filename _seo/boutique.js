@@ -143,7 +143,7 @@ const VACIAS = {
 // «Sérum de colágeno») y se descartan las fichas técnicas («Descripción del
 // producto», «Contenido neto»…): entonces vale más el nombre original.
 const VERBOS = {
-  es: /\s(contiene|contienen|est[áa]n?|es|son|proporciona|ofrece|combina|aporta|ayuda|cuenta|tiene|te|le|se|ha|han)\s/i,
+  es: /\s(contiene|contienen|est[áa]n?|es|son|proporciona|ofrece|combina|aporta|ayuda|cuenta|tiene|te|le|se|ha|han|promueve|incluye|incluyen|favorece|deja|elimina|reduce|mejora)\s/i,
   pt: /\s(cont[ée]m|cont[êe]m|est[áa]|est[ãa]o|[ée]|s[ãa]o|proporciona|oferece|combina|ajuda|tem|se)\s/i,
   fr: /\s(contient|contiennent|est|sont|offre|combine|apporte|aide|a|se|vous)\s/i,
   it: /\s(contiene|contengono|[èe]|sono|offre|combina|aiuta|ha|si)\s/i,
@@ -151,9 +151,14 @@ const VERBOS = {
   sv: /\s(inneh[åa]ller|[äa]r|erbjuder|kombinerar|hj[äa]lper|har)\s/i,
 };
 const FICHA = /^(\*|uso general|funci[óo]n|color\b|modelo|marca\b|tipo:|descrip|categor|contenido|especificaci|caracter[íi]sticas|nombre del|tipo de|d[ée]jese|material|tama[ñn]o|descri[çc][ãa]o|conte[úu]do|especifica[çc]|caract[ée]ristiques|contenu|nom du|type d|sp[ée]cification|descrizione|contenuto|specifiche|caratteristiche|nome del|beschreibung|inhalt|produktname|technische|beskrivning|inneh[åa]ll|produktnamn)/i;
+// Frases de anuncio («¡Libera…», «Crea un delineado…», «SELLADO RÁPIDO»): no son
+// un nombre de producto; mejor el original.
+const ANUNCIO = /^(¡|¿|crea|libera|descubre|consigue|disfruta|dale|transforma|obt[ée]n|luce|prueba|r[ée]gimen|f[óo]rmula|d[ée]jate|olv[íi]date|di adi[óo]s|despierta|revela|experimenta|eleva|presentamos|conoce)/i;
 function limpiarTitulo(f, l) {
   const v = VACIAS[l]; if (!v) return f;
   if (FICHA.test(f)) return '';
+  if (l === 'es' && ANUNCIO.test(f)) return '';
+  if (f === f.toUpperCase() && /[A-ZÁÉÍÓÚÑ]{4}/.test(f)) return '';
   const m = VERBOS[l] && VERBOS[l].exec(' ' + f + ' ');
   if (m && m.index > 0) f = f.slice(0, m.index).trim();
   const pal = f.split(/\s+/);
