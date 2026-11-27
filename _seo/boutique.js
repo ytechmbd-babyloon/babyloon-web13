@@ -123,12 +123,51 @@ export const slug = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u0
 export const rutaProducto = (p) => `/boutique/p/${slug(p.name)}-${String(p.id).slice(0, 8)}`;
 function descripcion(p, l) { return quitarHtml(p['description_' + l] || (l !== 'es' && p.description_en) || p.description_es || p.description || ''); }
 /** Un nombre en el idioma pedido: el suyo si lo hay; si no, la primera frase de la descripción en ese idioma. */
+// El título sale de la primera frase de la descripción: sin «Nuestro…», «Este…»
+// delante ni un verbo o una preposición colgando al final («…pieles oscuras está»).
+const VACIAS = {
+  es: { ini: ['nuestro', 'nuestra', 'nuestros', 'nuestras', 'este', 'esta', 'estos', 'estas', 'el', 'la', 'los', 'las', 'un', 'una'],
+        fin: ['está', 'están', 'es', 'son', 'que', 'y', 'o', 'de', 'del', 'con', 'para', 'por', 'en', 'a', 'al', 'el', 'la', 'los', 'las', 'un', 'una', 'tu', 'su', 'sus', 'se', 'te', 'le', 'lo', 'muy', 'más', 'ha', 'han', 'hace', 'ofrece', 'proporciona', 'combina', 'contiene'] },
+  pt: { ini: ['nosso', 'nossa', 'nossos', 'nossas', 'este', 'esta', 'o', 'a', 'os', 'as', 'um', 'uma'],
+        fin: ['está', 'estão', 'é', 'são', 'que', 'e', 'ou', 'de', 'do', 'da', 'dos', 'das', 'com', 'para', 'por', 'em', 'no', 'na', 'o', 'a', 'os', 'as', 'um', 'uma', 'seu', 'sua', 'se', 'muito', 'mais', 'oferece', 'combina', 'contém'] },
+  fr: { ini: ['notre', 'nos', 'ce', 'cet', 'cette', 'ces', 'le', 'la', 'les', 'un', 'une'],
+        fin: ['est', 'sont', 'qui', 'que', 'et', 'ou', 'de', 'du', 'des', 'avec', 'pour', 'par', 'en', 'à', 'au', 'aux', 'le', 'la', 'les', 'un', 'une', 'votre', 'vos', 'son', 'sa', 'ses', 'se', 'très', 'plus', 'offre', 'combine', 'contient'] },
+  it: { ini: ['il', 'nostro', 'la', 'nostra', 'questo', 'questa', 'lo', 'i', 'gli', 'le', 'un', 'una', 'uno'],
+        fin: ['è', 'sono', 'che', 'e', 'o', 'di', 'del', 'della', 'dei', 'delle', 'con', 'per', 'in', 'a', 'al', 'alla', 'il', 'lo', 'la', 'i', 'gli', 'le', 'un', 'una', 'tuo', 'tua', 'suo', 'sua', 'si', 'molto', 'più', 'offre', 'combina', 'contiene'] },
+  de: { ini: ['unser', 'unsere', 'unseren', 'dieser', 'diese', 'dieses', 'der', 'die', 'das', 'ein', 'eine'],
+        fin: ['ist', 'sind', 'wird', 'der', 'die', 'das', 'den', 'dem', 'des', 'und', 'oder', 'mit', 'für', 'von', 'zu', 'zum', 'zur', 'in', 'im', 'an', 'am', 'auf', 'ein', 'eine', 'einen', 'einem', 'ihr', 'ihre', 'sich', 'sehr', 'mehr', 'bietet', 'kombiniert', 'enthält'] },
+  sv: { ini: ['vår', 'vårt', 'våra', 'denna', 'detta', 'dessa', 'en', 'ett'],
+        fin: ['är', 'som', 'och', 'eller', 'av', 'med', 'för', 'till', 'i', 'på', 'en', 'ett', 'din', 'ditt', 'dina', 'sin', 'sitt', 'sig', 'mycket', 'mer', 'erbjuder', 'kombinerar', 'innehåller'] },
+};
+// Se corta en el primer verbo («Nuestro sérum de colágeno contiene glicerina» →
+// «Sérum de colágeno») y se descartan las fichas técnicas («Descripción del
+// producto», «Contenido neto»…): entonces vale más el nombre original.
+const VERBOS = {
+  es: /\s(contiene|contienen|est[áa]n?|es|son|proporciona|ofrece|combina|aporta|ayuda|cuenta|tiene|te|le|se|ha|han)\s/i,
+  pt: /\s(cont[ée]m|cont[êe]m|est[áa]|est[ãa]o|[ée]|s[ãa]o|proporciona|oferece|combina|ajuda|tem|se)\s/i,
+  fr: /\s(contient|contiennent|est|sont|offre|combine|apporte|aide|a|se|vous)\s/i,
+  it: /\s(contiene|contengono|[èe]|sono|offre|combina|aiuta|ha|si)\s/i,
+  de: /\s(enth[äa]lt|ist|sind|wird|bietet|kombiniert|hilft|hat|sorgt)\s/i,
+  sv: /\s(inneh[åa]ller|[äa]r|erbjuder|kombinerar|hj[äa]lper|har)\s/i,
+};
+const FICHA = /^(\*|uso general|funci[óo]n|color\b|modelo|marca\b|tipo:|descrip|categor|contenido|especificaci|caracter[íi]sticas|nombre del|tipo de|d[ée]jese|material|tama[ñn]o|descri[çc][ãa]o|conte[úu]do|especifica[çc]|caract[ée]ristiques|contenu|nom du|type d|sp[ée]cification|descrizione|contenuto|specifiche|caratteristiche|nome del|beschreibung|inhalt|produktname|technische|beskrivning|inneh[åa]ll|produktnamn)/i;
+function limpiarTitulo(f, l) {
+  const v = VACIAS[l]; if (!v) return f;
+  if (FICHA.test(f)) return '';
+  const m = VERBOS[l] && VERBOS[l].exec(' ' + f + ' ');
+  if (m && m.index > 0) f = f.slice(0, m.index).trim();
+  const pal = f.split(/\s+/);
+  while (pal.length > 1 && v.ini.includes(pal[0].toLowerCase())) pal.shift();
+  while (pal.length > 1 && v.fin.includes(pal[pal.length - 1].toLowerCase())) pal.pop();
+  return pal.join(' ');
+}
 function nombre(p, l) {
   if (p['name_' + l]) return p['name_' + l];
   const d = quitarHtml(p['description_' + l] || '');
   if (d && l !== 'en') {
     let f = d.split(/[.,;:!?。、，；]/)[0].trim();
     if (f.length > 70) f = f.slice(0, f.lastIndexOf(' ', 68) > 30 ? f.lastIndexOf(' ', 68) : 68).trim();
+    f = limpiarTitulo(f, l);
     if (f.length >= 12) return f.charAt(0).toUpperCase() + f.slice(1);
   }
   return p.name;
