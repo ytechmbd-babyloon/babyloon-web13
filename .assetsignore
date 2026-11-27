@@ -52,3 +52,8 @@ seo/
 # ── Descargas · 26-nov-2026 ─────────────────────────────────────────────
 # Proyecto aparte (descargas.babyloon.app), con su propio wrangler.jsonc.
 descargas/
+
+# ── SEO desde el panel · 27-nov-2026 ────────────────────────────────────
+# El programa de Cloudflare que pone el SEO publicado. Es código del
+# Worker (main en wrangler.jsonc), no una página.
+_seo/
